@@ -6,3 +6,17 @@ type t
 (** The type of suits. *)
 type suit = Spades | Hearts | Diamonds | Clubs
 
+(** The type of values. *)
+type value = Two 
+| Three 
+| Four 
+| Five 
+| Six 
+| Seven 
+| Eight 
+| Nine 
+| Ten 
+| Jack 
+| Queen 
+| King 
+| Ace
