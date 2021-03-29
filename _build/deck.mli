@@ -27,10 +27,7 @@ type value =
 type card = {suit : suit; value : value}
 
 (** The abstract type of cards in order in a deck.*)
-type deck 
-
-(** Creates a card with [value] and [suit]*)
-val createCard : value -> suit -> card
+type deck
 
 (** Creates a shuffled deck of cards and returns it*)
 val create : deck
@@ -39,7 +36,7 @@ val create : deck
 val shuffle : deck -> unit
 
 (** Removes the top card from the deck and gives the card*)
-val remove : deck -> card
+val remove : deck -> card option
 
 (** Returns size of deck*)
 val size : deck -> int

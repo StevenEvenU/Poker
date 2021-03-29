@@ -1,14 +1,14 @@
 ### Starting build.
 # Target: main.mli.depends, tags: { extension:mli, file:main.mli, ocaml, ocamldep, quiet, traverse }
-ocamlfind ocamldep -modules main.mli > main.mli.depends
+ocamlfind ocamldep -modules main.mli > main.mli.depends # cached
 # Target: deck.mli.depends, tags: { extension:mli, file:deck.mli, ocaml, ocamldep, quiet, traverse }
-ocamlfind ocamldep -modules deck.mli > deck.mli.depends # cached
-# Target: deck.cmi, tags: { byte, compile, extension:mli, file:deck.mli, interf, ocaml, quiet, traverse }
-ocamlfind ocamlc -c -o deck.cmi deck.mli # cached
+ocamlfind ocamldep -modules deck.mli > deck.mli.depends
 # Target: table.mli.depends, tags: { extension:mli, file:table.mli, ocaml, ocamldep, quiet, traverse }
 ocamlfind ocamldep -modules table.mli > table.mli.depends # cached
+# Target: deck.cmi, tags: { byte, compile, extension:mli, file:deck.mli, interf, ocaml, quiet, traverse }
+ocamlfind ocamlc -c -o deck.cmi deck.mli
 # Target: table.cmi, tags: { byte, compile, extension:mli, file:table.mli, interf, ocaml, quiet, traverse }
-ocamlfind ocamlc -c -o table.cmi table.mli # cached
+ocamlfind ocamlc -c -o table.cmi table.mli
 # Target: main.cmi, tags: { byte, compile, extension:mli, file:main.mli, interf, ocaml, quiet, traverse }
 ocamlfind ocamlc -c -o main.cmi main.mli
 # Target: main.ml.depends, tags: { extension:ml, file:main.ml, ocaml, ocamldep, quiet, traverse }
@@ -18,9 +18,12 @@ ocamlfind ocamlc -c -o main.cmo main.ml
 # Target: table.ml.depends, tags: { extension:ml, file:table.ml, ocaml, ocamldep, quiet, traverse }
 ocamlfind ocamldep -modules table.ml > table.ml.depends # cached
 # Target: table.cmo, tags: { byte, compile, extension:cmo, extension:ml, file:table.cmo, file:table.ml, implem, ocaml, quiet, traverse }
-ocamlfind ocamlc -c -o table.cmo table.ml # cached
-# Target: deck.ml.depends, tags: { extension:ml, file:deck.ml, ocaml, ocamldep, quiet, traverse }
-ocamlfind ocamldep -modules deck.ml > deck.ml.depends # cached
-# Target: deck.cmo, tags: { byte, compile, extension:cmo, extension:ml, file:deck.cmo, file:deck.ml, implem, ocaml, quiet, traverse }
-ocamlfind ocamlc -c -o deck.cmo deck.ml # cached
-# Compilation successful.
+ocamlfind ocamlc -c -o table.cmo table.ml
++ ocamlfind ocamlc -c -o table.cmo table.ml
+File "table.ml", line 18, characters 23-44:
+18 |     state.cpu_hand <- (remove state.deck_rem :: state.cpu_hand);
+                            ^^^^^^^^^^^^^^^^^^^^^
+Error: This expression has type Deck.card option
+       but an expression was expected of type Deck.card
+Command exited with code 2.
+# Compilation unsuccessful.

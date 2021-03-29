@@ -24,7 +24,7 @@ type value =
   | Ace
 
 (** The abstract type of a single card. *)
-type card
+type card = {suit : suit; value : value}
 
 (** The abstract type of cards in order in a deck.*)
 type deck
