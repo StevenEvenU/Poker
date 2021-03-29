@@ -1,4 +1,4 @@
-(**The deck of cards in order. Able to be shuffled.*)
+(** The deck of cards in order. Able to be shuffled.*)
 
 (** The type of suits. *)
 type suit = Spades | Hearts | Diamonds | Clubs
@@ -24,17 +24,17 @@ type card
 (** The abstract type of cards in order in a deck.*)
 type deck  
 
-(**Creates a shuffled deck of cards and returns it*)
+(** Creates a shuffled deck of cards and returns it*)
 val create : unit -> deck
 
-(**Shuffles a deck (or smaller amount) of cards*)
+(** Shuffles a deck (or smaller amount) of cards*)
 val shuffle: deck -> unit
 
-(**Removes the top card from the deck and gives the card*)
+(** Removes the top card from the deck and gives the card*)
 val remove: deck -> card
 
-(**Returns size of deck*)
+(** Returns size of deck*)
 val size: deck -> int
 
-(**Returns string representing deck*)
+(** Returns string representing deck*)
 val deck_to_string: deck -> string
