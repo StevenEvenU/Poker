@@ -17,6 +17,9 @@ type state = {
   mutable turn : players;
 }
 
+(** The initial state of a game *)
+val init_state : state
+
 (** This will delegate the cards amongst the players, thus changing the
     state. *)
 val delegate : state -> unit

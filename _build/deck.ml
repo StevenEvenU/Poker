@@ -90,11 +90,6 @@ let shuffle (deck1 : deck) = to_deck (shuffle_repeater deck1 [] 0 30)
 let rec top_card (deck1 : deck) : card option =
   match deck1 with [] -> None | [ h ] -> h | h :: t -> top_card t
 
-exception NoCard
-
-let get_card (card : card option) =
-  match card with Some x -> x | None -> raise NoCard
-
 let rec remove_top (deck1 : deck) =
   match deck1 with
   | [] -> []
