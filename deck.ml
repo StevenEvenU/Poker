@@ -24,16 +24,17 @@ type card = {
   value : value;
 }
 
-type deck = card option array
+type deck = card option list
+
+let to_deck (c_o_l : card option list) : deck = c_o_l
 
 let create_card (valu : value) (sut : suit) =
   { suit = sut; value = valu }
 
-let create_empty_helper : deck = Array.make 52 None
+(*let create_empty_helper : deck = Array.make 52 None*)
 
-let create : deck =
-  let deck1 = create_empty_helper in
-  for y = 0 to 51 do
+let rec create_helper (deck1 : card option list) (y : int) =
+  if y < 52 then
     let sut =
       if y < 13 then Hearts
       else if y < 26 then Diamonds
@@ -55,23 +56,20 @@ let create : deck =
       else if y mod 13 = 11 then King
       else Ace
     in
-    deck1.(y) <- Some (create_card valu sut)
-  done;
-  deck1
+    Some (create_card valu sut) :: create_helper deck1 (y + 1)
+  else to_deck deck1
 
-let shuffle = failwith "not implemented"
+let create : deck = create_helper [] 0
 
-let remove (deck1 : deck) =
-  let card1 = ref None in
-  for y = 0 to 51 do
-    if deck1.(y) = None then deck1.(y - 1) <- None
-    else card1 := deck1.(y)
-  done;
-  !card1
+let shuffle = failwith "not implemented yet"
 
-let size (deck1 : deck) =
-  let len = ref 0 in
-  for y = 0 to 51 do
-    if deck1.(y) = None then () else len := !len + 1
-  done;
-  !len
+let rec top_card (deck1 : deck) : card option =
+  match deck1 with [] -> None | [ h ] -> h | h :: t -> top_card t
+
+let rec remove_top (deck1 : deck) =
+  match deck1 with
+  | [] -> []
+  | [ h ] -> []
+  | h :: t -> to_deck (h :: remove_top t)
+
+let size (deck1 : deck) = List.length deck1
