@@ -1,2 +1,42 @@
 ### Starting build.
-# Compilation unsuccessful.
+# Target: main.mli.depends, tags: { extension:mli, file:main.mli, ocaml, ocamldep, quiet, traverse }
+ocamlfind ocamldep -modules main.mli > main.mli.depends # cached
+# Target: deck.mli.depends, tags: { extension:mli, file:deck.mli, ocaml, ocamldep, quiet, traverse }
+ocamlfind ocamldep -modules deck.mli > deck.mli.depends # cached
+# Target: deck.cmi, tags: { byte, compile, extension:mli, file:deck.mli, interf, ocaml, quiet, traverse }
+ocamlfind ocamlc -c -o deck.cmi deck.mli # cached
+# Target: table.mli.depends, tags: { extension:mli, file:table.mli, ocaml, ocamldep, quiet, traverse }
+ocamlfind ocamldep -modules table.mli > table.mli.depends # cached
+# Target: table.cmi, tags: { byte, compile, extension:mli, file:table.mli, interf, ocaml, quiet, traverse }
+ocamlfind ocamlc -c -o table.cmi table.mli # cached
+# Target: main.cmi, tags: { byte, compile, extension:mli, file:main.mli, interf, ocaml, quiet, traverse }
+ocamlfind ocamlc -c -o main.cmi main.mli # cached
+# Target: main.ml.depends, tags: { extension:ml, file:main.ml, ocaml, ocamldep, quiet, traverse }
+ocamlfind ocamldep -modules main.ml > main.ml.depends # cached
+# Target: main.cmo, tags: { byte, compile, extension:cmo, extension:ml, file:main.cmo, file:main.ml, implem, ocaml, quiet, traverse }
+ocamlfind ocamlc -c -o main.cmo main.ml # cached
+# Target: table.ml.depends, tags: { extension:ml, file:table.ml, ocaml, ocamldep, quiet, traverse }
+ocamlfind ocamldep -modules table.ml > table.ml.depends # cached
+# Target: table.cmo, tags: { byte, compile, extension:cmo, extension:ml, file:table.cmo, file:table.ml, implem, ocaml, quiet, traverse }
+ocamlfind ocamlc -c -o table.cmo table.ml # cached
+# Target: deck.ml.depends, tags: { extension:ml, file:deck.ml, ocaml, ocamldep, quiet, traverse }
+ocamlfind ocamldep -modules deck.ml > deck.ml.depends # cached
+# Target: deck.cmo, tags: { byte, compile, extension:cmo, extension:ml, file:deck.cmo, file:deck.ml, implem, ocaml, quiet, traverse }
+ocamlfind ocamlc -c -o deck.cmo deck.ml # cached
+# Target: compare.mli.depends, tags: { extension:mli, file:compare.mli, ocaml, ocamldep, quiet, traverse }
+ocamlfind ocamldep -modules compare.mli > compare.mli.depends # cached
+# Target: compare.cmi, tags: { byte, compile, extension:mli, file:compare.mli, interf, ocaml, quiet, traverse }
+ocamlfind ocamlc -c -o compare.cmi compare.mli # cached
+# Target: compare.ml.depends, tags: { extension:ml, file:compare.ml, ocaml, ocamldep, quiet, traverse }
+ocamlfind ocamldep -modules compare.ml > compare.ml.depends # cached
+# Target: compare.cmo, tags: { byte, compile, extension:cmo, extension:ml, file:compare.cmo, file:compare.ml, implem, ocaml, quiet, traverse }
+ocamlfind ocamlc -c -o compare.cmo compare.ml # cached
+# Target: authors.mli.depends, tags: { extension:mli, file:authors.mli, ocaml, ocamldep, quiet, traverse }
+ocamlfind ocamldep -modules authors.mli > authors.mli.depends # cached
+# Target: authors.cmi, tags: { byte, compile, extension:mli, file:authors.mli, interf, ocaml, quiet, traverse }
+ocamlfind ocamlc -c -o authors.cmi authors.mli # cached
+# Target: authors.ml.depends, tags: { extension:ml, file:authors.ml, ocaml, ocamldep, quiet, traverse }
+ocamlfind ocamldep -modules authors.ml > authors.ml.depends # cached
+# Target: authors.cmo, tags: { byte, compile, extension:cmo, extension:ml, file:authors.cmo, file:authors.ml, implem, ocaml, quiet, traverse }
+ocamlfind ocamlc -c -o authors.cmo authors.ml # cached
+# Compilation successful.

@@ -2,7 +2,6 @@ open Deck
 
 let int_of_val value =
   match value with
-  | Ace -> 1
   | Two -> 2
   | Three -> 3
   | Four -> 4
@@ -15,6 +14,7 @@ let int_of_val value =
   | Jack -> 11
   | Queen -> 12
   | King -> 13
+  | Ace -> 14
 
 let string_of_suit suit =
   match suit with
@@ -48,6 +48,7 @@ let card_compare fst_card snd_card =
 
 let hand_sort (cards : card_check list) = List.sort card_compare cards
 
+let high_card = failwith "Not implemented"
 (* let royal_flush_check pers_hand table = let new_card_list =
    hand_converter [] (total_hand pers_hand table) in let rec check =
    match new_card_list with | h -> *)

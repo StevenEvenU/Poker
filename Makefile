@@ -1,4 +1,4 @@
-MODULES=main table deck logic authors
+MODULES=main table deck compare authors
 OBJECTS=$(MODULES:=.cmo)
 MLS=$(MODULES:=.ml)
 MLIS=$(MODULES:=.mli)
@@ -13,7 +13,7 @@ build:
 	$(OCAMLBUILD) $(OBJECTS)
 
 playable:
-	$(OCAMLBUILD) main.byte
+	$(OCAMLBUILD) $(MAIN)
 
 test:
 	$(OCAMLBUILD) -tag 'debug' $(TEST) && ./$(TEST) -runner sequential
