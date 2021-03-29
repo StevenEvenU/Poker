@@ -1,26 +1,28 @@
 ### Starting build.
 # Target: main.mli.depends, tags: { extension:mli, file:main.mli, ocaml, ocamldep, quiet, traverse }
-ocamlfind ocamldep -modules main.mli > main.mli.depends
+/Users/eliaslittle/.opam/cs3110-2021sp/bin/ocamldep.opt -modules main.mli > main.mli.depends
 # Target: deck.mli.depends, tags: { extension:mli, file:deck.mli, ocaml, ocamldep, quiet, traverse }
-ocamlfind ocamldep -modules deck.mli > deck.mli.depends
+/Users/eliaslittle/.opam/cs3110-2021sp/bin/ocamldep.opt -modules deck.mli > deck.mli.depends
 # Target: table.mli.depends, tags: { extension:mli, file:table.mli, ocaml, ocamldep, quiet, traverse }
-ocamlfind ocamldep -modules table.mli > table.mli.depends
+/Users/eliaslittle/.opam/cs3110-2021sp/bin/ocamldep.opt -modules table.mli > table.mli.depends
 # Target: deck.cmi, tags: { byte, compile, extension:mli, file:deck.mli, interf, ocaml, quiet, traverse }
-ocamlfind ocamlc -c -o deck.cmi deck.mli
+/Users/eliaslittle/.opam/cs3110-2021sp/bin/ocamlc.opt -c -o deck.cmi deck.mli
 # Target: table.cmi, tags: { byte, compile, extension:mli, file:table.mli, interf, ocaml, quiet, traverse }
-ocamlfind ocamlc -c -o table.cmi table.mli
+/Users/eliaslittle/.opam/cs3110-2021sp/bin/ocamlc.opt -c -o table.cmi table.mli
 # Target: main.cmi, tags: { byte, compile, extension:mli, file:main.mli, interf, ocaml, quiet, traverse }
-ocamlfind ocamlc -c -o main.cmi main.mli
+/Users/eliaslittle/.opam/cs3110-2021sp/bin/ocamlc.opt -c -o main.cmi main.mli
 # Target: main.ml.depends, tags: { extension:ml, file:main.ml, ocaml, ocamldep, quiet, traverse }
-ocamlfind ocamldep -modules main.ml > main.ml.depends
+/Users/eliaslittle/.opam/cs3110-2021sp/bin/ocamldep.opt -modules main.ml > main.ml.depends
 # Target: main.cmo, tags: { byte, compile, extension:cmo, extension:ml, file:main.cmo, file:main.ml, implem, ocaml, quiet, traverse }
-ocamlfind ocamlc -c -o main.cmo main.ml
-# Target: table.ml.depends, tags: { extension:ml, file:table.ml, ocaml, ocamldep, quiet, traverse }
-ocamlfind ocamldep -modules table.ml > table.ml.depends
-# Target: table.cmo, tags: { byte, compile, extension:cmo, extension:ml, file:table.cmo, file:table.ml, implem, ocaml, quiet, traverse }
-ocamlfind ocamlc -c -o table.cmo table.ml
+/Users/eliaslittle/.opam/cs3110-2021sp/bin/ocamlc.opt -c -o main.cmo main.ml
 # Target: deck.ml.depends, tags: { extension:ml, file:deck.ml, ocaml, ocamldep, quiet, traverse }
-ocamlfind ocamldep -modules deck.ml > deck.ml.depends
+/Users/eliaslittle/.opam/cs3110-2021sp/bin/ocamldep.opt -modules deck.ml > deck.ml.depends
+# Target: table.ml.depends, tags: { extension:ml, file:table.ml, ocaml, ocamldep, quiet, traverse }
+/Users/eliaslittle/.opam/cs3110-2021sp/bin/ocamldep.opt -modules table.ml > table.ml.depends
 # Target: deck.cmo, tags: { byte, compile, extension:cmo, extension:ml, file:deck.cmo, file:deck.ml, implem, ocaml, quiet, traverse }
-ocamlfind ocamlc -c -o deck.cmo deck.ml
+/Users/eliaslittle/.opam/cs3110-2021sp/bin/ocamlc.opt -c -o deck.cmo deck.ml
+# Target: table.cmo, tags: { byte, compile, extension:cmo, extension:ml, file:table.cmo, file:table.ml, implem, ocaml, quiet, traverse }
+/Users/eliaslittle/.opam/cs3110-2021sp/bin/ocamlc.opt -c -o table.cmo table.ml
+# Target: main.byte, tags: { byte, dont_link_with, extension:byte, file:main.byte, link, ocaml, program, quiet, traverse }
+/Users/eliaslittle/.opam/cs3110-2021sp/bin/ocamlc.opt deck.cmo table.cmo main.cmo -o main.byte
 # Compilation successful.

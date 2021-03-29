@@ -23,4 +23,4 @@ val string_of_cards : Deck.card list -> string
 val print_hand : Table.state -> unit
 
 (** Returns string of the state *)
-val print_table : Table.state -> unit
+val print_event : Table.state -> string -> unit

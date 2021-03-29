@@ -73,12 +73,10 @@ let print_hand (state : Table.state) =
     then let s = string_of_cards hand in print_string ("Your hand is: \n " ^ s ^"\n")
     else print_string ("Your hand is empty. \n")
 
-let print_table (state : Table.state) = 
-  let table_cards = state.cards_on_table in 
-  if table_cards <> [] 
-    then print_string ("The current cards on the table are: \n" ^ (string_of_cards table_cards) ^ "\n") 
-    else print_string "Table is empty. \n"
-
+let print_event (state : Table.state) (event : string) =
+  print_string ("After the " ^ event ^ " the cards are now: \n" ^
+  (string_of_cards state.cards_on_table) ^ "\n")
+  
 let main =
   (* Get Number of players *)
   print_string
@@ -90,5 +88,13 @@ let main =
   let state = active_state in
   delegate state;
   print_hand state;
+  (* First round of betting will occur here *)
   deal state;
-  print_table state;
+  print_event state "Flop";
+  (* Second round of betting will occur here *)
+  flop state;
+  print_event state "Turn";
+  (* Third round of betting will occur here *)
+  flop state; 
+  print_event state "River";
+  (* Results *)
