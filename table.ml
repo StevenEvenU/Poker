@@ -14,6 +14,7 @@ type state = {
 let table_deck = create
 let init_state = {users_hand = []; cpu_hand = []; cards_on_table = []; deck_rem = table_deck; turn = Player}
 
+(*THIS IS NEW ADDED BY ZACH*)
 let remove (deck_rem: Deck.deck):Deck.card  = 
 let x = Deck.top_card deck_rem in 
 match x with 
@@ -23,7 +24,7 @@ match x with
 let delegate state = shuffle state.deck_rem;
   for i = 0 to 1 do
     state.cpu_hand <- (remove state.deck_rem :: state.cpu_hand);
-    state.deck_rem <- Deck.remove_top table_deck
+    state.deck_rem <- Deck.remove_top table_deck(*ADDED THIS TO EACH TIME*)
   done;
   for i = 0 to 1 do
     state.users_hand <- (remove state.deck_rem :: state.users_hand); 
