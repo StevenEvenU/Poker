@@ -28,4 +28,4 @@ val flop: state -> state
 
 (** This will check who won when the size of the state.cards_on_table is equal
 to 5. *)
-val round_check: unit -> players
+val round_check: state -> players
