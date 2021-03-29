@@ -1,4 +1,4 @@
-open Deck
+(* open Deck
 
 let int_of_val value =
   match value with
@@ -50,4 +50,4 @@ let hand_sort (cards : card_check list) = List.sort card_compare cards
 
 (* let royal_flush_check pers_hand table = let new_card_list =
    hand_converter [] (total_hand pers_hand table) in let rec check =
-   match new_card_list with | h -> *)
+   match new_card_list with | h -> *) *)
