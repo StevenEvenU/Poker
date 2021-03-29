@@ -30,7 +30,7 @@ type card = {
 }
 
 (** The abstract type of cards in order in a deck.*)
-type deck
+type deck = card option list
 
 (** Creates a card value of suit*)
 val create_card : value -> suit -> card
