@@ -52,17 +52,43 @@ let rec hand_converter acc (cards : Deck.card list) =
 let card_compare fst_card snd_card =
   compare fst_card.int_value snd_card.int_value
 
-let hand_sort (cards : card_check list) = List.sort card_compare cards
+let hand_sort (cards : card_check list) =
+  List.rev (List.sort card_compare cards)
 
 exception GameNotOver
 
-let high_card (cards: card_check list) (user : Table.players) : win_record  = 
-  match List.rev (hand_sort cards) with
+let high_card (cards : card_check list) (user : Table.players) :
+    win_record =
+  match hand_sort cards with
   | [] -> raise GameNotOver
-  | h :: t -> {player = user; rank = 1; value = h.int_value}
+  | h :: t -> { player = user; rank = 1; value = h.int_value }
 
+let rec one_pair
+    (cards : card_check list)
+    (user : Table.players)
+    (value : int) : win_record =
+  match hand_sort cards with
+  | h1 :: h2 :: t ->
+      if h1.int_value = h2.int_value then
+        { player = user; rank = 2; value = h1.int_value }
+      else one_pair (h2 :: t) user value
+  | _ -> { player = user; rank = 0; value = 0 }
 
-let one_pair (cards: card_check list) (user: Table.players) 
+let rec snd_pair_check pair cards user value =
+  match hand_sort cards with
+  | h1 :: h2 :: t ->
+      if h1.int_value = h2.int_value && pair.value != h1.int_value then
+        { player = user; rank = 3; value = h1.int_value }
+      else snd_pair_check pair (h2 :: t) user value
+  | _ -> pair
+
+let two_pair
+    (cards : card_check list)
+    (user : Table.players)
+    (value : int) : win_record =
+  let fst_pair = one_pair cards user value in
+  snd_pair_check fst_pair cards user value
+
 (* let royal_flush_check pers_hand table = let new_card_list =
    hand_converter [] (total_hand pers_hand table) in let rec check =
    match new_card_list with | h -> *)
