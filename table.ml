@@ -11,9 +11,14 @@ type state = {
 }
 
 let table_deck = create
-let init_state = {users_hand = []; cpu_hand = []; cards_on_table = []; deck_rem = table_deck; turn = Player}
+let init_state = {
+  users_hand = []; 
+  cpu_hand = []; 
+  cards_on_table = []; 
+  deck_rem = table_deck; 
+  turn = Player
+}
 let active_state = init_state
-
 let delegate state = state.deck_rem <- shuffle state.deck_rem;
   for i = 0 to 1 do
     state.cpu_hand <- 
