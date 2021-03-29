@@ -35,3 +35,6 @@ val remove: deck -> card
 
 (**Returns size of deck*)
 val size: deck -> int
+
+(**Returns string representing deck*)
+val deck_to_string: deck -> string
