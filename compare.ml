@@ -1,5 +1,11 @@
 open Deck
 
+type win_record = {
+  player : Table.players;
+  rank : int;
+  value : int;
+}
+
 let int_of_val value =
   match value with
   | Two -> 2
@@ -48,7 +54,15 @@ let card_compare fst_card snd_card =
 
 let hand_sort (cards : card_check list) = List.sort card_compare cards
 
-let high_card = failwith "Not implemented"
+exception GameNotOver
+
+let high_card (cards: card_check list) (user : Table.players) : win_record  = 
+  match List.rev (hand_sort cards) with
+  | [] -> raise GameNotOver
+  | h :: t -> {player = user; rank = 1; value = h.int_value}
+
+
+let one_pair (cards: card_check list) (user: Table.players) 
 (* let royal_flush_check pers_hand table = let new_card_list =
    hand_converter [] (total_hand pers_hand table) in let rec check =
    match new_card_list with | h -> *)
