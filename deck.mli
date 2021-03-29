@@ -23,11 +23,17 @@ type value =
   | King
   | Ace
 
-(** The abstract type of a single card. *)
-type card
+(** The type of a single card. *)
+type card = {
+  suit : suit;
+  value : value;
+}
 
 (** The abstract type of cards in order in a deck.*)
 type deck
+
+(** Creates a card value of suit*)
+val create_card : value -> suit -> card
 
 (** Creates a shuffled deck of cards and returns it*)
 val create : deck
