@@ -10,36 +10,40 @@ type state = {
   mutable turn: players;
 }
 
-
 let table_deck = create
 let init_state = {users_hand = []; cpu_hand = []; cards_on_table = []; deck_rem = table_deck; turn = Player}
 
-(*THIS IS NEW ADDED BY ZACH*)
-let remove (deck_rem: Deck.deck):Deck.card  = 
-let x = Deck.top_card deck_rem in 
-match x with 
-|Some x -> x
-(*| None ->*) 
-
-let delegate state = shuffle state.deck_rem;
+let delegate state = state.deck_rem <- shuffle state.deck_rem;
   for i = 0 to 1 do
-    state.cpu_hand <- (remove state.deck_rem :: state.cpu_hand);
-    state.deck_rem <- Deck.remove_top table_deck(*ADDED THIS TO EACH TIME*)
+    state.cpu_hand <- 
+    (match (top_card state.deck_rem) with
+    | Some card -> (card :: state.cpu_hand)
+    | none -> (state.cpu_hand));
+    state.deck_rem <- remove_top state.deck_rem
   done;
   for i = 0 to 1 do
-    state.users_hand <- (remove state.deck_rem :: state.users_hand); 
-    state.deck_rem <- Deck.remove_top table_deck
+    state.users_hand <- 
+    (match (top_card state.deck_rem) with
+    | Some card -> (card :: state.users_hand)
+    | none -> (state.users_hand));
+    state.deck_rem <- remove_top state.deck_rem
   done
 
 let deal state =
   for i = 0 to 2 do
-    state.cards_on_table <- (remove state.deck_rem:: state.cards_on_table);
-    state.deck_rem <- Deck.remove_top table_deck
+    state.cards_on_table <- 
+    (match (top_card state.deck_rem) with
+    | Some card -> (card :: state.cards_on_table)
+    | none -> (state.cards_on_table));
+    state.deck_rem <- remove_top state.deck_rem
   done
 
 let flop state = 
-  state.cards_on_table <- (remove state.deck_rem :: state.cards_on_table);
-  state.deck_rem <- Deck.remove_top table_deck
+  state.cards_on_table <- 
+    (match (top_card state.deck_rem) with
+    | Some card -> (card :: state.cards_on_table)
+    | none -> (state.cards_on_table));
+    state.deck_rem <- remove_top state.deck_rem
 
 let winner state = failwith "Not implemented"
 

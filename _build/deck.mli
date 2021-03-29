@@ -38,11 +38,14 @@ val create_card : value -> suit -> card
 (** Creates a shuffled deck of cards and returns it*)
 val create : deck
 
-(** Shuffles a deck (or smaller amount) of cards*)
-val shuffle : deck -> unit
+(** Shuffles a deck of cards*)
+val shuffle : deck -> deck
 
-(** Removes the top card from the deck and gives the card*)
-val remove : deck -> card option
+(** Gives the top card from the deck*)
+val top_card : deck -> card option
+
+(** Removes the top card from the deck*)
+val remove_top : deck -> deck
 
 (** Returns size of deck*)
 val size : deck -> int
