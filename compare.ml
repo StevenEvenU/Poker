@@ -89,6 +89,17 @@ let two_pair
   let fst_pair = one_pair cards user value in
   snd_pair_check fst_pair cards user value
 
+let rec three_kind
+    (cards : card_check list)
+    (user : Table.players)
+    (value : int) : win_record =
+  match hand_sort cards with
+  | h1 :: h2 :: h3 :: t ->
+      if h1.int_value = h2.int_value && h2.int_value = h3.int_value then
+        { player = user; rank = 4; value = h1.int_value }
+      else three_kind (h2 :: h3 :: t) user value
+  | _ -> { player = user; rank = 0; value = 0 }
+
 (* let royal_flush_check pers_hand table = let new_card_list =
    hand_converter [] (total_hand pers_hand table) in let rec check =
    match new_card_list with | h -> *)
