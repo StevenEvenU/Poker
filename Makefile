@@ -1,4 +1,4 @@
-MODULES=main table deck
+MODULES=main table deck logic authors
 OBJECTS=$(MODULES:=.cmo)
 MLS=$(MODULES:=.ml)
 MLIS=$(MODULES:=.mli)
@@ -20,12 +20,6 @@ test:
 
 play:
 	$(OCAMLBUILD) -tag 'debug' $(MAIN) && OCAMLRUNPARAM=b ./$(MAIN)
-
-check:
-	@bash check.sh
-	
-finalcheck:
-	@bash check.sh final
 
 zip:
 	zip poker.zip *.ml* *.json _tags .merlin .ocamlformat .ocamlinit LICENSE Makefile	
