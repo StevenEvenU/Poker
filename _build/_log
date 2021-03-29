@@ -1,6 +1,6 @@
 ### Starting build.
 # Target: main.mli.depends, tags: { extension:mli, file:main.mli, ocaml, ocamldep, quiet, traverse }
-ocamlfind ocamldep -modules main.mli > main.mli.depends # cached
+ocamlfind ocamldep -modules main.mli > main.mli.depends
 # Target: deck.mli.depends, tags: { extension:mli, file:deck.mli, ocaml, ocamldep, quiet, traverse }
 ocamlfind ocamldep -modules deck.mli > deck.mli.depends
 # Target: table.mli.depends, tags: { extension:mli, file:table.mli, ocaml, ocamldep, quiet, traverse }
@@ -12,7 +12,7 @@ ocamlfind ocamlc -c -o table.cmi table.mli
 # Target: main.cmi, tags: { byte, compile, extension:mli, file:main.mli, interf, ocaml, quiet, traverse }
 ocamlfind ocamlc -c -o main.cmi main.mli
 # Target: main.ml.depends, tags: { extension:ml, file:main.ml, ocaml, ocamldep, quiet, traverse }
-ocamlfind ocamldep -modules main.ml > main.ml.depends # cached
+ocamlfind ocamldep -modules main.ml > main.ml.depends
 # Target: main.cmo, tags: { byte, compile, extension:cmo, extension:ml, file:main.cmo, file:main.ml, implem, ocaml, quiet, traverse }
 ocamlfind ocamlc -c -o main.cmo main.ml
 # Target: table.ml.depends, tags: { extension:ml, file:table.ml, ocaml, ocamldep, quiet, traverse }

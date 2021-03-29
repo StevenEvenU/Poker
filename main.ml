@@ -1,4 +1,5 @@
 open Deck
+open Table
 
 (* Types of user action *)
 type action =
@@ -57,23 +58,37 @@ let string_of_value value =
 let string_of_card card = 
   (string_of_value (card.value)) ^ string_of_suit card.suit
 
-let rec string_of_cards str cards =
+let rec string_of_cards_rec str cards =
   match cards with 
   | [] -> str 
   | h::[] -> str ^" "^ string_of_card h 
-  | h::t -> let s = str ^" "^ string_of_card h in (string_of_cards s t)
+  | h::t -> let s = str ^" "^ string_of_card h in (string_of_cards_rec s t)
 
-(* let output_state state = let table_cards = state.cards_on_table in if
-   state.cards_on_table <> [] then print_string ("The current cards on
-   the table are: \n" ^ (string_of_cards "" table_cards)) else
-   print_string "Table is empty" *)
+let string_of_cards cards = 
+  string_of_cards_rec "" cards
+
+let print_hand (state : Table.state) = 
+  let hand = state.users_hand in
+  if hand <> []
+    then let s = string_of_cards hand in print_string ("Your hand is: \n " ^ s ^"\n")
+    else print_string ("Your hand is empty. \n")
+
+let print_table (state : Table.state) = 
+  let table_cards = state.cards_on_table in 
+  if table_cards <> [] 
+    then print_string ("The current cards on the table are: \n" ^ (string_of_cards table_cards) ^ "\n") 
+    else print_string "Table is empty. \n"
 
 let main =
   (* Get Number of players *)
   print_string
-    "Welcome to Poker! How many people do you want to play against?\n"
+    "Welcome to Poker! How many people do you want to play against?\n";
+  let num_players = read_int () in
+  print_int num_players;
+  print_string "\n";
 
-let num_players = read_int ()
-
-(* Get the initial state based on number of players *)
-(* let state = construct num_players *)
+  let state = active_state in
+  delegate state;
+  print_hand state;
+  deal state;
+  print_table state;
