@@ -31,8 +31,6 @@ let to_deck (c_o_l : card option list) : deck = c_o_l
 let create_card (valu : value) (sut : suit) =
   { suit = sut; value = valu }
 
-(*let create_empty_helper : deck = Array.make 52 None*)
-
 let rec create_helper (deck1 : card option list) (y : int) =
   if y < 52 then
     let sut =
@@ -61,7 +59,7 @@ let rec create_helper (deck1 : card option list) (y : int) =
 
 let create : deck = create_helper [] 0
 
-let shuffle = failwith "not implemented yet"
+let shuffle = failwith "nope"
 
 let rec top_card (deck1 : deck) : card option =
   match deck1 with [] -> None | [ h ] -> h | h :: t -> top_card t
