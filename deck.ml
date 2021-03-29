@@ -26,13 +26,15 @@ type card = {
 
 type deck = card option list
 
+let deck_size = 52
+
 let to_deck (c_o_l : card option list) : deck = c_o_l
 
 let create_card (valu : value) (sut : suit) =
   { suit = sut; value = valu }
 
 let rec create_helper (deck1 : card option list) (y : int) =
-  if y < 52 then
+  if y < deck_size then
     let sut =
       if y < 13 then Hearts
       else if y < 26 then Diamonds
@@ -64,7 +66,7 @@ let rec shuffle_helper
     (shuff_list : card option list)
     (num : int) =
   Random.self_init ();
-  if num < 52 then
+  if num < deck_size then
     match deck1 with
     | h :: t ->
         if Random.bool () then h :: shuffle_helper t shuff_list (num + 1)
@@ -75,12 +77,15 @@ let rec shuffle_helper
 let rec shuffle_repeater
     (deck1 : deck)
     (shuff_list : card option list)
-    (num : int) =
-  if num < 30 then
-    shuffle_repeater (shuffle_helper deck1 [] 0) [] (num + 1)
+    (num : int)
+    (repetitions : int) =
+  if num < repetitions then
+    shuffle_repeater
+      (shuffle_helper deck1 [] 0)
+      [] (num + 1) repetitions
   else deck1
 
-let shuffle (deck1 : deck) = to_deck (shuffle_repeater deck1 [] 0)
+let shuffle (deck1 : deck) = to_deck (shuffle_repeater deck1 [] 0 30)
 
 let rec top_card (deck1 : deck) : card option =
   match deck1 with [] -> None | [ h ] -> h | h :: t -> top_card t
