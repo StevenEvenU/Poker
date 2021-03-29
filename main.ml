@@ -54,12 +54,14 @@ let string_of_value value =
   | King -> "K"
   | Ace -> "A"
 
-(* let string_of_card card : Deck.card = string_of_value card.value ^
-   string_of_suit card.suit *)
+let string_of_card card = 
+  (string_of_value (card.value)) ^ string_of_suit card.suit
 
-(* let rec string_of_cards str cards = function | [] -> str | h::[] ->
-   str ^" "^ string_of_card h | h::t -> str ^" "^ string_of_card h ^" "^
-   string_of_cards t *)
+let rec string_of_cards str cards =
+  match cards with 
+  | [] -> str 
+  | h::[] -> str ^" "^ string_of_card h 
+  | h::t -> let s = str ^" "^ string_of_card h in (string_of_cards s t)
 
 (* let output_state state = let table_cards = state.cards_on_table in if
    state.cards_on_table <> [] then print_string ("The current cards on
@@ -69,7 +71,7 @@ let string_of_value value =
 let main =
   (* Get Number of players *)
   print_string
-    "Welcome to Poker! How many people do you want to play against?"
+    "Welcome to Poker! How many people do you want to play against?\n"
 
 let num_players = read_int ()
 
