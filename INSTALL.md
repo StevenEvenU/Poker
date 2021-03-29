@@ -1,16 +1,18 @@
 ## How to Install
 
-Installation is very simple, it takes two steps to start playing.
-First, run
+Installation is very simple, it takes three steps to start playing.
+First, in your directory where the zip is located, unzip the file.
+
+Second, in that directory, run
 ```sh
 make playable
 ```
 
-Second, run 
-```bash
+Finally, run 
+```sh
 ./main.byte
 ```
-in order to start playing.
+to start playing.
 
 Have fun playing Poker!
 (*No real money is involved*)
