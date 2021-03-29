@@ -21,11 +21,11 @@ let delegate state = shuffle;
 
 let deal state =
   for i = 0 to 2 do
-    {state with cards_on_table = remove () :: cards_on_table; deck_rem = deck}
+    {state with cards_on_table = remove :: cards_on_table; deck_rem = deck}
   done
 
 let flop state = 
-  {state with cards_on_table = remove () :: cards_on_table; deck_rem = deck}
+  {state with cards_on_table = remove :: cards_on_table; deck_rem = deck}
 
 let round_check state = if List.length (state.cards_on_table) = 5 
   then winner state
