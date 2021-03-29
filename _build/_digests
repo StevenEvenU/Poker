@@ -1,3 +1,4 @@
+<<<<<<< HEAD
 "Resource: /home/zmg24/poker/poker/deck.ml": "*R\023\211i\\\181\146ue\234?$Y\193\163"
 "Rule: ocaml dependencies mli (%=deck )": "\177\142\137}\1755n\162\177\025u\156g\021\152C"
 "Resource: /Users/stevenevenu/Desktop/cs3110-spring/cs3110-poker/poker/main.mli": "\170Qy\166Z\165.-\172ZbdY\191\171\181"
@@ -10,3 +11,10 @@
 "Resource: /home/zmg24/poker/poker/deck.mli": "{\131`o\171\214|\026L)\192\157\018\242\185G"
 "Rule: ocaml: mli -> cmi (%=table )": "\149/9\225zC\150F\223g\015\212\029\246v\240"
 "Resource: /Users/stevenevenu/Desktop/cs3110-spring/cs3110-poker/poker/deck.mli": "\133yt\130\226/9\226\005n\183^\171\255\253\188"
+=======
+"Resource: /home/zmg24/poker/poker/deck.ml": "\023ol\172n8A\237\179\127?\157<X$\023"
+"Rule: ocaml dependencies mli (%=deck )": "&@d\016?\012l\168\213\1324\188QV\247\180"
+"Rule: ocaml dependencies ml (%=deck )": "k\146}\219\170\222p\195\152\219\194\228e\145\253\247"
+"Rule: ocaml: mli -> cmi (%=deck )": "\003@\221\136 \231A\2360MBr8\142z'"
+"Resource: /home/zmg24/poker/poker/deck.mli": "\133yt\130\226/9\226\005n\183^\171\255\253\188"
+>>>>>>> f0b3a53de227c5f4bc147db64f29b4b504a4395e

@@ -1,20 +1,2 @@
 ### Starting build.
-# Target: main.mli.depends, tags: { package(ounit2), extension:mli, file:main.mli, ocaml, ocamldep, quiet, traverse }
-ocamlfind ocamldep -package ounit2 -modules main.mli > main.mli.depends
-# Target: deck.mli.depends, tags: { package(ounit2), extension:mli, file:deck.mli, ocaml, ocamldep, quiet, traverse }
-ocamlfind ocamldep -package ounit2 -modules deck.mli > deck.mli.depends
-# Target: table.mli.depends, tags: { package(ounit2), extension:mli, file:table.mli, ocaml, ocamldep, quiet, traverse }
-ocamlfind ocamldep -package ounit2 -modules table.mli > table.mli.depends
-# Target: deck.cmi, tags: { package(ounit2), byte, compile, extension:mli, file:deck.mli, interf, ocaml, quiet, traverse }
-ocamlfind ocamlc -c -package ounit2 -o deck.cmi deck.mli
-# Target: table.cmi, tags: { package(ounit2), byte, compile, extension:mli, file:table.mli, interf, ocaml, quiet, traverse }
-ocamlfind ocamlc -c -package ounit2 -o table.cmi table.mli
-# Target: main.cmi, tags: { package(ounit2), byte, compile, extension:mli, file:main.mli, interf, ocaml, quiet, traverse }
-ocamlfind ocamlc -c -package ounit2 -o main.cmi main.mli
-+ ocamlfind ocamlc -c -package ounit2 -o main.cmi main.mli
-File "main.mli", line 5, characters 16-34:
-5 | val is_raised : Table.active_state -> bool
-                    ^^^^^^^^^^^^^^^^^^
-Error: Unbound type constructor Table.active_state
-Command exited with code 2.
 # Compilation unsuccessful.
