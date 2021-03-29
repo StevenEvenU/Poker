@@ -10,7 +10,7 @@ type state = {
   mutable turn: players;
 }
 
-let table_deck = create()
+let table_deck = create
 let init_state = {users_hand = []; cpu_hand = []; cards_on_table = []; deck_rem = table_deck; turn = Player}
 
 let delegate state = shuffle state.deck_rem;
