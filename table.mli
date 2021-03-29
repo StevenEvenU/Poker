@@ -1,9 +1,10 @@
+open Deck 
+
 (** The turn type decides whether it is the computer's or the player's
 turn. *)
-type players = {
+type players =
   | Player
   | Computer
-}
 
 (** The state type is keeping track of the cards that the user and player has 
 along with keeping track was cards are on the table and how many cards are 
