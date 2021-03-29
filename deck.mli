@@ -30,7 +30,7 @@ type card
 type deck
 
 (** Creates a shuffled deck of cards and returns it*)
-val create : unit -> deck
+val create : deck
 
 (** Shuffles a deck (or smaller amount) of cards*)
 val shuffle : deck -> unit

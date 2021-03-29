@@ -2,10 +2,10 @@
 type action = Check | Call | Raise | Fold
 
 (* Checks whether someone has raised or not *)
-val is_raised : Table.active_state -> bool
+(* val is_raised : Table.active_state -> bool
 
 (* Gets the users next action *)
-val get_action : Table.active_state -> action
+val get_action : Table.active_state -> action *)
 
 (* Returns string of suit *)
 val string_of_suit : Deck.suit -> string
@@ -14,7 +14,7 @@ val string_of_suit : Deck.suit -> string
 val string_of_value : Deck.value -> string
 
 (* Returns string of card *)
-val string_of_card : Deck.card -> string
+(* val string_of_card : Deck.card -> string
 
 (* Returns string of card list *)
-val string_of_cards : Deck.card list -> string
+val string_of_cards : Deck.card list -> string *)
