@@ -12,6 +12,9 @@ default: build
 build:
 	$(OCAMLBUILD) $(OBJECTS)
 
+playable:
+	$(OCAMLBUILD) main.byte
+
 test:
 	$(OCAMLBUILD) -tag 'debug' $(TEST) && ./$(TEST) -runner sequential
 
