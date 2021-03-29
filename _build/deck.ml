@@ -58,8 +58,8 @@ let create : deck =
   done;
   deck1
 
-let shuffle = failwith "not"
+let shuffle deck = failwith "not"
 
-let remove = failwith "not"
+let remove deck = failwith "not"
 
-let size = failwith "not"
+let size deck = failwith "not"
