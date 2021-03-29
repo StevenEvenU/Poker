@@ -26,8 +26,7 @@ type card = {
 
 type deck = card option array
 
-let create_card (valu : value) (sut : suit) =
-  { suit = sut; value = valu }
+let createCard valu sut = { suit = sut; value = valu }
 
 let create_empty_helper : deck = Array.make 52 None
 
@@ -55,23 +54,12 @@ let create : deck =
       else if y mod 13 = 11 then King
       else Ace
     in
-    deck1.(y) <- Some (create_card valu sut)
+    deck1.(y) <- Some (createCard valu sut)
   done;
   deck1
 
-let shuffle = failwith "not implemented"
+let shuffle deck = failwith "not"
 
-let remove (deck1 : deck) =
-  let card1 = ref None in
-  for y = 0 to 51 do
-    if deck1.(y) = None then deck1.(y - 1) <- None
-    else card1 := deck1.(y)
-  done;
-  !card1
+let remove deck = failwith "not"
 
-let size (deck1 : deck) =
-  let len = ref 0 in
-  for y = 0 to 51 do
-    if deck1.(y) = None then () else len := !len + 1
-  done;
-  !len
+let size deck = failwith "not"
