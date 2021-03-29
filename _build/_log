@@ -1,16 +1,20 @@
 ### Starting build.
 # Target: deck.mli.depends, tags: { extension:mli, file:deck.mli, ocaml, ocamldep, quiet }
-/Users/stevenevenu/.opam/cs3110-2021sp/bin/ocamldep.opt -modules deck.mli > deck.mli.depends
+/home/zmg24/.opam/cs3110-2021sp/bin/ocamldep.opt -modules deck.mli > deck.mli.depends
 # Target: deck.cmi, tags: { byte, compile, extension:mli, file:deck.mli, interf, ocaml, quiet }
-/Users/stevenevenu/.opam/cs3110-2021sp/bin/ocamlc.opt -c -o deck.cmi deck.mli
+/home/zmg24/.opam/cs3110-2021sp/bin/ocamlc.opt -c -o deck.cmi deck.mli
 # Target: deck.ml.depends, tags: { extension:ml, file:deck.ml, ocaml, ocamldep, quiet }
-/Users/stevenevenu/.opam/cs3110-2021sp/bin/ocamldep.opt -modules deck.ml > deck.ml.depends
+/home/zmg24/.opam/cs3110-2021sp/bin/ocamldep.opt -modules deck.ml > deck.ml.depends
 # Target: deck.cmo, tags: { byte, compile, extension:cmo, extension:ml, file:deck.cmo, file:deck.ml, implem, ocaml, quiet }
-/Users/stevenevenu/.opam/cs3110-2021sp/bin/ocamlc.opt -c -o deck.cmo deck.ml
-+ /Users/stevenevenu/.opam/cs3110-2021sp/bin/ocamlc.opt -c -o deck.cmo deck.ml
-File "deck.ml", line 21, characters 25-35:
-21 | let create = let card1 = createCard "Jack" "Hearts" in Array.make 52 card1
-                              ^^^^^^^^^^
-Error: Unbound value createCard
+/home/zmg24/.opam/cs3110-2021sp/bin/ocamlc.opt -c -o deck.cmo deck.ml
++ /home/zmg24/.opam/cs3110-2021sp/bin/ocamlc.opt -c -o deck.cmo deck.ml
+File "deck.ml", line 1:
+Error: The implementation deck.ml does not match the interface deck.cmi:
+       Values do not match:
+         val create : deck
+       is not included in
+         val create : unit -> deck
+       File "deck.mli", line 33, characters 0-25: Expected declaration
+       File "deck.ml", line 33, characters 4-10: Actual declaration
 Command exited with code 2.
 # Compilation unsuccessful.
