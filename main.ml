@@ -63,7 +63,8 @@ let rec get_action state =
 
 
   let output_state state = 
-    state.cards_on_table
+    if state.cards_on_table <> []
+    then print_string "The current cards on the table are: "
 
   let main = 
     (* Get Number of players *)
