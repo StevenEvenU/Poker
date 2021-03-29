@@ -13,20 +13,20 @@ type state = {
   mutable users_hand : Deck.card list;
   mutable cpu_hand : Deck.card list;
   mutable cards_on_table : Deck.card list;
-  mutable deck_rem : Deck.card array;
+  mutable deck_rem : Deck.deck;
   mutable turn : players;
 }
 
 (** This will delegate the cards amongst the players, thus changing the
     state. *)
-val delegate : state -> state
+val delegate : state -> unit
 
 (** This will deal the first three cards on the table. *)
-val deal : state -> state
+val deal : state -> unit
 
 (** This will deal the next card on the table. *)
-val flop : state -> state
+val flop : state -> unit
 
 (** This will check who won when the size of the state.cards_on_table is
     equal to 5. *)
-val round_check : state -> players
+val round_check : state -> unit
