@@ -196,6 +196,23 @@ let rec four_kind
       else four_kind (h2 :: h3 :: h4 :: t) user value
   | _ -> { player = user; rank = 0; value = 0 }
 
-let straight_flush = failwith "Not Implemented"
+let rec straight_flush
+    (cards : card_check list)
+    (user : Table.players)
+    (value : int) : win_record =
+  match strght_hand_sort_val cards with
+  | h1 :: h2 :: h3 :: h4 :: h5 :: t ->
+      if
+        h1.int_value - 1 = h2.int_value
+        && h2.int_value - 1 = h3.int_value
+        && h3.int_value - 1 = h4.int_value
+        && h4.int_value - 1 = h5.int_value
+        && h1.string_suit = h2.string_suit
+        && h2.string_suit = h3.string_suit
+        && h3.string_suit = h4.string_suit
+        && h4.string_suit = h5.string_suit
+      then { player = user; rank = 9; value = h1.int_value }
+      else straight_flush (h2 :: h3 :: h4 :: h5 :: t) user value
+  | _ -> { player = user; rank = 0; value = 0 }
 
 let royal_flush = failwith "Not Implemented"
