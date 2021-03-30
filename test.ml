@@ -136,6 +136,14 @@ let deck_test =
       (remove_top create);
   ]
 
-let suite = "test suite for A2" >::: List.flatten [ deck_test ]
+let table_test = []
+
+let compare_test = []
+
+let main_test = []
+
+let suite =
+  "test suite for A2"
+  >::: List.flatten [ deck_test; table_test; compare_test; main_test ]
 
 let _ = run_test_tt_main suite
