@@ -4,6 +4,7 @@ open Compare
 open Main
 open Table
 
+(** converts card option to string*)
 let string_of_card_option card1 =
   match card1 with None -> "" | Some x -> string_of_card x
 
@@ -47,9 +48,8 @@ let total_compare (fst : card option) (snd : card option) =
   compare fst_num snd_num
 
 (** [deck_test] constructs an OUnit test named [name] that asserts with
-    52 the size of a deck made using [deck1] and the uniqueness of cards
-    in it. *)
-let deck_test (name : string) (deck1 : deck) : test =
+    52 the size of a deck [deck1] and the uniqueness of cards in it. *)
+let full_deck_test (name : string) (deck1 : deck) : test =
   name >:: fun _ ->
   assert_equal 52 (size (List.sort_uniq total_compare deck1));
   assert_equal false
@@ -85,17 +85,32 @@ let create_card_test
   name >:: fun _ ->
   assert_equal expected (string_of_card (create_card valu sut))
 
+let rec top_card_helper (deck1 : deck) (times : int) =
+  if times >= 2 then top_card_helper (remove_top deck1) (times - 1)
+  else top_card deck1
+
 (** [top_card_test] constructs an OUnit test named [name] that asserts
-    the quality of [top_card deck1] with [expected]. *)
-let top_card_test (name : string) (expected : string) (deck1 : deck) :
-    test =
+    the quality of [top_card deck1] with [expected] after using
+    [remove_top deck1] to remove [times] numbers of cards. *)
+let top_card_remove_card_test
+    (name : string)
+    (expected : string)
+    (deck1 : deck)
+    (times : int) : test =
   name >:: fun _ ->
-  assert_equal expected (string_of_card_option (top_card deck1))
+  assert_equal expected
+    (string_of_card_option (top_card_helper deck1 (times + 1)))
+
+(** [deck_test] constructs an OUnit test named [name] that asserts with
+    52 the size of a deck made using [deck1] and the uniqueness of cards
+    in it. *)
+let size_test (name : string) (expected : int) (deck1 : deck) : test =
+  name >:: fun _ -> assert_equal expected (size deck1)
 
 let deck_test =
   [
-    deck_test "Create unshuffled deck" create;
-    deck_test "Create a shuffled deck" (shuffle create 7);
+    full_deck_test "Create unshuffled deck" create;
+    full_deck_test "Create a shuffled deck" (shuffle create 7);
     decks_unequal_test "See if two shuffled decks are different"
       (shuffle create 135) (shuffle create 2349);
     (*NOTE: if shuffle is truly random, there is approximately a 1/52!
@@ -107,8 +122,18 @@ let deck_test =
       Jack Hearts;
     create_card_test "See if 7 of Clubs is a 7 of Clubs" "7♣" Seven
       Clubs;
-    top_card_test "See if top of unshuffled deck is correct" "A♣"
-      create;
+    top_card_remove_card_test "See if top of unshuffled deck is correct"
+      "A♣" create 0;
+    top_card_remove_card_test
+      "See if a few down of unshuffled deck is correct" "J♣" create 3;
+    top_card_remove_card_test
+      "See if a last in unshuffled deck is correct" "2♥" create 51;
+    top_card_remove_card_test
+      "See if a removing all from unshuffled deck is correct" "" create
+      52;
+    size_test "see if full deck is 52" 52 create;
+    size_test "see if one removed from deck is 51" 51
+      (remove_top create);
   ]
 
 let suite = "test suite for A2" >::: List.flatten [ deck_test ]
