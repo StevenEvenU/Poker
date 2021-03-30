@@ -8,7 +8,7 @@ type players =
 
 type state = {
   mutable users_hand : Deck.card list;
-  mutable cpu_hand : Deck.card list;
+  mutable cpu_hands : Deck.card list array;
   mutable cards_on_table : Deck.card list;
   mutable deck_rem : Deck.deck;
   mutable turn : players;
@@ -16,25 +16,27 @@ type state = {
 
 let table_deck = create
 
-let init_state =
+let init_state (num : int) =
   {
     users_hand = [];
-    cpu_hand = [];
+    cpu_hands = Array.make num [];
     cards_on_table = [];
     deck_rem = table_deck;
     turn = Player;
   }
 
-let active_state = init_state
+let active_state (num : int) = init_state num
 
 let delegate state =
   state.deck_rem <- shuffle state.deck_rem;
-  for i = 0 to 1 do
-    state.cpu_hand <-
-      (match top_card state.deck_rem with
-      | Some card -> card :: state.cpu_hand
-      | none -> state.cpu_hand);
-    state.deck_rem <- remove_top state.deck_rem
+  for j = 0 to Array.length state.cpu_hands - 1 do
+    for i = 0 to 1 do
+      state.cpu_hands.(j) <-
+        (match top_card state.deck_rem with
+        | Some card -> card :: state.cpu_hands.(j)
+        | none -> state.cpu_hands.(j));
+      state.deck_rem <- remove_top state.deck_rem
+    done
   done;
   for i = 0 to 1 do
     state.users_hand <-
