@@ -46,7 +46,7 @@ let rec hand_converter acc (cards : Deck.card list) =
            string_suit = string_of_suit h.suit;
            int_value = int_of_val h.value;
          }
-        :: acc)
+         :: acc)
         t
 
 let card_compare_int fst_card snd_card =
@@ -154,9 +154,25 @@ let rec flush
       then { player = user; rank = 6; value = 0 }
       else { player = user; rank = 0; value = 0 }
 
-let full_house = failwith "Not Implemented"
+let full_house
+    (cards : card_check list)
+    (user : Table.players)
+    (value : int) : win_record =
+  failwith "Not implemented"
 
-let four_kind = failwith "Not Implemented"
+let rec four_kind
+    (cards : card_check list)
+    (user : Table.players)
+    (value : int) : win_record =
+  match hand_sort_int cards with
+  | h1 :: h2 :: h3 :: h4 :: t ->
+      if
+        h1.int_value = h2.int_value
+        && h2.int_value = h3.int_value
+        && h3.int_value = h4.int_value
+      then { player = user; rank = 8; value = h1.int_value }
+      else four_kind (h2 :: h3 :: h4 :: t) user value
+  | _ -> { player = user; rank = 0; value = 0 }
 
 let straight_flush = failwith "Not Implemented"
 
