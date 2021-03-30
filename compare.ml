@@ -124,7 +124,17 @@ let rec straight
       else straight (h2 :: h3 :: h4 :: h5 :: t) user value
   | _ -> { player = user; rank = 0; value = 0 }
 
-let flush = failwith "Not Implemented"
+let rec flush (cards: card_check list) (user: Table.players) (value: int) (spade_count: int) (heart_count: int) (diamond_count: int) (club_count: int): win_record =
+    match hand_sort_int cards with
+    (** FIND THE HIGHEST VALUE IN THE FLUSH *)
+    | h :: t -> if h.string_suit = "♠" 
+      then flush t user value (spade_count + 1) (heart_count) (diamond_count) (club_count) 
+      else if h.string_suit = "♥" 
+      then flush t user value (spade_count) (heart_count + 1) (diamond_count) (club_count) 
+      else if h.string_suit = "♦" 
+      then flush t user value (spade_count) (heart_count) (diamond_count + 1) (club_count) 
+      else flush t user value (spade_count) (heart_count) (diamond_count + 1) (club_count)
+    | [] -> if (spade_count >= 5 || heart_count >= 5 || diamond_count >= 5 || club_count >= 5) then { player = user; rank = 6; value = 0 } else { player = user; rank = 0; value = 0 }
 
 let full_house = failwith "Not Implemented"
 
