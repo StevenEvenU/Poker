@@ -215,4 +215,18 @@ let rec straight_flush
       else straight_flush (h2 :: h3 :: h4 :: h5 :: t) user value
   | _ -> { player = user; rank = 0; value = 0 }
 
-let royal_flush = failwith "Not Implemented"
+let royal_flush
+    (cards : card_check list)
+    (user : Table.players)
+    (value : int) : win_record =
+  match strght_hand_sort_val cards with
+  | h1 :: h2 :: h3 :: h4 :: h5 :: t ->
+      if
+        h1.int_value = 14 && h2.int_value = 13 && h3.int_value = 12
+        && h4.int_value = 11 && h5.int_value = 10
+        && h1.string_suit = "♠" && h2.string_suit = "♠"
+        && h3.string_suit = "♠" && h4.string_suit = "♠"
+        && h5.string_suit = "♠"
+      then { player = user; rank = 10; value = 14 }
+      else { player = user; rank = 0; value = 0 }
+  | _ -> { player = user; rank = 0; value = 0 }
