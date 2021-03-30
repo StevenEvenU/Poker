@@ -2,6 +2,7 @@ open OUnit2
 open Deck
 open Compare
 open Main
+open Table
 
 (** converts card option list to string*)
 let rec string_of_card_options str cards =
@@ -63,23 +64,36 @@ let rec deck_unequal_helper deck1 deck2 (acc : int) =
 (** [shuffle_random_test] constructs an OUnit test named [name] that
     asserts with the uniqueness of the order of cards in two shuffled
     decks. *)
-let deck_unequal_test (name : string) (deck1 : deck) (deck2 : deck) :
+let decks_unequal_test (name : string) (deck1 : deck) (deck2 : deck) :
     test =
   name >:: fun _ ->
   assert_equal
     (string_of_card_options "" deck1)
     (string_of_card_options "" deck2)
 
+let create_card_test
+    (name : string)
+    (expected : string)
+    (valu : value)
+    (sut : suit) : test =
+  name >:: fun _ ->
+  assert_equal expected (string_of_card (create_card valu sut))
+
 let deck_test =
   [
     deck_test "Create unshuffled deck" create;
     deck_test "Create a shuffled decks" (shuffle create 7);
-    deck_unequal_test "See if two shuffled decks are different"
-      (shuffle create 10) (shuffle create 35);
+    decks_unequal_test "See if two shuffled decks are different"
+      (shuffle create 135) (shuffle create 2349);
     (*NOTE: if shuffle is truly random, there is approximately a 1/52!
-      probability of this failing even if correct. This is negligable.*)
-    deck_unequal_test "See if two unshuffled decks are the same" create
+      probability of this failing even if correct. Random module is
+      pseudo-random, but the chance is still negligable.*)
+    decks_unequal_test "See if two unshuffled decks are the same" create
       create;
+    create_card_test "See if Jack of Hearts is a Jack of Hearts" "J♥"
+      Jack Hearts;
+    create_card_test "See if 7 of Clubs is a 7 of Clubs" "7♣" Seven
+      Clubs;
   ]
 
 let suite = "test suite for A2" >::: List.flatten [ deck_test ]
