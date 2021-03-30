@@ -107,6 +107,7 @@ let top_card_remove_card_test
 let size_test (name : string) (expected : int) (deck1 : deck) : test =
   name >:: fun _ -> assert_equal expected (size deck1)
 
+(* *******END HELPER FUNCTIONS********* *)
 let deck_test =
   [
     full_deck_test "Create unshuffled deck" create;
