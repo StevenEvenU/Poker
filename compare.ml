@@ -124,7 +124,7 @@ let rec straight
       else straight (h2 :: h3 :: h4 :: h5 :: t) user value
   | _ -> { player = user; rank = 0; value = 0 }
 
-let rec flush
+let rec flush_helper
     (cards : card_check list)
     (user : Table.players)
     (value : int)
@@ -136,16 +136,16 @@ let rec flush
   (* FIND THE HIGHEST VALUE IN THE FLUSH *)
   | h :: t ->
       if h.string_suit = "♠" then
-        flush t user value (spade_count + 1) heart_count diamond_count
-          club_count
+        flush_helper t user value (spade_count + 1) heart_count
+          diamond_count club_count
       else if h.string_suit = "♥" then
-        flush t user value spade_count (heart_count + 1) diamond_count
-          club_count
+        flush_helper t user value spade_count (heart_count + 1)
+          diamond_count club_count
       else if h.string_suit = "♦" then
-        flush t user value spade_count heart_count (diamond_count + 1)
-          club_count
+        flush_helper t user value spade_count heart_count
+          (diamond_count + 1) club_count
       else
-        flush t user value spade_count heart_count diamond_count
+        flush_helper t user value spade_count heart_count diamond_count
           (club_count + 1)
   | [] ->
       if
@@ -153,6 +153,16 @@ let rec flush
         || club_count >= 5
       then { player = user; rank = 6; value = 0 }
       else { player = user; rank = 0; value = 0 }
+
+let flush
+    (cards : card_check list)
+    (user : Table.players)
+    (value : int)
+    (spade_count : int)
+    (heart_count : int)
+    (diamond_count : int)
+    (club_count : int) : win_record =
+  flush_helper cards user value 0 0 0 0
 
 let full_house
     (cards : card_check list)
