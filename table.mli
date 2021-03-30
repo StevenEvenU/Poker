@@ -11,14 +11,15 @@ type players =
     how many cards are remaining in the deck. *)
 type state = {
   mutable users_hand : Deck.card list;
-  mutable cpu_hand : Deck.card list;
+  mutable cpu_hands : Deck.card list array;
   mutable cards_on_table : Deck.card list;
   mutable deck_rem : Deck.deck;
   mutable turn : players;
 }
 
-(** The active state of a game *)
-val active_state : state
+(** The active state of a game. It is inputted the number of computer
+    players. *)
+val active_state : int -> state
 
 (** This will delegate the cards amongst the players, thus changing the
     state. *)
