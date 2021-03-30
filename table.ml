@@ -28,7 +28,8 @@ let init_state (num : int) =
 let active_state (num : int) = init_state num
 
 let delegate state =
-  state.deck_rem <- shuffle state.deck_rem 6 (*MAKE BETTER RANDOM SEED*);
+  Random.self_init ();
+  state.deck_rem <- shuffle state.deck_rem (Random.int 100000);
   for j = 0 to Array.length state.cpu_hands - 1 do
     for i = 0 to 1 do
       state.cpu_hands.(j) <-
