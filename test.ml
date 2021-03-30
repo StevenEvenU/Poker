@@ -4,6 +4,9 @@ open Compare
 open Main
 open Table
 
+let string_of_card_option card1 =
+  match card1 with None -> "" | Some x -> string_of_card x
+
 (** converts card option list to string*)
 let rec string_of_card_options str cards =
   match cards with
@@ -61,9 +64,9 @@ let rec deck_unequal_helper deck1 deck2 (acc : int) =
       else deck_unequal_helper t2 t2 acc
   | _, _ -> 100
 
-(** [shuffle_random_test] constructs an OUnit test named [name] that
-    asserts with the uniqueness of the order of cards in two shuffled
-    decks. *)
+(** [decks_unequal_test] constructs an OUnit test named [name] that
+    asserts with the uniqueness of the order of cards in [deck1] and
+    [deck2]. *)
 let decks_unequal_test (name : string) (deck1 : deck) (deck2 : deck) :
     test =
   name >:: fun _ ->
@@ -71,6 +74,9 @@ let decks_unequal_test (name : string) (deck1 : deck) (deck2 : deck) :
     (string_of_card_options "" deck1)
     (string_of_card_options "" deck2)
 
+(** [create_card_test] constructs an OUnit test named [name] that
+    asserts with the uniqueness of the order of cards in two shuffled
+    decks. *)
 let create_card_test
     (name : string)
     (expected : string)
@@ -79,10 +85,17 @@ let create_card_test
   name >:: fun _ ->
   assert_equal expected (string_of_card (create_card valu sut))
 
+(** [top_card_test] constructs an OUnit test named [name] that asserts
+    the quality of [top_card deck1] with [expected]. *)
+let top_card_test (name : string) (expected : string) (deck1 : deck) :
+    test =
+  name >:: fun _ ->
+  assert_equal expected (string_of_card_option (top_card deck1))
+
 let deck_test =
   [
     deck_test "Create unshuffled deck" create;
-    deck_test "Create a shuffled decks" (shuffle create 7);
+    deck_test "Create a shuffled deck" (shuffle create 7);
     decks_unequal_test "See if two shuffled decks are different"
       (shuffle create 135) (shuffle create 2349);
     (*NOTE: if shuffle is truly random, there is approximately a 1/52!
@@ -94,6 +107,8 @@ let deck_test =
       Jack Hearts;
     create_card_test "See if 7 of Clubs is a 7 of Clubs" "7♣" Seven
       Clubs;
+    top_card_test "See if top of unshuffled deck is correct" "A♣"
+      create;
   ]
 
 let suite = "test suite for A2" >::: List.flatten [ deck_test ]
