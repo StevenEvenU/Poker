@@ -39,7 +39,7 @@ val create_card : value -> suit -> card
 val create : deck
 
 (** Shuffles a deck of cards*)
-val shuffle : deck -> deck
+val shuffle : deck -> int -> deck
 
 (** Gives the top card from the deck*)
 val top_card : deck -> card option
