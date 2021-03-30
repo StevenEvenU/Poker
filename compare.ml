@@ -49,17 +49,23 @@ let rec hand_converter acc (cards : Deck.card list) =
          :: acc)
         t
 
-let card_compare fst_card snd_card =
+let card_compare_int fst_card snd_card =
   compare fst_card.int_value snd_card.int_value
 
-let hand_sort (cards : card_check list) =
-  List.rev (List.sort card_compare cards)
+let hand_sort_int (cards : card_check list) =
+  List.rev (List.sort card_compare_int cards)
+
+let card_compare_str fst_card snd_card =
+  compare fst_card.string_suit snd_card.string_suit
+
+let hand_sort_str (cards : card_check list) =
+  List.rev (List.sort card_compare_str cards)
 
 exception GameNotOver
 
 let high_card (cards : card_check list) (user : Table.players) :
     win_record =
-  match hand_sort cards with
+  match hand_sort_int cards with
   | [] -> raise GameNotOver
   | h :: t -> { player = user; rank = 1; value = h.int_value }
 
@@ -67,7 +73,7 @@ let rec one_pair
     (cards : card_check list)
     (user : Table.players)
     (value : int) : win_record =
-  match hand_sort cards with
+  match hand_sort_int cards with
   | h1 :: h2 :: t ->
       if h1.int_value = h2.int_value then
         { player = user; rank = 2; value = h1.int_value }
@@ -75,7 +81,7 @@ let rec one_pair
   | _ -> { player = user; rank = 0; value = 0 }
 
 let rec snd_pair_check pair cards user value =
-  match hand_sort cards with
+  match hand_sort_int cards with
   | h1 :: h2 :: t ->
       if h1.int_value = h2.int_value && pair.value != h1.int_value then
         { player = user; rank = 3; value = h1.int_value }
@@ -93,13 +99,37 @@ let rec three_kind
     (cards : card_check list)
     (user : Table.players)
     (value : int) : win_record =
-  match hand_sort cards with
+  match hand_sort_int cards with
   | h1 :: h2 :: h3 :: t ->
       if h1.int_value = h2.int_value && h2.int_value = h3.int_value then
         { player = user; rank = 4; value = h1.int_value }
       else three_kind (h2 :: h3 :: t) user value
   | _ -> { player = user; rank = 0; value = 0 }
 
-(* let royal_flush_check pers_hand table = let new_card_list =
-   hand_converter [] (total_hand pers_hand table) in let rec check =
-   match new_card_list with | h -> *)
+let strght_hand_sort_val (cards : card_check list) =
+  List.rev (List.sort_uniq card_compare_int cards)
+
+let rec straight
+    (cards : card_check list)
+    (user : Table.players)
+    (value : int) : win_record =
+  match strght_hand_sort_val cards with
+  | h1 :: h2 :: h3 :: h4 :: h5 :: t ->
+      if
+        h1.int_value - 1 = h2.int_value
+        && h2.int_value - 1 = h3.int_value
+        && h3.int_value - 1 = h4.int_value
+        && h4.int_value - 1 = h5.int_value
+      then { player = user; rank = 5; value = h1.int_value }
+      else straight (h2 :: h3 :: h4 :: h5 :: t) user value
+  | _ -> { player = user; rank = 0; value = 0 }
+
+let flush = failwith "Not Implemented"
+
+let full_house = failwith "Not Implemented"
+
+let four_kind = failwith "Not Implemented"
+
+let straight_flush = failwith "Not Implemented"
+
+let royal_flush = failwith "Not Implemented"
