@@ -55,28 +55,32 @@ let string_of_value value =
   | King -> "K"
   | Ace -> "A"
 
-let string_of_card card = 
-  (string_of_value (card.value)) ^ string_of_suit card.suit
+let string_of_card card =
+  string_of_value card.value ^ string_of_suit card.suit
 
 let rec string_of_cards_rec str cards =
-  match cards with 
-  | [] -> str 
-  | h::[] -> str ^" "^ string_of_card h 
-  | h::t -> let s = str ^" "^ string_of_card h in (string_of_cards_rec s t)
+  match cards with
+  | [] -> str
+  | [ h ] -> str ^ " " ^ string_of_card h
+  | h :: t ->
+      let s = str ^ " " ^ string_of_card h in
+      string_of_cards_rec s t
 
-let string_of_cards cards = 
-  string_of_cards_rec "" cards
+let string_of_cards cards = string_of_cards_rec "" cards
 
-let print_hand (state : Table.state) = 
+let print_hand (state : Table.state) =
   let hand = state.users_hand in
-  if hand <> []
-    then let s = string_of_cards hand in print_string ("Your hand is: \n " ^ s ^"\n")
-    else print_string ("Your hand is empty. \n")
+  if hand <> [] then
+    let s = string_of_cards hand in
+    print_string ("Your hand is: \n " ^ s ^ "\n")
+  else print_string "Your hand is empty. \n"
 
 let print_event (state : Table.state) (event : string) =
-  print_string ("After the " ^ event ^ " the cards are now: \n" ^
-  (string_of_cards state.cards_on_table) ^ "\n")
-  
+  print_string
+    ("After the " ^ event ^ " the cards are now: \n"
+    ^ string_of_cards state.cards_on_table
+    ^ "\n")
+
 let main =
   (* Get Number of players *)
   print_string
@@ -85,7 +89,7 @@ let main =
   print_int num_players;
   print_string "\n";
 
-  let state = active_state in
+  let state = active_state num_players in
   delegate state;
   print_hand state;
   (* First round of betting will occur here *)
@@ -95,6 +99,7 @@ let main =
   flop state;
   print_event state "Turn";
   (* Third round of betting will occur here *)
-  flop state; 
-  print_event state "River";
-  (* Results *)
+  flop state;
+  print_event state "River"
+
+(* Results *)
