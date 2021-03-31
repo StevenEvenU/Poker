@@ -94,10 +94,15 @@ let print_event (state : Table.state) (event : string) =
     ^ string_of_cards state.cards_on_table
     ^ "\n")
 
-let print_win_record (record : win_record) = 
-  print_string ((string_of_player record.player) ^ " had a " ^
-  (hand_of_rank record.rank) ^"\n"
-  )
+let print_win_record (records : win_record list) =
+  let rec print_win_rec = function
+    []->()
+    |h::t -> 
+    print_string ((string_of_player h.player) ^ " had a " 
+    ^ (hand_of_rank h.rank) ^"\n"); print_win_rec t
+    in
+  print_win_rec records
+
 let main =
   (* Get Number of players *)
   print_string
