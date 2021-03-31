@@ -2,10 +2,6 @@ open Deck
 open Compare
 open State
 
-let string_of_player = function
-  | Player -> "Player"
-  | Computer -> "Opponent"
-
 let table_deck = create
 
 let init_state (num : int) =
@@ -55,11 +51,12 @@ let flop state =
     | none -> state.cards_on_table);
   state.deck_rem <- remove_top state.deck_rem
 
-let winner (state : state) =
+let winner (state : state) : win_record =
   let best_player = find_best_hand state Player in
   let best_computers = find_best_hand state Computer in
   let hands = List.append best_player best_computers in
-  List.hd hands  
+  let sorted = List.sort (fun x y -> if x.value > y.value then 1 else -1) (List.sort (fun x y -> if x.rank > y.rank then 1 else -1) hands) in
+  List.hd sorted
   
 (* let round_check state =
   if List.length state.cards_on_table = 5 then winner state

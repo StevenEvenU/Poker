@@ -4,6 +4,10 @@ type players =
   | Player
   | Computer
 
+let string_of_player = function
+  | Player -> "You"
+  | Computer -> "Opponent"
+
 (* Game state *)
 type state = {
   mutable users_hand : Deck.card list;

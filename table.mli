@@ -1,8 +1,5 @@
 open Deck
 
-(** Returns string of a players type  *)
-val string_of_player : State.players -> string
-
 (** The active state of a game. It is inputted the number of computer
     players. *)
 val active_state : int -> State.state

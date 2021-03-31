@@ -92,11 +92,10 @@ let print_win_record (records : win_record list) =
   let rec print_win_rec = function
     []->()
     |h::t -> 
-    print_string ((string_of_player h.player) ^ " had a " 
+    print_string ((string_of_player h.player) ^ " with a " 
     ^ (hand_of_rank h.rank) ^"\n"); print_win_rec t
     in
   print_win_rec records
-
 let main =
   (* Get Number of players *)
   print_string
@@ -114,9 +113,12 @@ let main =
   (* Third round of betting will occur here *)
   flop state;
   print_event state "River";
-  print_win_record (find_best_hand state Player);
-  print_win_record (find_best_hand state Computer);
+  print_string "You have a ";
+  (hand_of_rank (List.hd (find_best_hand state Player)).rank) ^ "\n" |> print_string;
+  print_string "The WINNER is....\n";
+  print_win_record [winner state];
   print_string "THE FOLLOWING IS FOR DEVELOPMENT ONLY\n";
+  print_win_record (find_best_hand state Computer);
   print_hands state Computer;
 
 (* Results *)

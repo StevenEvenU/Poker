@@ -3,6 +3,9 @@ type players =
 | Player
 | Computer
 
+(** Returns string of a players type  *)
+val string_of_player : players -> string
+
 (** The state type is keeping track of the cards that the user and
     player has along with keeping track was cards are on the table and
     how many cards are remaining in the deck. *)
