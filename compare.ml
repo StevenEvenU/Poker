@@ -184,6 +184,26 @@ let rec full_house
       else full_house (h2 :: h3 :: t) user
   | _ -> { player = user; rank = 0; value = 0 }
 
+(* let better_full_house 
+  (cards : card_check list)
+  (user : players) : win_record =
+  let seen  = [] in
+  let rec find (card : card_check) list = 
+    match list with
+    | [] -> -1
+    | (k, v)::t -> 
+      if card.int_value = k.int_value then v 
+      else lookup value t
+  in   
+  let rec loop cards (seen: tuple list) = 
+    match cards with
+    | [] -> seen
+    |h::t -> if 0 = find h seen 
+      then loop t acc::(h, 1)
+      else List.map (fun (k,v) -> if k=h then (k, v+1) else (k,v))
+  in
+  let quantity = loop cards  *)
+
 let rec four_kind
     (cards : card_check list)
     (user : players) : win_record =
