@@ -1,17 +1,15 @@
 (** CS 3110 Spring 2021 Final Project
 
-    @author Elias Little (Ejl242) 
-    @author Steven Urdaneta (Sau9)
-    @author Zach Gelfond (Zmg24)
-    
-*)
+    @author Elias Little (ejl242)
+    @author Steven Urdaneta (sau9)
+    @author Zach Gelfond (zmg24) *)
 
 (************************************************************ 
 
    Academic Integrity Statement
 
-   I, the person named in the @author comment above, have fully reviewed the
-   course academic integrity policies.  I have adhered to those policies in
+   We, the people named in the @author comment above, have fully reviewed the
+   course academic integrity policies.  We have adhered to those policies in
    solving the assignment.
 
    The policies do permit some limited collaboration among students currently
@@ -31,5 +29,7 @@
 
 (** [hours_worked] is the number of hours you worked on this assignment.*)
 val hours_worked_Elias : int
+
 val hours_worked_Steven : int
+
 val hours_worked_Zach : int
