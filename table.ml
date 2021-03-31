@@ -55,7 +55,14 @@ let winner (state : state) : win_record =
   let best_player = find_best_hand state Player in
   let best_computers = find_best_hand state Computer in
   let hands = List.append best_player best_computers in
-  let sorted = (List.sort (fun x y -> if x.rank > y.rank then -1 else 1) hands) in
+  let sf x y = if x.rank > y.rank then -1 
+    else if x.rank = y.rank then ( 
+    if x.value > y.value then -1
+    else if x.value = y.value then 0 
+    else 1 )
+    else 1
+  in
+  let sorted = (List.sort sf hands) in
   (* List.sort (fun x y -> if x.value > y.value then 1 else -1)  *)
   List.hd sorted
   
