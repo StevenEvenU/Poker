@@ -70,12 +70,21 @@ let rec string_of_cards_rec str cards =
 let string_of_cards cards = string_of_cards_rec "" cards
 
 (* Given a state. This prints the user's hand *)
-let print_hand (state : Table.state) =
-  let hand = state.users_hand in
+let print_hand hand =
   if hand <> [] then
     let s = string_of_cards hand in
     print_string ("Your hand is: \n " ^ s ^ "\n")
   else print_string "Your hand is empty. \n"
+
+let print_hands (state : Table.state) (player : Table.players) =
+  if player = Player 
+  then print_hand state.users_hand 
+  else 
+    let rec print_hand_rec = function
+      | [] -> ()
+      | h::t -> print_hand h; print_hand_rec t
+    in
+    print_hand_rec (Array.to_list state.cpu_hands)
 
 
 (* Given a state and name of an event  *)
@@ -101,7 +110,7 @@ let main =
   let num_players = read_int () in
   let state = active_state num_players in
   delegate state;
-  print_hand state;
+  print_hands state Player;
   (* First round of betting will occur here *)
   deal state;
   print_event state "Flop";
@@ -113,5 +122,7 @@ let main =
   print_event state "River";
   print_win_record (find_best_hand state Player);
   print_win_record (find_best_hand state Computer);
+  print_string "THE FOLLOWING IS FOR DEVELOPMENT ONLY\n";
+  print_hands state Computer;
 
 (* Results *)
