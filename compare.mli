@@ -22,4 +22,4 @@ val hand_sort_int : card_check list -> card_check list
 val best_hand : card_check list -> Table.players -> win_record
 
 (** Returns win_record of the best hand a player has. *)
-val find_best_hand : Table.state -> Table.players -> win_record list
+val find_best_hand : Table.state -> Table.players -> win_record
