@@ -50,7 +50,7 @@ type card_check = {
   int_value : int;
 }
 
-let rec hand_converter acc (cards : Deck.card list) =
+let rec hand_converter acc (cards : Deck.card list) : card_check list =
   match cards with
   | [] -> acc
   | h :: t ->
@@ -251,8 +251,20 @@ let best_hand (cards : card_check list) (user : Table.players) :
                   if result.rank = 2 then result
                   else high_card cards user
 
-let find_best_hand (state : Table.state) player : win_record =
-  best_hand
-    (hand_converter []
-       (total_hand state.users_hand state.cards_on_table))
-    player
+let find_best_hand (state : Table.state) (player : Table.players) :
+    win_record list =
+  let f hand person =
+    best_hand
+      (hand_converter [] (total_hand hand state.cards_on_table))
+      person
+  in
+  if player = Table.Player then [ f state.users_hand player ]
+  else
+    let ( -- ) i j =
+      let rec aux n acc =
+        if n < i then acc else aux (n - 1) (n :: acc)
+      in
+      aux j []
+    in
+    let hands = 0 -- (Array.length state.cpu_hands - 1) in
+    List.map (fun x -> f (Array.get state.cpu_hands x) Computer) hands
