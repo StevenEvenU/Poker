@@ -1,6 +1,7 @@
 open Deck
 open Table
 open Compare
+open State
 
 (** Types of user action *)
 type action =
@@ -33,13 +34,6 @@ let rec get_action state =
         print_string "Not Valid. Try again";
         get_action state)
 
-let string_of_suit suit =
-  match suit with
-  | Spades -> "♠"
-  | Hearts -> "♥"
-  | Diamonds -> "♦"
-  | Clubs -> "♣"
-
 let string_of_value value =
   match value with
   | Two -> "2"
@@ -70,25 +64,26 @@ let rec string_of_cards_rec str cards =
 let string_of_cards cards = string_of_cards_rec "" cards
 
 (* Given a state. This prints the user's hand *)
-let print_hand hand =
+let print_hand hand player =
+  let pronoun = if player = Player then "Your " else "Their " in
   if hand <> [] then
     let s = string_of_cards hand in
-    print_string ("Your hand is: \n " ^ s ^ "\n")
-  else print_string "Your hand is empty. \n"
+    print_string (pronoun ^ "hand is: \n " ^ s ^ "\n")
+  else print_string (pronoun ^ "hand is empty. \n")
 
-let print_hands (state : Table.state) (player : Table.players) =
+let print_hands (state : State.state) (player : State.players) =
   if player = Player 
-  then print_hand state.users_hand 
+  then print_hand state.users_hand Player
   else 
     let rec print_hand_rec = function
       | [] -> ()
-      | h::t -> print_hand h; print_hand_rec t
+      | h::t -> print_hand h Computer; print_hand_rec t
     in
     print_hand_rec (Array.to_list state.cpu_hands)
 
 
 (* Given a state and name of an event  *)
-let print_event (state : Table.state) (event : string) =
+let print_event (state : State.state) (event : string) =
   print_string
     ("After the " ^ event ^ " the cards are now: \n"
     ^ string_of_cards state.cards_on_table
@@ -98,11 +93,10 @@ let print_win_record (records : win_record list) =
   let rec print_win_rec = function
     []->()
     |h::t -> 
-    print_string ((string_of_player h.player) ^ " had a " 
+    print_string ((string_of_player h.player) ^ " with a " 
     ^ (hand_of_rank h.rank) ^"\n"); print_win_rec t
     in
   print_win_rec records
-
 let main =
   (* Get Number of players *)
   print_string
@@ -120,9 +114,12 @@ let main =
   (* Third round of betting will occur here *)
   flop state;
   print_event state "River";
-  print_win_record (find_best_hand state Player);
-  print_win_record (find_best_hand state Computer);
+  print_string "You have a ";
+  (hand_of_rank (List.hd (find_best_hand state Player)).rank) ^ "\n" |> print_string;
+  print_string "The WINNER is....\n";
+  print_win_record [winner state];
   print_string "THE FOLLOWING IS FOR DEVELOPMENT ONLY\n";
+  print_win_record (find_best_hand state Computer);
   print_hands state Computer;
 
 (* Results *)
