@@ -47,22 +47,14 @@ let total_compare (fst : card option) (snd : card option) =
   in
   compare fst_num snd_num
 
-(** [deck_test] constructs an OUnit test named [name] that asserts with
-    52 the size of a deck [deck1] and the uniqueness of cards in it. *)
+(** [full_deck_test] constructs an OUnit test named [name] that asserts
+    with 52 the size of a deck [deck1] and the uniqueness of cards in
+    it. *)
 let full_deck_test (name : string) (deck1 : deck) : test =
   name >:: fun _ ->
   assert_equal 52 (size (List.sort_uniq total_compare deck1));
   assert_equal false
     (List.mem None (List.sort_uniq total_compare deck1))
-
-(** recursive helper for [deck_unequal_test]*)
-let rec deck_unequal_helper deck1 deck2 (acc : int) =
-  match (deck1, deck2) with
-  | [], [] -> acc
-  | h1 :: t1, h2 :: t2 ->
-      if total_compare h1 h2 = 0 then deck_unequal_helper t2 t2 (acc + 1)
-      else deck_unequal_helper t2 t2 acc
-  | _, _ -> 100
 
 (** [decks_equality_test] constructs an OUnit test named [name] that
     asserts [expected] with the sameness of the order of cards in
