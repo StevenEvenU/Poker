@@ -6,22 +6,6 @@ type win_record = {
   value : int;
 }
 
-type card_seen = {
-  two : int;
-  three : int;
-  four : int;
-  five : int;
-  six : int;
-  seven : int;
-  eight : int;
-  nine : int;
-  ten : int;
-  jack : int;
-  queen : int;
-  king : int;
-  ace : int;
-}
-
 let hand_of_rank = function
   | 1 -> "High Card"
   | 2 -> "Pair"
@@ -50,25 +34,6 @@ let int_of_val value =
   | Queen -> 12
   | King -> 13
   | Ace -> 14
-
-exception NotValidValue
-
-let card_count_of_int integer (card_count : card_seen) =
-  match integer with
-  | 2 -> { card_count with two = card_count.two + 1 }
-  | 3 -> { card_count with three = card_count.three + 1 }
-  | 4 -> { card_count with four = card_count.four + 1 }
-  | 5 -> { card_count with five = card_count.five + 1 }
-  | 6 -> { card_count with six = card_count.six + 1 }
-  | 7 -> { card_count with seven = card_count.seven + 1 }
-  | 8 -> { card_count with eight = card_count.eight + 1 }
-  | 9 -> { card_count with nine = card_count.nine + 1 }
-  | 10 -> { card_count with ten = card_count.ten + 1 }
-  | 11 -> { card_count with jack = card_count.jack + 1 }
-  | 12 -> { card_count with queen = card_count.queen + 1 }
-  | 13 -> { card_count with king = card_count.king + 1 }
-  | 14 -> { card_count with ace = card_count.ace + 1 }
-  | _ -> raise NotValidValue
 
 let string_of_suit suit =
   match suit with
@@ -144,14 +109,20 @@ let two_pair (cards : card_check list) (user : Table.players) :
   let fst_pair = one_pair cards user in
   snd_pair_check fst_pair cards user
 
-let rec three_kind (cards : card_check list) (user : Table.players) :
-    win_record =
+let rec three_kind_helper
+    (cards : card_check list)
+    (user : Table.players)
+    (hand_rank : int) : win_record =
   match hand_sort_int cards with
   | h1 :: h2 :: h3 :: t ->
       if h1.int_value = h2.int_value && h2.int_value = h3.int_value then
-        { player = user; rank = 4; value = h1.int_value }
-      else three_kind (h2 :: h3 :: t) user
+        { player = user; rank = hand_rank; value = h1.int_value }
+      else three_kind_helper (h2 :: h3 :: t) user hand_rank
   | _ -> { player = user; rank = 0; value = 0 }
+
+let three_kind (cards : card_check list) (user : Table.players) :
+    win_record =
+  three_kind_helper cards user 4
 
 let strght_hand_sort_val (cards : card_check list) =
   List.rev (List.sort_uniq card_compare_int cards)
@@ -202,52 +173,16 @@ let flush (cards : card_check list) (user : Table.players) : win_record
     =
   flush_helper cards user 0 0 0 0
 
-let rec full_house_helper
-    (cards : card_check list)
-    (user : Table.players)
-    (card_count : card_seen) : win_record =
+let rec full_house (cards : card_check list) (user : Table.players) :
+    win_record =
   match hand_sort_int cards with
-  | h :: t -> (
-      match h.int_value with
-      | x -> full_house_helper t user (card_count_of_int x card_count))
-  | [] ->
-      if
-        (card_count.two = 2 || card_count.three = 2
-       || card_count.four = 2 || card_count.five = 2
-       || card_count.six = 2 || card_count.seven = 2
-       || card_count.eight = 2 || card_count.nine = 2
-       || card_count.ten = 2 || card_count.jack = 2
-       || card_count.queen = 2 || card_count.king = 2
-       || card_count.ace = 2)
-        && (card_count.two = 3 || card_count.three = 3
-          || card_count.four = 3 || card_count.five = 3
-          || card_count.six = 3 || card_count.seven = 3
-          || card_count.eight = 3 || card_count.nine = 3
-          || card_count.ten = 3 || card_count.jack = 3
-          || card_count.queen = 3 || card_count.king = 3
-          || card_count.ace = 3)
-      then { player = user; rank = 7; value = 14 }
-      else { player = user; rank = 0; value = 0 }
-
-let full_house (cards : card_check list) (user : Table.players) =
-  let card_count =
-    {
-      two = 0;
-      three = 0;
-      four = 0;
-      five = 0;
-      six = 0;
-      seven = 0;
-      eight = 0;
-      nine = 0;
-      ten = 0;
-      jack = 0;
-      queen = 0;
-      king = 0;
-      ace = 0;
-    }
-  in
-  full_house_helper cards user card_count
+  | h1 :: h2 :: h3 :: t
+    when h1.int_value = h2.int_value && h2.int_value = h3.int_value ->
+      one_pair_helper t user 7
+  | h1 :: h2 :: t when h1.int_value = h2.int_value ->
+      three_kind_helper t user 7
+  | h :: t -> full_house t user
+  | _ -> { player = user; rank = 0; value = 0 }
 
 let rec four_kind (cards : card_check list) (user : Table.players) :
     win_record =
