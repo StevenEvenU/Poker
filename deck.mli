@@ -41,10 +41,9 @@ val create_card : value -> suit -> card
 (** Creates a shuffled deck of cards and returns it*)
 val create : deck
 
-(* TODO: DELETE THIS. TEMPORARY ONLY *)
-val shuffle_helper : deck -> card option list -> int -> int -> card option list
-val shuffle_repeater : deck -> card option list -> int -> int -> int -> deck
-
+(* TODO: DELETE THIS. TEMPORARY ONLY val shuffle_helper : deck -> card
+   option list -> int -> int -> card option list val shuffle_repeater :
+   deck -> card option list -> int -> int -> int -> deck *)
 
 (** Shuffles a deck of cards*)
 val shuffle : deck -> int -> deck
