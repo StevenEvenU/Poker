@@ -1,17 +1,17 @@
 open Deck
 open Table
 
-(* Types of user action *)
+(** Types of user action *)
 type action =
   | Check
   | Call
   | Raise
   | Fold
 
-(* Checks whether another player has raised *)
+(** Checks whether another player has raised *)
 let is_raised state = failwith "Not implemented yet"
 
-(* Get the user's next action based on the current state *)
+(** Get the user's next action based on the current state *)
 let rec get_action state =
   if is_raised state then (
     print_string "Do you wish to Call, Raise, or Fold?";
@@ -68,6 +68,7 @@ let rec string_of_cards_rec str cards =
 
 let string_of_cards cards = string_of_cards_rec "" cards
 
+(* Given a state. This prints the user's hand *)
 let print_hand (state : Table.state) =
   let hand = state.users_hand in
   if hand <> [] then
@@ -75,6 +76,8 @@ let print_hand (state : Table.state) =
     print_string ("Your hand is: \n " ^ s ^ "\n")
   else print_string "Your hand is empty. \n"
 
+
+(* Given a state and name of an event  *)
 let print_event (state : Table.state) (event : string) =
   print_string
     ("After the " ^ event ^ " the cards are now: \n"
@@ -86,9 +89,6 @@ let main =
   print_string
     "Welcome to Poker! How many people do you want to play against?\n";
   let num_players = read_int () in
-  print_int num_players;
-  print_string "\n";
-
   let state = active_state num_players in
   delegate state;
   print_hand state;
