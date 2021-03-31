@@ -1,31 +1,10 @@
 open Deck
-
-(* Write in a function recursively that will keep on changing the init
-state based on how many players there are *)
-type players =
-| Player
-| Computer
+open State
 
 type win_record = {
   player : players;
   rank : int;
   value : int;
-}
-
-type card_seen = {
-  two : int;
-  three : int;
-  four : int;
-  five : int;
-  six : int;
-  seven : int;
-  eight : int;
-  nine : int;
-  ten : int;
-  jack : int;
-  queen : int;
-  king : int;
-  ace : int;
 }
 
 let hand_of_rank = function
@@ -56,25 +35,6 @@ let int_of_val value =
   | Queen -> 12
   | King -> 13
   | Ace -> 14
-
-exception NotValidValue
-
-let card_count_of_int integer (card_count : card_seen) =
-  match integer with
-  | 2 -> { card_count with two = card_count.two + 1 }
-  | 3 -> { card_count with three = card_count.three + 1 }
-  | 4 -> { card_count with four = card_count.four + 1 }
-  | 5 -> { card_count with five = card_count.five + 1 }
-  | 6 -> { card_count with six = card_count.six + 1 }
-  | 7 -> { card_count with seven = card_count.seven + 1 }
-  | 8 -> { card_count with eight = card_count.eight + 1 }
-  | 9 -> { card_count with nine = card_count.nine + 1 }
-  | 10 -> { card_count with ten = card_count.ten + 1 }
-  | 11 -> { card_count with jack = card_count.jack + 1 }
-  | 12 -> { card_count with queen = card_count.queen + 1 }
-  | 13 -> { card_count with king = card_count.king + 1 }
-  | 14 -> { card_count with ace = card_count.ace + 1 }
-  | _ -> raise NotValidValue
 
 let string_of_suit suit =
   match suit with
@@ -182,7 +142,7 @@ let rec straight
 
 let rec flush_helper
     (cards : card_check list)
-    (user : .players)
+    (user : players)
     (spade_count : int)
     (heart_count : int)
     (diamond_count : int)
@@ -191,14 +151,14 @@ let rec flush_helper
   (* FIND THE HIGHEST VALUE IN THE FLUSH *)
   | h :: t ->
       if h.string_suit = "♠" then
-        flush_helper t user (spade_count + 1) heart_count diamond_count
-          club_count
+        flush_helper t user (spade_count + 1) heart_count
+          diamond_count club_count
       else if h.string_suit = "♥" then
-        flush_helper t user spade_count (heart_count + 1) diamond_count
-          club_count
+        flush_helper t user spade_count (heart_count + 1)
+          diamond_count club_count
       else if h.string_suit = "♦" then
-        flush_helper t user spade_count heart_count (diamond_count + 1)
-          club_count
+        flush_helper t user spade_count heart_count
+          (diamond_count + 1) club_count
       else
         flush_helper t user spade_count heart_count diamond_count
           (club_count + 1)
@@ -211,34 +171,18 @@ let rec flush_helper
 
 let flush
     (cards : card_check list)
-    (user : .players) : win_record =
+    (user : players) : win_record =
   flush_helper cards user 0 0 0 0
 
-let rec full_house_helper
+let rec full_house
     (cards : card_check list)
     (user : players) : win_record =
   match hand_sort_int cards with
-  | h :: t -> (
-      match h.int_value with
-      | x -> full_house_helper t user (card_count_of_int x card_count))
-  | [] ->
-      if
-        (card_count.two = 2 || card_count.three = 2
-       || card_count.four = 2 || card_count.five = 2
-       || card_count.six = 2 || card_count.seven = 2
-       || card_count.eight = 2 || card_count.nine = 2
-       || card_count.ten = 2 || card_count.jack = 2
-       || card_count.queen = 2 || card_count.king = 2
-       || card_count.ace = 2)
-        && (card_count.two = 3 || card_count.three = 3
-          || card_count.four = 3 || card_count.five = 3
-          || card_count.six = 3 || card_count.seven = 3
-          || card_count.eight = 3 || card_count.nine = 3
-          || card_count.ten = 3 || card_count.jack = 3
-          || card_count.queen = 3 || card_count.king = 3
-          || card_count.ace = 3)
-      then { player = user; rank = 7; value = 14 }
-      else { player = user; rank = 0; value = 0 }
+  | h1 :: h2 :: h3 :: t ->
+      if h1.int_value = h2.int_value && h2.int_value = h3.int_value then
+        one_pair_helper cards user 7
+      else full_house (h2 :: h3 :: t) user
+  | _ -> { player = user; rank = 0; value = 0 }
 
 let rec four_kind
     (cards : card_check list)
@@ -307,11 +251,10 @@ let find_best_hand (state : state) (player : players) : win_record list =
   if player = Player then
     [f state.users_hand player]
   else
-    let ( -- ) i j =
+    let (--) i j = 
       let rec aux n acc =
-        if n < i then acc else aux (n - 1) (n :: acc)
-      in
-      aux j []
+        if n < i then acc else aux (n-1) (n :: acc)
+      in aux j []
     in
-    let hands = 0 -- (Array.length state.cpu_hands - 1) in
+    let hands = 0--(Array.length state.cpu_hands - 1) in 
     List.map (fun x -> f (Array.get state.cpu_hands x) Computer) hands

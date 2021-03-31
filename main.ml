@@ -1,6 +1,7 @@
 open Deck
 open Table
 open Compare
+open State
 
 (** Types of user action *)
 type action =
@@ -69,7 +70,7 @@ let print_hand hand =
     print_string ("Your hand is: \n " ^ s ^ "\n")
   else print_string "Your hand is empty. \n"
 
-let print_hands (state : Table.state) (player : Table.players) =
+let print_hands (state : State.state) (player : State.players) =
   if player = Player 
   then print_hand state.users_hand 
   else 
@@ -81,7 +82,7 @@ let print_hands (state : Table.state) (player : Table.players) =
 
 
 (* Given a state and name of an event  *)
-let print_event (state : Table.state) (event : string) =
+let print_event (state : State.state) (event : string) =
   print_string
     ("After the " ^ event ^ " the cards are now: \n"
     ^ string_of_cards state.cards_on_table

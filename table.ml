@@ -1,17 +1,10 @@
 open Deck
 open Compare
+open State
 
 let string_of_player = function
   | Player -> "Player"
   | Computer -> "Opponent"
-
-type state = {
-  mutable users_hand : Deck.card list;
-  mutable cpu_hands : Deck.card list array;
-  mutable cards_on_table : Deck.card list;
-  mutable deck_rem : Deck.deck;
-  mutable turn : Compare.players;
-}
 
 let table_deck = create
 
@@ -64,10 +57,10 @@ let flop state =
 
 let winner (state : state) =
   let best_player = find_best_hand state Player in
-  let best_computers = find_best_hand Computer in
+  let best_computers = find_best_hand state Computer in
   let hands = List.append best_player best_computers in
-  hands  
+  List.hd hands  
   
-let round_check state =
+(* let round_check state =
   if List.length state.cards_on_table = 5 then winner state
-  else flop state
+  else flop state *)

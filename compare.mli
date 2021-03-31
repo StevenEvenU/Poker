@@ -1,12 +1,7 @@
 type card_check
 
-(** The turn type decides whether it is the computer's or the player's turn. *)
-type players =
-| Player
-| Computer
-
 type win_record = {
-  player : Table.players;
+  player : State.players;
   rank : int;
   value : int;
 }
@@ -24,7 +19,7 @@ val hand_converter :
 
 val hand_sort_int : card_check list -> card_check list
 
-val best_hand : card_check list -> Table.players -> win_record
+val best_hand : card_check list -> State.players -> win_record
 
 (** Returns win_record of the best hand a player has. *)
-val find_best_hand : Table.state -> Table.players -> win_record list
+val find_best_hand : State.state -> State.players -> win_record list
