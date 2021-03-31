@@ -7,9 +7,6 @@ val is_raised : Table.state -> bool
 (** Gets the users next action *)
 val get_action : Table.state -> action
 
-(** Returns string of suit *)
-val string_of_suit : Deck.suit -> string
-
 (** Returns string of value *)
 val string_of_value : Deck.value -> string
 

@@ -1,10 +1,5 @@
 open Deck
-
-(** The turn type decides whether it is the computer's or the player's
-    turn. *)
-type players =
-  | Player
-  | Computer
+open Compare
 
 (** Returns string of a players type  *)
 val string_of_player : players -> string
@@ -33,6 +28,9 @@ val deal : state -> unit
 
 (** This will deal the next card on the table. *)
 val flop : state -> unit
+
+(** Returns the winner of the round. *)
+val winner : state -> Compare.win_record
 
 (** This will check who won when the size of the state.cards_on_table is
     equal to 5. *)

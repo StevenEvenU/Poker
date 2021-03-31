@@ -1,7 +1,13 @@
 open Deck
 
+(* Write in a function recursively that will keep on changing the init
+state based on how many players there are *)
+type players =
+| Player
+| Computer
+
 type win_record = {
-  player : Table.players;
+  player : players;
   rank : int;
   value : int;
 }
@@ -76,7 +82,7 @@ let hand_sort_str (cards : card_check list) =
 
 exception GameNotOver
 
-let high_card (cards : card_check list) (user : Table.players) :
+let high_card (cards : card_check list) (user : players) :
     win_record =
   match hand_sort_int cards with
   | [] -> raise GameNotOver
@@ -84,7 +90,7 @@ let high_card (cards : card_check list) (user : Table.players) :
 
 let rec one_pair_helper
     (cards : card_check list)
-    (user : Table.players)
+    (user : players)
     (hand_rank : int) : win_record =
   match hand_sort_int cards with
   | h1 :: h2 :: t ->
@@ -95,7 +101,7 @@ let rec one_pair_helper
 
 let one_pair
     (cards : card_check list)
-    (user : Table.players) =
+    (user : players) =
   one_pair_helper cards user 2
 
 let rec snd_pair_check pair cards user =
@@ -108,13 +114,13 @@ let rec snd_pair_check pair cards user =
 
 let two_pair
     (cards : card_check list)
-    (user : Table.players) : win_record =
+    (user : players) : win_record =
   let fst_pair = one_pair cards user in
   snd_pair_check fst_pair cards user
 
 let rec three_kind
     (cards : card_check list)
-    (user : Table.players) : win_record =
+    (user : players) : win_record =
   match hand_sort_int cards with
   | h1 :: h2 :: h3 :: t ->
       if h1.int_value = h2.int_value && h2.int_value = h3.int_value then
@@ -127,7 +133,7 @@ let strght_hand_sort_val (cards : card_check list) =
 
 let rec straight
     (cards : card_check list)
-    (user : Table.players) : win_record =
+    (user : players) : win_record =
   match strght_hand_sort_val cards with
   | h1 :: h2 :: h3 :: h4 :: h5 :: t ->
       if
@@ -141,7 +147,7 @@ let rec straight
 
 let rec flush_helper
     (cards : card_check list)
-    (user : Table.players)
+    (user : .players)
     (spade_count : int)
     (heart_count : int)
     (diamond_count : int)
@@ -170,12 +176,12 @@ let rec flush_helper
 
 let flush
     (cards : card_check list)
-    (user : Table.players) : win_record =
+    (user : .players) : win_record =
   flush_helper cards user 0 0 0 0
 
 let rec full_house
     (cards : card_check list)
-    (user : Table.players) : win_record =
+    (user : players) : win_record =
   match hand_sort_int cards with
   | h1 :: h2 :: h3 :: t ->
       if h1.int_value = h2.int_value && h2.int_value = h3.int_value then
@@ -185,7 +191,7 @@ let rec full_house
 
 let rec four_kind
     (cards : card_check list)
-    (user : Table.players) : win_record =
+    (user : players) : win_record =
   match hand_sort_int cards with
   | h1 :: h2 :: h3 :: h4 :: t ->
       if
@@ -198,7 +204,7 @@ let rec four_kind
 
 let rec straight_flush
     (cards : card_check list)
-    (user : Table.players) : win_record =
+    (user : players) : win_record =
   match strght_hand_sort_val cards with
   | h1 :: h2 :: h3 :: h4 :: h5 :: t ->
       if
@@ -216,7 +222,7 @@ let rec straight_flush
 
 let royal_flush
     (cards : card_check list)
-    (user : Table.players) : win_record =
+    (user : players) : win_record =
   match strght_hand_sort_val cards with
   | h1 :: h2 :: h3 :: h4 :: h5 :: t ->
       if
@@ -233,7 +239,7 @@ let royal_flush
 this returns what their best available hand is. *)
 let best_hand
     (cards : card_check list)
-    (user : Table.players) : win_record = 
+    (user : players) : win_record = 
   let result = royal_flush cards user in if result.rank = 10 then result
   else let result = straight_flush cards user in if result.rank = 9 then result
   else let result = four_kind cards user in if result.rank = 8 then result
@@ -245,9 +251,9 @@ let best_hand
   else let result = one_pair cards user in if result.rank = 2 then result
   else high_card cards user
 
-let find_best_hand (state : Table.state) (player : Table.players) : win_record list = 
+let find_best_hand (state : state) (player : players) : win_record list = 
   let f hand person  = best_hand (hand_converter [] (total_hand hand state.cards_on_table)) person in
-  if player = Table.Player then
+  if player = Player then
     [f state.users_hand player]
   else
     let (--) i j = 

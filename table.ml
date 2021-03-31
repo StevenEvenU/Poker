@@ -1,10 +1,5 @@
 open Deck
-
-(* Write in a function recursively that will keep on changing the init
-   state based on how many players there are *)
-type players =
-  | Player
-  | Computer
+open Compare
 
 let string_of_player = function
   | Player -> "Player"
@@ -15,7 +10,7 @@ type state = {
   mutable cpu_hands : Deck.card list array;
   mutable cards_on_table : Deck.card list;
   mutable deck_rem : Deck.deck;
-  mutable turn : players;
+  mutable turn : Compare.players;
 }
 
 let table_deck = create
@@ -67,9 +62,12 @@ let flop state =
     | none -> state.cards_on_table);
   state.deck_rem <- remove_top state.deck_rem
 
-let winner state = failwith "Not implemented"
-
+let winner (state : state) =
+  let best_player = find_best_hand state Player in
+  let best_computers = find_best_hand Computer in
+  let hands = List.append best_player best_computers in
+  hands  
+  
 let round_check state =
   if List.length state.cards_on_table = 5 then winner state
   else flop state
-

@@ -1,5 +1,10 @@
 type card_check
 
+(** The turn type decides whether it is the computer's or the player's turn. *)
+type players =
+| Player
+| Computer
+
 type win_record = {
   player : Table.players;
   rank : int;

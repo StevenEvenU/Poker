@@ -33,13 +33,6 @@ let rec get_action state =
         print_string "Not Valid. Try again";
         get_action state)
 
-let string_of_suit suit =
-  match suit with
-  | Spades -> "♠"
-  | Hearts -> "♥"
-  | Diamonds -> "♦"
-  | Clubs -> "♣"
-
 let string_of_value value =
   match value with
   | Two -> "2"
