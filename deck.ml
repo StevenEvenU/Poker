@@ -61,18 +61,30 @@ let rec create_helper (deck1 : card option list) (y : int) =
 
 let create : deck = create_helper [] 0
 
+(* let rec shuffle_helper (deck1 : deck) (shuff_list : card option list)
+   (num : int) (seed : int) = Random.init seed; if num < deck_size then
+   match deck1 with | h :: t -> if Random.bool () then h ::
+   shuffle_helper t shuff_list (num + 1) seed else shuffle_helper t
+   shuff_list (num + 1) seed @ [ h ] | [] -> [] else shuff_list
+
+   let rec shuffle_repeater (deck1 : deck) (shuff_list : card option
+   list) (num : int) (repetitions : int) (seed : int) = if num <
+   repetitions then shuffle_repeater (shuffle_helper deck1 [] 0 seed) []
+   (num + 1) repetitions seed else deck1
+
+   let shuffle (deck1 : deck) (seed : int) = to_deck (shuffle_repeater
+   deck1 [] 0 30 seed) *)
+
 let rec shuffle_helper
     (deck1 : deck)
     (shuff_list : card option list)
-    (num : int)
-    (seed : int) =
-  Random.init seed;
+    (num : int) =
+  Random.self_init ();
   if num < deck_size then
     match deck1 with
     | h :: t ->
-        if Random.bool () then
-          h :: shuffle_helper t shuff_list (num + 1) seed
-        else shuffle_helper t shuff_list (num + 1) seed @ [ h ]
+        if Random.bool () then h :: shuffle_helper t shuff_list (num + 1)
+        else shuffle_helper t shuff_list (num + 1) @ [ h ]
     | [] -> []
   else shuff_list
 
@@ -80,16 +92,16 @@ let rec shuffle_repeater
     (deck1 : deck)
     (shuff_list : card option list)
     (num : int)
-    (repetitions : int)
-    (seed : int) =
+    (repetitions : int) =
   if num < repetitions then
     shuffle_repeater
-      (shuffle_helper deck1 [] 0 seed)
-      [] (num + 1) repetitions seed
+      (shuffle_helper deck1 [] 0)
+      [] (num + 1) repetitions
   else deck1
 
+(*IGNORE SEED*)
 let shuffle (deck1 : deck) (seed : int) =
-  to_deck (shuffle_repeater deck1 [] 0 30 seed)
+  to_deck (shuffle_repeater deck1 [] 0 30)
 
 let rec top_card (deck1 : deck) : card option =
   match deck1 with [] -> None | [ h ] -> h | h :: t -> top_card t
