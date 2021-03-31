@@ -1,4 +1,5 @@
 open Deck
+open Compare
 
 (* Write in a function recursively that will keep on changing the init
    state based on how many players there are *)
@@ -63,8 +64,13 @@ let flop state =
     | none -> state.cards_on_table);
   state.deck_rem <- remove_top state.deck_rem
 
+
+let find_best_hand state player : win_record= 
+  best_hand (total_hand state.users_hand state.cards_on_table) player
+
 let winner state = failwith "Not implemented"
 
 let round_check state =
   if List.length state.cards_on_table = 5 then winner state
   else flop state
+

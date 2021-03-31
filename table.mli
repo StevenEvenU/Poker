@@ -31,6 +31,9 @@ val deal : state -> unit
 (** This will deal the next card on the table. *)
 val flop : state -> unit
 
+(** Returns win_record of the best hand a player has. *)
+val find_best_hand : state -> players -> win_record
+
 (** This will check who won when the size of the state.cards_on_table is
     equal to 5. *)
 val round_check : state -> unit

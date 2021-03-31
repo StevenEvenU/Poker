@@ -84,6 +84,9 @@ let print_event (state : Table.state) (event : string) =
     ^ string_of_cards state.cards_on_table
     ^ "\n")
 
+(* let print_win_record (win_record) = 
+  print_string () *)
+
 let main =
   (* Get Number of players *)
   print_string
@@ -100,6 +103,7 @@ let main =
   print_event state "Turn";
   (* Third round of betting will occur here *)
   flop state;
-  print_event state "River"
+  print_event state "River";
+  find_best_hand state Player;
 
 (* Results *)
