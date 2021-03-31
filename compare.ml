@@ -251,7 +251,7 @@ let best_hand (cards : card_check list) (user : Table.players) :
                   if result.rank = 2 then result
                   else high_card cards user
 
-let find_best_hand (state : Table.state) (player : Table.players) :
+let find_best_hand (state : Table.state ) (player : Table.players) :
     win_record list =
   let f hand person =
     best_hand
