@@ -1,5 +1,6 @@
 open Deck
 open Table
+open Compare
 
 (** Types of user action *)
 type action =
@@ -55,7 +56,7 @@ let string_of_value value =
   | King -> "K"
   | Ace -> "A"
 
-let string_of_card card =
+let string_of_card (card : Deck.card) =
   string_of_value card.value ^ string_of_suit card.suit
 
 let rec string_of_cards_rec str cards =
@@ -84,9 +85,10 @@ let print_event (state : Table.state) (event : string) =
     ^ string_of_cards state.cards_on_table
     ^ "\n")
 
-(* let print_win_record (win_record) = 
-  print_string () *)
-
+let print_win_record (record : win_record) = 
+  print_string ((string_of_player record.player) ^ " had a " ^
+  (hand_of_rank record.rank) ^"\n"
+  )
 let main =
   (* Get Number of players *)
   print_string
@@ -104,6 +106,6 @@ let main =
   (* Third round of betting will occur here *)
   flop state;
   print_event state "River";
-  find_best_hand state Player;
+  print_win_record (find_best_hand state Player);
 
 (* Results *)

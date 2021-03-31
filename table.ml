@@ -1,11 +1,14 @@
 open Deck
-open Compare
 
 (* Write in a function recursively that will keep on changing the init
    state based on how many players there are *)
 type players =
   | Player
   | Computer
+
+let string_of_player = function
+  | Player -> "Player"
+  | Computer -> "Opponent"
 
 type state = {
   mutable users_hand : Deck.card list;
@@ -63,10 +66,6 @@ let flop state =
     | Some card -> card :: state.cards_on_table
     | none -> state.cards_on_table);
   state.deck_rem <- remove_top state.deck_rem
-
-
-let find_best_hand state player : win_record= 
-  best_hand (total_hand state.users_hand state.cards_on_table) player
 
 let winner state = failwith "Not implemented"
 

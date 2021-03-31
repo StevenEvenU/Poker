@@ -6,6 +6,19 @@ type win_record = {
   value : int;
 }
 
+let hand_of_rank = function
+  | 1 -> "High Card"
+  | 2 -> "Pair"
+  | 3 -> "Two Pairs"
+  | 4 -> "Three of a kind"
+  | 5 -> "Straight"
+  | 6 -> "Flush"
+  | 7 -> "Full House"
+  | 8 -> "Four of a kind"
+  | 9 -> "Straight Flush"
+  | 10 -> "Royal Flush"
+  | _ -> "Error. Unknown hand!"
+
 let int_of_val value =
   match value with
   | Two -> 2
@@ -231,3 +244,6 @@ let best_hand
   else let result = two_pair cards user in if result.rank = 3 then result
   else let result = one_pair cards user in if result.rank = 2 then result
   else high_card cards user
+
+let find_best_hand (state : Table.state) player : win_record= 
+  best_hand (hand_converter [] (total_hand state.users_hand state.cards_on_table)) player
