@@ -17,7 +17,7 @@ val string_of_card : Deck.card -> string
 val string_of_cards : Deck.card list -> string
 
 (**  *)
-val print_hand : Deck.card list -> unit
+val print_hand : Deck.card list -> State.players -> unit
 
 (** Returns string of the state *)
 val print_event : State.state -> string -> unit

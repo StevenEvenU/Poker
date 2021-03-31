@@ -64,19 +64,20 @@ let rec string_of_cards_rec str cards =
 let string_of_cards cards = string_of_cards_rec "" cards
 
 (* Given a state. This prints the user's hand *)
-let print_hand hand =
+let print_hand hand player =
+  let pronoun = if player = Player then "Your " else "Their " in
   if hand <> [] then
     let s = string_of_cards hand in
-    print_string ("Your hand is: \n " ^ s ^ "\n")
-  else print_string "Your hand is empty. \n"
+    print_string (pronoun ^ "hand is: \n " ^ s ^ "\n")
+  else print_string (pronoun ^ "hand is empty. \n")
 
 let print_hands (state : State.state) (player : State.players) =
   if player = Player 
-  then print_hand state.users_hand 
+  then print_hand state.users_hand Player
   else 
     let rec print_hand_rec = function
       | [] -> ()
-      | h::t -> print_hand h; print_hand_rec t
+      | h::t -> print_hand h Computer; print_hand_rec t
     in
     print_hand_rec (Array.to_list state.cpu_hands)
 
