@@ -64,15 +64,26 @@ let rec deck_unequal_helper deck1 deck2 (acc : int) =
       else deck_unequal_helper t2 t2 acc
   | _, _ -> 100
 
-(** [decks_unequal_test] constructs an OUnit test named [name] that
-    asserts with the uniqueness of the order of cards in [deck1] and
+(** [decks_equal_test] constructs an OUnit test named [name] that
+    asserts with the sameness of the order of cards in [deck1] and
     [deck2]. *)
-let decks_unequal_test (name : string) (deck1 : deck) (deck2 : deck) :
+let decks_equal_test (name : string) (deck1 : deck) (deck2 : deck) :
     test =
   name >:: fun _ ->
   assert_equal
     (string_of_card_options "" deck1)
     (string_of_card_options "" deck2)
+
+(** [decks_equal_test] constructs an OUnit test named [name] that
+    asserts with the sameness of the order of cards in [deck1] and
+    [deck2]. *)
+let decks_unequal_test (name : string) (deck1 : deck) (deck2 : deck) :
+    test =
+  name >:: fun _ ->
+  assert_equal false
+    (String.equal
+       (string_of_card_options "" deck1)
+       (string_of_card_options "" deck2))
 
 (** [create_card_test] constructs an OUnit test named [name] that
     asserts with the uniqueness of the order of cards in two shuffled
@@ -117,7 +128,7 @@ let deck_test =
     (*NOTE: if shuffle is truly random, there is approximately a 1/52!
       probability of this failing even if correct. Random module is
       pseudo-random, but the chance is still negligable.*)
-    decks_unequal_test "See if two unshuffled decks are the same" create
+    decks_equal_test "See if two unshuffled decks are the same" create
       create;
     create_card_test "See if Jack of Hearts is a Jack of Hearts" "J♥"
       Jack Hearts;
