@@ -22,7 +22,7 @@ play:
 	$(OCAMLBUILD) -tag 'debug' $(MAIN) && OCAMLRUNPARAM=b ./$(MAIN)
 
 zip:
-	zip poker.zip *.ml* *.json _tags .merlin .ocamlformat .ocamlinit LICENSE Makefile	
+	zip poker.zip poker.sh *.ml* *.json _tags .merlin .ocamlformat .ocamlinit LICENSE Makefile	
 	
 docs: docs-public docs-private
 	

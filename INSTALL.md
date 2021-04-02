@@ -21,3 +21,14 @@ to start playing.
 
 Have fun playing Poker!
 (*No real money is involved*)
+
+#### Alternative installation:
+
+Once the file is unzipped run 
+```sh
+source poker.sh
+```
+Then to start a game of poker from anywhere run 
+```sh
+playpoker
+```
