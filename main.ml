@@ -118,7 +118,8 @@ let main =
   (hand_of_rank (List.hd (find_best_hand state Player)).rank) ^ "\n" |> print_string;
   print_string "The WINNER is....\n";
   print_win_record [winner state];
-  print_string "THE FOLLOWING IS FOR DEVELOPMENT ONLY\n";
+  (* print_string "THE FOLLOWING IS FOR DEVELOPMENT ONLY\n"; *)
+  print_string "\nThe other players hands were: \n";
   print_win_record (find_best_hand state Computer);
   print_hands state Computer;
 
