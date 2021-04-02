@@ -97,11 +97,19 @@ let print_win_record (records : win_record list) =
     ^ (hand_of_rank h.rank) ^"\n"); print_win_rec t
     in
   print_win_rec records
+
+let rec reprompt_player_count (num_players : int) : int= 
+  if num_players > 7 || num_players < 1 then
+    (print_string "Invalid number of players! Input an integer between 1 and 7: \n";
+    reprompt_player_count (read_int ()))
+  else
+    num_players
 let main =
   (* Get Number of players *)
   print_string
     "Welcome to Poker! How many people do you want to play against?\n";
   let num_players = read_int () in
+  let num_players = (reprompt_player_count num_players) in
   let state = active_state num_players in
   delegate state;
   print_hands state Player;
