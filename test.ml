@@ -4,6 +4,33 @@ open Compare
 open Main
 open Table
 
+let t_player_hand =
+  [ { suit = Spades; value = Three }; { suit = Spades; value = Six } ]
+
+let t_table_flop =
+  [
+    { suit = Spades; value = Two };
+    { suit = Spades; value = Eight };
+    { suit = Spades; value = Nine };
+  ]
+
+let t_table_turn =
+  [
+    { suit = Spades; value = Two };
+    { suit = Spades; value = Eight };
+    { suit = Spades; value = Nine };
+    { suit = Spades; value = Queen };
+  ]
+
+let t_table_river =
+  [
+    { suit = Spades; value = Two };
+    { suit = Spades; value = Eight };
+    { suit = Spades; value = Nine };
+    { suit = Spades; value = Queen };
+    { suit = Spades; value = King };
+  ]
+
 (** converts card option to string*)
 let string_of_card_option card1 =
   match card1 with None -> "" | Some x -> string_of_card x
@@ -103,6 +130,42 @@ let top_card_remove_card_test
 let size_test (name : string) (expected : int) (deck1 : deck) : test =
   name >:: fun _ -> assert_equal expected (size deck1)
 
+let hand_of_rank_test (name : string) (value : int) (expected : string)
+    : test =
+  name >:: fun _ -> assert_equal expected (hand_of_rank value)
+
+let int_of_val_test
+    (name : string)
+    (value : Deck.value)
+    (expected : int) : test =
+  name >:: fun _ -> assert_equal expected (int_of_val value)
+
+let str_of_suit_test
+    (name : string)
+    (suit : Deck.suit)
+    (expected : string) : test =
+  name >:: fun _ -> assert_equal expected (string_of_suit suit)
+
+let total_hand_test
+    (name : string)
+    (player_hand : Deck.card list)
+    (table_card : Deck.card list)
+    (expected : Deck.card list) : test =
+  name >:: fun _ ->
+  assert_equal expected (total_hand player_hand table_card)
+
+let hand_converter_test
+    (name : string)
+    (hand : Deck.card list)
+    (expected : card_check list) : test =
+  name >:: fun _ -> assert_equal expected (hand_converter [] hand)
+
+let hand_sort_int_test
+    (name : string)
+    (hand : card_check list)
+    (expected : card_check list) : test =
+  name >:: fun _ -> assert_equal expected (hand_sort_int hand)
+
 (* *******END HELPER FUNCTIONS********* *)
 let deck_test =
   [
@@ -135,7 +198,55 @@ let deck_test =
 
 let table_test = []
 
-let compare_test = []
+let compare_test =
+  [
+    hand_of_rank_test "A valid hand" 10 "Royal Flush";
+    hand_of_rank_test "A non-valid number" 342 "Error. Unknown hand!";
+    int_of_val_test "A number value" Four 4;
+    int_of_val_test "A royal value" Queen 12;
+    str_of_suit_test "A suit" Spades "♠";
+    total_hand_test "Flop" t_player_hand t_table_flop
+      [
+        { suit = Spades; value = Three };
+        { suit = Spades; value = Six };
+        { suit = Spades; value = Two };
+        { suit = Spades; value = Eight };
+        { suit = Spades; value = Nine };
+      ];
+    total_hand_test "Turn" t_player_hand t_table_turn
+      [
+        { suit = Spades; value = Three };
+        { suit = Spades; value = Six };
+        { suit = Spades; value = Two };
+        { suit = Spades; value = Eight };
+        { suit = Spades; value = Nine };
+        { suit = Spades; value = Queen };
+      ];
+    total_hand_test "River" t_player_hand t_table_river
+      [
+        { suit = Spades; value = Three };
+        { suit = Spades; value = Six };
+        { suit = Spades; value = Two };
+        { suit = Spades; value = Eight };
+        { suit = Spades; value = Nine };
+        { suit = Spades; value = Queen };
+        { suit = Spades; value = King };
+      ];
+    (* hand_converter_test "Converting numbers" t_player_hand [ {
+       string_suit = "♠"; int_value = 3 }; { string_suit = "♠";
+       int_value = 6 }; ]; *)
+    hand_sort_int_test "Sort numbers"
+      (hand_converter [] (total_hand t_player_hand t_table_river))
+      [
+        { string_suit = "♠"; int_value = 2 };
+        { string_suit = "♠"; int_value = 3 };
+        { string_suit = "♠"; int_value = 6 };
+        { string_suit = "♠"; int_value = 8 };
+        { string_suit = "♠"; int_value = 9 };
+        { string_suit = "♠"; int_value = 12 };
+        { string_suit = "♠"; int_value = 13 };
+      ];
+  ]
 
 let main_test = []
 

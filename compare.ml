@@ -20,8 +20,7 @@ let hand_of_rank = function
   | 10 -> "Royal Flush"
   | _ -> "Error. Unknown hand!"
 
-let int_of_val value =
-  match value with
+let int_of_val = function
   | Two -> 2
   | Three -> 3
   | Four -> 4
@@ -68,12 +67,6 @@ let card_compare_int fst_card snd_card =
 
 let hand_sort_int (cards : card_check list) =
   List.rev (List.sort card_compare_int cards)
-
-let card_compare_str fst_card snd_card =
-  compare fst_card.string_suit snd_card.string_suit
-
-let hand_sort_str (cards : card_check list) =
-  List.rev (List.sort card_compare_str cards)
 
 exception GameNotOver
 
@@ -181,29 +174,16 @@ let rec full_house (cards : card_check list) (user : players) :
   | h :: t -> full_house t user
   | _ -> { player = user; rank = 0; value = 0 }
 
-(* let better_full_house 
-  (cards : card_check list)
-  (user : players) : win_record =
-  let seen  = [] in
-  let rec find (card : card_check) list = 
-    match list with
-    | [] -> -1
-    | (k, v)::t -> 
-      if card.int_value = k.int_value then v 
-      else lookup value t
-  in   
-  let rec loop cards (seen: tuple list) = 
-    match cards with
-    | [] -> seen
-    |h::t -> if 0 = find h seen 
-      then loop t acc::(h, 1)
-      else List.map (fun (k,v) -> if k=h then (k, v+1) else (k,v))
-  in
-  let quantity = loop cards  *)
+(* let better_full_house (cards : card_check list) (user : players) :
+   win_record = let seen = [] in let rec find (card : card_check) list =
+   match list with | [] -> -1 | (k, v)::t -> if card.int_value =
+   k.int_value then v else lookup value t in let rec loop cards (seen:
+   tuple list) = match cards with | [] -> seen |h::t -> if 0 = find h
+   seen then loop t acc::(h, 1) else List.map (fun (k,v) -> if k=h then
+   (k, v+1) else (k,v)) in let quantity = loop cards *)
 
-let rec four_kind
-    (cards : card_check list)
-    (user : players) : win_record =
+let rec four_kind (cards : card_check list) (user : players) :
+    win_record =
   match hand_sort_int cards with
   | h1 :: h2 :: h3 :: h4 :: t ->
       if
@@ -245,8 +225,6 @@ let royal_flush (cards : card_check list) (user : players) : win_record
       else { player = user; rank = 0; value = 0 }
   | _ -> { player = user; rank = 0; value = 0 }
 
-(** Given a player's available cards (and the player), this returns what
-    their best available hand is. *)
 let best_hand (cards : card_check list) (user : players) : win_record =
   let result = royal_flush cards user in
   if result.rank = 10 then result
