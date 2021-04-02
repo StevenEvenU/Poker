@@ -166,6 +166,25 @@ let hand_sort_int_test
     (expected : card_check list) : test =
   name >:: fun _ -> assert_equal expected (hand_sort_int hand)
 
+(* **** MAIN HELPER FUNCTIONS **** *)
+
+(* [string_of_card_test] constructs an OUnit test named [name] that
+   asserts the string produced from [card] is what is expected. *)
+let string_of_card_test
+    (name : string)
+    (expected : string)
+    (card : Deck.card) : test =
+  name >:: fun _ -> assert_equal expected (string_of_card card)
+
+(* [string_of_cards_test] constructs an OUnit test named [name] that
+   asserts the string produced from the card list [cards] is what is
+   expected. *)
+let string_of_cards_test
+    (name : string)
+    (expected : string)
+    (cards : Deck.card list) : test =
+  name >:: fun _ -> assert_equal expected (string_of_cards cards)
+
 (* *******END HELPER FUNCTIONS********* *)
 let deck_test =
   [
@@ -235,20 +254,36 @@ let compare_test =
     (* hand_converter_test "Converting numbers" t_player_hand [ {
        string_suit = "♠"; int_value = 3 }; { string_suit = "♠";
        int_value = 6 }; ]; *)
-    hand_sort_int_test "Sort numbers"
-      (hand_converter [] (total_hand t_player_hand t_table_river))
-      [
-        { string_suit = "♠"; int_value = 2 };
-        { string_suit = "♠"; int_value = 3 };
-        { string_suit = "♠"; int_value = 6 };
-        { string_suit = "♠"; int_value = 8 };
-        { string_suit = "♠"; int_value = 9 };
-        { string_suit = "♠"; int_value = 12 };
-        { string_suit = "♠"; int_value = 13 };
-      ];
+    (* hand_sort_int_test "Sort numbers" (hand_converter [] (total_hand
+       t_player_hand t_table_river)) [ { string_suit = "♠"; int_value =
+       2 }; { string_suit = "♠"; int_value = 3 }; { string_suit = "♠";
+       int_value = 6 }; { string_suit = "♠"; int_value = 8 }; {
+       string_suit = "♠"; int_value = 9 }; { string_suit = "♠";
+       int_value = 12 }; { string_suit = "♠"; int_value = 13 }; ]; *)
   ]
 
-let main_test = []
+let main_test =
+  [
+    string_of_card_test "Ace of Spades" "A♠"
+      { suit = Spades; value = Ace };
+    string_of_card_test "Queen of Hearts" "Q♥"
+      { suit = Hearts; value = Queen };
+    string_of_card_test "Two of Clubs" "2♣"
+      { suit = Clubs; value = Two };
+    string_of_card_test "Seven of Diamonds" "7♦"
+      { suit = Diamonds; value = Seven };
+    string_of_cards_test "Set of two cards" " A♠ Q♥"
+      [
+        { suit = Spades; value = Ace }; { suit = Hearts; value = Queen };
+      ];
+    string_of_cards_test "Set of four cards" " A♠ Q♥ 2♣ 7♦"
+      [
+        { suit = Spades; value = Ace };
+        { suit = Hearts; value = Queen };
+        { suit = Clubs; value = Two };
+        { suit = Diamonds; value = Seven };
+      ];
+  ]
 
 let suite =
   "test suite for A2"
