@@ -3,6 +3,7 @@ open Deck
 open Compare
 open Main
 open Table
+open State
 
 let t_player_hand =
   [ { suit = Spades; value = Three }; { suit = Spades; value = Six } ]
@@ -31,6 +32,36 @@ let t_table_river =
     { suit = Spades; value = King };
   ]
 
+let t_state = {users_hand =
+  [{suit = Diamonds; value = Eight}; {suit = Hearts; value = Three}];
+ cpu_hands = [|[{suit = Clubs; value = Eight}; {suit = Spades; value = Jack}]|];
+ cards_on_table =
+  [{suit = Hearts; value = Two}; {suit = Hearts; value = Six};
+   {suit = Clubs; value = Ten}; {suit = Clubs; value = Queen};
+   {suit = Hearts; value = Queen}];
+ deck_rem =
+  [Some {suit = Spades; value = Nine}; Some {suit = Hearts; value = Jack};
+   Some {suit = Spades; value = Six}; Some {suit = Spades; value = King};
+   Some {suit = Clubs; value = Six}; Some {suit = Clubs; value = Two};
+   Some {suit = Clubs; value = Four}; Some {suit = Clubs; value = Nine};
+   Some {suit = Diamonds; value = Ten}; Some {suit = Diamonds; value = Three};
+   Some {suit = Clubs; value = Five}; Some {suit = Spades; value = Four};
+   Some {suit = Diamonds; value = Four}; Some {suit = Diamonds; value = Six};
+   Some {suit = Hearts; value = Ten}; Some {suit = Diamonds; value = Seven};
+   Some {suit = Spades; value = Ten}; Some {suit = Diamonds; value = Jack};
+   Some {suit = Hearts; value = Five}; Some {suit = Hearts; value = Nine};
+   Some {suit = Diamonds; value = Five}; Some {suit = Diamonds; value = Two};
+   Some {suit = Diamonds; value = Ace}; Some {suit = Hearts; value = Eight};
+   Some {suit = Clubs; value = Seven}; Some {suit = Hearts; value = Four};
+   Some {suit = Diamonds; value = King}; Some {suit = Hearts; value = Ace};
+   Some {suit = Spades; value = Three}; Some {suit = Clubs; value = King};
+   Some {suit = Spades; value = Two}; Some {suit = Spades; value = Eight};
+   Some {suit = Clubs; value = Three}; Some {suit = Diamonds; value = Queen};
+   Some {suit = Hearts; value = King}; Some {suit = Hearts; value = Seven};
+   Some {suit = Spades; value = Seven}; Some {suit = Diamonds; value = Nine};
+   Some {suit = Spades; value = Queen}; Some {suit = Spades; value = Ace};
+   Some {suit = Spades; value = Five}; Some {suit = Clubs; value = Ace};
+   Some {suit = Clubs; value = Jack}];turn= Player}
 (** converts card option to string*)
 let string_of_card_option card1 =
   match card1 with None -> "" | Some x -> string_of_card x
@@ -130,6 +161,7 @@ let top_card_remove_card_test
 let size_test (name : string) (expected : int) (deck1 : deck) : test =
   name >:: fun _ -> assert_equal expected (size deck1)
 
+(* **** Compare helper functions **** *)
 let hand_of_rank_test (name : string) (value : int) (expected : string)
     : test =
   name >:: fun _ -> assert_equal expected (hand_of_rank value)
@@ -166,6 +198,12 @@ let hand_sort_int_test
     (expected : card_check list) : test =
   name >:: fun _ -> assert_equal expected (hand_sort_int hand)
 
+let find_best_hand
+    (name : string)
+    (state : State.state)
+    (player : State.players)
+    (expected : win_record list) : test =
+  name >:: fun _ -> assert_equal expected (find_best_hand state player)
 (* **** MAIN HELPER FUNCTIONS **** *)
 
 (* [string_of_card_test] constructs an OUnit test named [name] that
@@ -260,6 +298,7 @@ let compare_test =
        int_value = 6 }; { string_suit = "♠"; int_value = 8 }; {
        string_suit = "♠"; int_value = 9 }; { string_suit = "♠";
        int_value = 12 }; { string_suit = "♠"; int_value = 13 }; ]; *)
+    find_best_hand "Test player" t_state Player [{player = Player; rank = 2; value = 12}]
   ]
 
 let main_test =
