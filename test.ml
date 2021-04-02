@@ -103,6 +103,27 @@ let top_card_remove_card_test
 let size_test (name : string) (expected : int) (deck1 : deck) : test =
   name >:: fun _ -> assert_equal expected (size deck1)
 
+
+(*   **** MAIN HELPER FUNCTIONS ****    *)
+
+(* [string_of_card_test] constructs an OUnit test named [name] that asserts 
+  the string produced from [card] is what is expected. *)
+let string_of_card_test 
+    (name : string)
+    (expected : string)
+    (card : Deck.card) : test = 
+  name >:: fun _ -> assert_equal expected (string_of_card card)
+
+
+(* [string_of_cards_test] constructs an OUnit test named [name] that asserts
+  the string produced from the card list [cards] is what is expected. *)
+let string_of_cards_test
+  (name : string)
+  (expected : string)
+  (cards : Deck.card list) : test =
+  name >:: fun _ -> assert_equal expected (string_of_cards cards)
+
+
 (* *******END HELPER FUNCTIONS********* *)
 let deck_test =
   [
@@ -137,7 +158,19 @@ let table_test = []
 
 let compare_test = []
 
-let main_test = []
+let main_test = 
+  [
+    string_of_card_test "Ace of Spades" "A♠" {suit = Spades; value = Ace};
+    string_of_card_test "Queen of Hearts" "Q♥" {suit = Hearts; value = Queen};
+    string_of_card_test "Two of Clubs" "2♣" {suit = Clubs; value = Two};
+    string_of_card_test "Seven of Diamonds" "7♦" {suit = Diamonds; value = Seven};
+
+    string_of_cards_test "Set of two cards" " A♠ Q♥" 
+      [{suit = Spades; value = Ace}; {suit = Hearts; value = Queen}];
+    string_of_cards_test "Set of four cards" " A♠ Q♥ 2♣ 7♦" 
+      [{suit = Spades; value = Ace}; {suit = Hearts; value = Queen}; 
+       {suit = Clubs; value = Two}; {suit = Diamonds; value = Seven}];
+  ]
 
 let suite =
   "test suite for A2"
