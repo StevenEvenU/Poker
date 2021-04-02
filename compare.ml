@@ -247,7 +247,6 @@ let royal_flush (cards : card_check list) (user : players) : win_record
 
 (** Given a player's available cards (and the player), this returns what
     their best available hand is. *)
-(* TODO: Return sorted list of best available hands in case of tie. *)
 let best_hand (cards : card_check list) (user : players) : win_record =
   let result = royal_flush cards user in
   if result.rank = 10 then result
@@ -277,7 +276,6 @@ let best_hand (cards : card_check list) (user : players) : win_record =
                   if result.rank = 2 then result
                   else high_card cards user
 
-(* Returns list of the best hand for either the person playing or the computer players. *)
 let find_best_hand (state : state) (player : players) : win_record list
     =
   let f hand person =
