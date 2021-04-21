@@ -22,7 +22,7 @@ to start playing.
 Have fun playing Poker!
 (*No real money is involved*)
 
-#### Alternative installation:
+#### Alternative installation for UNIX systems:
 
 Once the file is unzipped run 
 ```sh
