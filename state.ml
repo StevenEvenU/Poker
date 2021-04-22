@@ -1,5 +1,5 @@
 (* Write in a function recursively that will keep on changing the init
-state based on how many players there are *)
+   state based on how many players there are *)
 type players =
   | Player
   | Computer
@@ -15,4 +15,6 @@ type state = {
   mutable cards_on_table : Deck.card list;
   mutable deck_rem : Deck.deck;
   mutable turn : players;
+  mutable user_money : int;
+  mutable cpu_moneys : int array;
 }

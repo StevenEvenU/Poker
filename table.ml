@@ -11,6 +11,8 @@ let init_state (num : int) =
     cards_on_table = [];
     deck_rem = table_deck;
     turn = Player;
+    user_money = 1000;
+    cpu_moneys = Array.make num 1000;
   }
 
 let active_state (num : int) = init_state num
@@ -55,17 +57,17 @@ let winner (state : state) : win_record =
   let best_player = find_best_hand state Player in
   let best_computers = find_best_hand state Computer in
   let hands = List.append best_player best_computers in
-  let sf x y = if x.rank > y.rank then -1 
-    else if x.rank = y.rank then ( 
-    if x.value > y.value then -1
-    else if x.value = y.value then 0 
-    else 1 )
+  let sf x y =
+    if x.rank > y.rank then -1
+    else if x.rank = y.rank then
+      if x.value > y.value then -1
+      else if x.value = y.value then 0
+      else 1
     else 1
   in
-  let sorted = (List.sort sf hands) in
-  (* List.sort (fun x y -> if x.value > y.value then 1 else -1)  *)
+  let sorted = List.sort sf hands in
+  (* List.sort (fun x y -> if x.value > y.value then 1 else -1) *)
   List.hd sorted
-  
-(* let round_check state =
-  if List.length state.cards_on_table = 5 then winner state
-  else flop state *)
+
+(* let round_check state = if List.length state.cards_on_table = 5 then
+   winner state else flop state *)

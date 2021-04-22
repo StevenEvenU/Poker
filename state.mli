@@ -1,9 +1,10 @@
-(** The turn type decides whether it is the computer's or the player's turn. *)
+(** The turn type decides whether it is the computer's or the player's
+    turn. *)
 type players =
-| Player
-| Computer
+  | Player
+  | Computer
 
-(** Returns string of a players type  *)
+(** Returns string of a players type *)
 val string_of_player : players -> string
 
 (** The state type is keeping track of the cards that the user and
@@ -15,4 +16,6 @@ type state = {
   mutable cards_on_table : Deck.card list;
   mutable deck_rem : Deck.deck;
   mutable turn : players;
+  mutable user_money : int;
+  mutable cpu_moneys : int array;
 }
