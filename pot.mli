@@ -5,7 +5,7 @@ open Compare
 type pot
 
 (** Add money to the pot*)
-val add : int -> pot
+val add : int -> unit
 
 (** Splits the pot amongs the winners. Uses a side pot if necessary.*)
 val to_winner : win_record list -> int list

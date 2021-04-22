@@ -1,8 +1,10 @@
 open Compare
 
-type pot = int
+type pot = int ref
 
-let add (mon : int) = failwith "Unimplemented"
+let pot = ref 0
+
+let add (mon : int) = pot := !pot + mon
 
 let to_winner (win_rec_list : win_record list) =
   failwith "unimplemented"
