@@ -65,24 +65,26 @@ let string_of_cards cards = string_of_cards_rec "" cards
 
 (* Given a state. This prints the user's hand *)
 let print_hand hand player =
-  let pronoun = if player = Player then "Your " else "Their " in
+  let pronoun =
+    if player = Player then "Your " else string_of_player player ^ "'s"
+  in
   if hand <> [] then
     let s = string_of_cards hand in
     print_string (pronoun ^ "hand is: \n " ^ s ^ "\n")
   else print_string (pronoun ^ "hand is empty. \n")
 
 let print_hands (state : State.state) (player : State.players) =
-  if player = Player 
-  then print_hand state.users_hand Player
-  else 
-    let rec print_hand_rec = function
+  if player = Player then print_hand state.users_hand Player
+  else
+    let rec print_hand_rec acc = function
       | [] -> ()
-      | h::t -> print_hand h Computer; print_hand_rec t
+      | h :: t ->
+          print_hand h (Computer acc);
+          print_hand_rec (acc + 1) t
     in
-    print_hand_rec (Array.to_list state.cpu_hands)
+    print_hand_rec 1 (Array.to_list state.cpu_hands)
 
-
-(* Given a state and name of an event  *)
+(* Given a state and name of an event *)
 let print_event (state : State.state) (event : string) =
   print_string
     ("After the " ^ event ^ " the cards are now: \n"
@@ -91,25 +93,28 @@ let print_event (state : State.state) (event : string) =
 
 let print_win_record (records : win_record list) =
   let rec print_win_rec = function
-    []->()
-    |h::t -> 
-    print_string ((string_of_player h.player) ^ " with a " 
-    ^ (hand_of_rank h.rank) ^"\n"); print_win_rec t
-    in
+    | [] -> ()
+    | h :: t ->
+        print_string
+          (string_of_player h.player
+          ^ " with a " ^ hand_of_rank h.rank ^ "\n");
+        print_win_rec t
+  in
   print_win_rec records
 
-let rec reprompt_player_count (num_players : int) : int= 
-  if num_players > 7 || num_players < 1 then
-    (print_string "Invalid number of players! Input an integer between 1 and 7: \n";
+let rec reprompt_player_count (num_players : int) : int =
+  if num_players > 7 || num_players < 1 then (
+    print_string
+      "Invalid number of players! Input an integer between 1 and 7: \n";
     reprompt_player_count (read_int ()))
-  else
-    num_players
+  else num_players
+
 let main =
   (* Get Number of players *)
   print_string
     "Welcome to Poker! How many people do you want to play against?\n";
   let num_players = read_int () in
-  let num_players = (reprompt_player_count num_players) in
+  let num_players = reprompt_player_count num_players in
   let state = active_state num_players in
   delegate state;
   print_hands state Player;
@@ -123,12 +128,12 @@ let main =
   flop state;
   print_event state "River";
   print_string "You have a ";
-  (hand_of_rank (List.hd (find_best_hand state Player)).rank) ^ "\n" |> print_string;
+  hand_of_rank (List.hd (find_best_hand state Player)).rank ^ "\n"
+  |> print_string;
   print_string "The WINNER is....\n";
-  print_win_record [winner state];
-  (* print_string "THE FOLLOWING IS FOR DEVELOPMENT ONLY\n"; *)
-  print_string "\nThe other players hands were: \n";
-  print_win_record (find_best_hand state Computer);
-  print_hands state Computer;
+  print_win_record [ winner state ]
+(* print_string "THE FOLLOWING IS FOR DEVELOPMENT ONLY\n"; *)
+(* print_string "\nThe other players hands were: \n"; print_win_record
+   (find_best_hand state Computer); print_hands state Computer *)
 
 (* Results *)

@@ -13,6 +13,7 @@ let init_state (num : int) =
     turn = Player;
     user_money = 1000;
     cpu_moneys = Array.make num 1000;
+    dealer = Player;
   }
 
 let active_state (num : int) = init_state num
@@ -55,7 +56,7 @@ let flop state =
 
 let winner (state : state) : win_record =
   let best_player = find_best_hand state Player in
-  let best_computers = find_best_hand state Computer in
+  let best_computers = find_best_hand state (Computer 1) in
   let hands = List.append best_player best_computers in
   let sf x y =
     if x.rank > y.rank then -1

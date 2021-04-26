@@ -2,7 +2,7 @@
     turn. *)
 type players =
   | Player
-  | Computer
+  | Computer of int
 
 (** Returns string of a players type *)
 val string_of_player : players -> string
@@ -18,4 +18,5 @@ type state = {
   mutable turn : players;
   mutable user_money : int;
   mutable cpu_moneys : int array;
+  mutable dealer : players;
 }

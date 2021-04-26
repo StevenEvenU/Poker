@@ -270,4 +270,6 @@ let find_best_hand (state : state) (player : players) : win_record list
       aux j []
     in
     let hands = 0 -- (Array.length state.cpu_hands - 1) in
-    List.map (fun x -> f (Array.get state.cpu_hands x) Computer) hands
+    List.map
+      (fun x -> f (Array.get state.cpu_hands x) (Computer 1))
+      hands

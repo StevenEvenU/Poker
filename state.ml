@@ -2,11 +2,11 @@
    state based on how many players there are *)
 type players =
   | Player
-  | Computer
+  | Computer of int
 
 let string_of_player = function
   | Player -> "You"
-  | Computer -> "Opponent"
+  | Computer x -> "Opponent" ^ string_of_int x
 
 (* Game state *)
 type state = {
@@ -17,4 +17,5 @@ type state = {
   mutable turn : players;
   mutable user_money : int;
   mutable cpu_moneys : int array;
+  mutable dealer : players;
 }
