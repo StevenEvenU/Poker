@@ -8,7 +8,7 @@ type pot
 val add : int -> bool -> unit
 
 (** Set pot to zero*)
-val reset : unit -> unit
+val reset : unit
 
 (** Splits the pot amongs the winners. Uses a side pot if necessary.
     Assumes it is passed just the winners (one winner, ties, etc.).*)
