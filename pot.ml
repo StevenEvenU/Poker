@@ -4,7 +4,8 @@ type pot = int ref
 
 let pot = ref 0
 
-let side_pot = ref 0
+(*tuple of pot value and maximum add size*)
+let side_pot = Array.make 8 (ref 0, ref 0)
 
 let add (mon : int) (all_in : bool) =
   if not all_in then pot := !pot + mon else failwith "unimplemented"
