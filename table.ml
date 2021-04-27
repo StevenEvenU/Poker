@@ -59,7 +59,6 @@ let bet (state : state) (amt : int) =
   | Player -> player_bet amt (state.user_money == amt)
   | Computer x -> comp_bet (Computer x) false
 
-
 let winner (state : state) : win_record =
   let best_player = find_best_hand state Player in
   let best_computers = find_best_hand state (Computer 1) in
