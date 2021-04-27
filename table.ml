@@ -79,4 +79,16 @@ let winner (state : state) : win_record =
 (* let round_check state = if List.length state.cards_on_table = 5 then
    winner state else flop state *)
 
-let player_bet amt all_in = Pot.add amt all_in
+let player_bet amt all_in =
+  Pot.add amt all_in;
+  amt
+
+let rec index_of element lst acc =
+  if lst.(acc) = element then acc else index_of element lst (acc + 1)
+
+let comp_bet comp all_in state =
+  let idx = index_of comp state.cpu_hands 0 in
+  let max = state.cpu_moneys.(idx) in
+  let bet_amt = Random.int max + 1 in
+  Pot.add bet_amt all_in;
+  bet_amt

@@ -109,6 +109,11 @@ let rec reprompt_player_count (num_players : int) : int =
     reprompt_player_count (read_int ()))
   else num_players
 
+
+let rec betting (state : state) stop = 
+  let utg = (int_of_player state.dealer) mod (1 + Array.length state.cpu_hands)
+  in state.turn = 
+
 let main =
   (* Get Number of players *)
   print_string
