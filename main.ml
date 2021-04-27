@@ -110,9 +110,19 @@ let rec reprompt_player_count (num_players : int) : int =
   else num_players
 
 
+let prompt_bet (state : state) = 
+  print_string "The current bet is "^();
+  print_string "How much do you want to bet?"
+
 let rec betting (state : state) stop = 
-  let utg = (int_of_player state.dealer) mod (1 + Array.length state.cpu_hands)
-  in state.turn = 
+  let amt = match state.turn with 
+  | Player -> bet Player prompt_bet
+  | Computer x -> bet (Computer x)
+  in
+  state.current_bet = amt
+  
+
+
 
 let main =
   (* Get Number of players *)
@@ -124,6 +134,9 @@ let main =
   delegate state;
   print_hands state Player;
   (* First round of betting will occur here *)
+  let utg = (int_of_player state.dealer) mod (1 + Array.length state.cpu_hands)
+  in state.turn = utg;
+
   deal state;
   print_event state "Flop";
   (* Second round of betting will occur here *)
