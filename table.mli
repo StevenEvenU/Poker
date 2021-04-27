@@ -14,6 +14,9 @@ val deal : State.state -> unit
 (** This will deal the next card on the table. *)
 val flop : State.state -> unit
 
+(** This will bet whoever's turn it is and the amount *)
+val bet : State.players -> int -> int
+
 (** Returns the winner of the round. *)
 val winner : State.state -> Compare.win_record
 

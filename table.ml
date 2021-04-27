@@ -14,6 +14,7 @@ let init_state (num : int) =
     user_money = 1000;
     cpu_moneys = Array.make num 1000;
     dealer = Player;
+    current_bet = 0;
   }
 
 let active_state (num : int) = init_state num
@@ -54,11 +55,10 @@ let flop state =
     | none -> state.cards_on_table);
   state.deck_rem <- remove_top state.deck_rem
 
-let bet (state : state) (amt : int) =
-  match state.turn with
+let bet (player : players) (amt : int) : int =
+  match player with
   | Player -> player_bet amt (state.user_money == amt)
   | Computer x -> comp_bet (Computer x) false
-
 
 let winner (state : state) : win_record =
   let best_player = find_best_hand state Player in
