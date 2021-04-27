@@ -4,6 +4,10 @@ type players =
   | Player
   | Computer of int
 
+let int_of_player = function
+  | Player -> 0
+  | Computer x -> x
+
 let string_of_player = function
   | Player -> "You"
   | Computer x -> "Opponent" ^ string_of_int x
