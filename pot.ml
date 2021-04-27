@@ -62,9 +62,8 @@ open State
   let to_winner (win_rec_list : win_record list) = failwith
   "unimplemented"*)
 
-type pot = unit
-
-let reset = failwith "nope"
+let pot (state : State.state) =
+  Array.make (Array.length state.cpu_hands + 1) 0
 
 let add (state : State.state) (mon : int) (player : players) =
   failwith "not yet"

@@ -4,7 +4,7 @@ open Compare
 open State
 
 (** The money on the table (the pot)*)
-type pot
+val pot : State.state -> unit
 
 (** Add money to the pot. Must be given the state, the amount
     (IMPORTANT: give 0 if a player is calling, give -1 if a player is
