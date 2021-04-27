@@ -4,6 +4,9 @@ type players =
   | Player
   | Computer of int
 
+(** Returns integer of a players type *)
+val int_of_player : players -> int
+
 (** Returns string of a players type *)
 val string_of_player : players -> string
 
