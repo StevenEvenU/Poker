@@ -4,6 +4,15 @@ type players =
   | Player
   | Computer of int
 
+let int_of_player = function
+  | Player -> 0
+  | Computer x -> x
+
+let player_of_int = function
+  | 0 -> Player
+  | x when x <= 7 -> Computer x
+  | _ -> failwith "Error, maximum of 7 computer players"
+
 let string_of_player = function
   | Player -> "You"
   | Computer x -> "Opponent" ^ string_of_int x

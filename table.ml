@@ -54,6 +54,11 @@ let flop state =
     | none -> state.cards_on_table);
   state.deck_rem <- remove_top state.deck_rem
 
+let rec betting state stop =
+  let under_the_gun = int_of_player state.dealer
+  in under_the_gun
+
+
 let winner (state : state) : win_record =
   let best_player = find_best_hand state Player in
   let best_computers = find_best_hand state (Computer 1) in
@@ -72,3 +77,5 @@ let winner (state : state) : win_record =
 
 (* let round_check state = if List.length state.cards_on_table = 5 then
    winner state else flop state *)
+
+let player_bet amt all_in = Pot.add amt all_in
