@@ -7,6 +7,9 @@ type players =
 (** Returns integer of a players type *)
 val int_of_player : players -> int
 
+(** Returns player type of corresponding integer *)
+val player_of_int : int -> players
+
 (** Returns string of a players type *)
 val string_of_player : players -> string
 

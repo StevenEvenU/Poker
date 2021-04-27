@@ -4,8 +4,9 @@ open Compare
 (** The money on the table (the pot)*)
 type pot
 
-(** Add money to the pot*)
-val add : int -> bool -> unit
+(** Add money to the pot. The bool refers to if someone goes all in or
+    not*)
+val add : State.state -> int -> bool -> unit
 
 (** Set pot to zero*)
 val reset : unit
