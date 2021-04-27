@@ -62,11 +62,22 @@ open State
   let to_winner (win_rec_list : win_record list) = failwith
   "unimplemented"*)
 
-let pot (state : State.state) =
-  Array.make (Array.length state.cpu_hands + 1) 0
+let pot = Array.make 8 0
 
-let add (state : State.state) (mon : int) (player : players) =
-  failwith "not yet"
+let folded = Array.make 8 false
+
+let add (mon : int) (player : players) =
+  match player with
+  | Computer x ->
+      if mon >= 0 then pot.(x) <- pot.(x) + mon else folded.(x) <- true
+  | Player ->
+      if mon >= 0 then pot.(0) <- pot.(0) + mon else folded.(0) <- true
+
+let reset =
+  for i = 0 to 7 do
+    pot.(i) <- 0;
+    folded.(i) <- false
+  done
 
 let to_winner (win_rec_list : win_record list) =
   failwith "unimplemented"
