@@ -110,9 +110,20 @@ let rec reprompt_player_count (num_players : int) : int =
   else num_players
 
 
+let rec get_action input =
+  match String.uppercase_ascii input with
+  | "CHECK" -> Check
+  | "CALL" -> Call
+  | "RAISE" -> Raise
+  | "FOLD" -> Fold
+  | _ -> print_string "Invalid, please try again."; get_action read_line
+
 let prompt_bet (state : state) = 
   print_string "The current bet is "^(string_of_int state.current_bet);
-  print_string "Do you wish call, raise, or fold?"
+  print_string "Do you wish check, call, raise, or fold?";
+  
+  let action = get_action read_line in
+  match action
   print_string "How much do you want to bet?"
 
 let rec betting (state : state) stop = 
