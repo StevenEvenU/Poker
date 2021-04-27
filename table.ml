@@ -92,3 +92,7 @@ let comp_bet comp all_in state =
   let bet_amt = Random.int max + 1 in
   Pot.add bet_amt all_in;
   bet_amt
+
+let rec distr int_list acc state =
+  state.cpu_moneys.(acc) <- int_list.(acc);
+  match acc with 8 -> () | _ -> distr int_list (acc + 1) state
