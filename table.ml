@@ -54,8 +54,8 @@ let flop state =
     | none -> state.cards_on_table);
   state.deck_rem <- remove_top state.deck_rem
 
-let bet (state : state) (amt : int) =
-  match state.turn with
+let bet (player : players) (amt : int) : int =
+  match player with
   | Player -> player_bet amt (state.user_money == amt)
   | Computer x -> comp_bet (Computer x) false
 
