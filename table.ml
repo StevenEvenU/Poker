@@ -14,6 +14,7 @@ let init_state (num : int) =
     user_money = 1000;
     cpu_moneys = Array.make num 1000;
     dealer = Player;
+    current_bet = 0;
   }
 
 let active_state (num : int) = init_state num

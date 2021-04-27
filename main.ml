@@ -111,9 +111,9 @@ let rec reprompt_player_count (num_players : int) : int =
 
 
 let prompt_bet (state : state) = 
-  print_string "The current bet is "^(string_of_int state.current_bet);
-  print_string "Do you wish call, raise, or fold?"
-  print_string "How much do you want to bet?"
+  print_string ("The current bet is "^(string_of_int state.current_bet));
+  print_string "Do you wish call, raise, or fold?";
+  print_string "How much do you want to bet?";
 
 let rec betting (state : state) stop = 
   let amt = match state.turn with 
