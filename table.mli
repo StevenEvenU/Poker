@@ -28,3 +28,6 @@ val player_bet : int -> bool -> int
 (** This will add on behalf of the computer a certain amount of money to
     the pot and return this amount. *)
 val comp_bet : State.players -> bool -> int
+
+(** This will distrbute the split of the pot to the individuals *)
+val distr : int array -> int -> State.state -> unit
