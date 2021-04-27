@@ -54,9 +54,11 @@ let flop state =
     | none -> state.cards_on_table);
   state.deck_rem <- remove_top state.deck_rem
 
-let rec betting state stop =
-  let under_the_gun = int_of_player state.dealer in
-  under_the_gun
+let bet (state : state) (amt : int) =
+  match state.turn with
+  | Player -> player_bet amt (state.user_money == amt)
+  | Computer x -> comp_bet (Computer x) false
+
 
 let winner (state : state) : win_record =
   let best_player = find_best_hand state Player in

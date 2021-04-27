@@ -25,4 +25,5 @@ type state = {
   mutable user_money : int;
   mutable cpu_moneys : int array;
   mutable dealer : players;
+  mutable current_bet : int;
 }
