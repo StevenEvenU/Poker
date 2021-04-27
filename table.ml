@@ -74,3 +74,11 @@ let winner (state : state) : win_record =
    winner state else flop state *)
 
 let player_bet amt all_in = Pot.add amt all_in
+
+let rec index_of element lst acc =
+  if lst.(acc) = element then acc else index_of element lst (acc + 1)
+
+let comp_bet comp all_in state =
+  let idx = index_of comp state.cpu_hands 0 in
+  let max = state.cpu_moneys.(idx) in
+  Pot.add (Random.int max + 1) all_in
