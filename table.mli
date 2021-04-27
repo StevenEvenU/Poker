@@ -21,9 +21,10 @@ val winner : State.state -> Compare.win_record
     equal to 5. *)
 (* val round_check : State.state -> unit *)
 
-(** This will add the amount of money the player desires to the pot *)
-val player_bet : int -> bool -> unit
+(** This will add the amount of money the player desires to the pot and
+    return this amount. *)
+val player_bet : int -> bool -> int
 
 (** This will add on behalf of the computer a certain amount of money to
-    the pot*)
-val comp_bet : State.players -> bool -> unit
+    the pot and return this amount. *)
+val comp_bet : State.players -> bool -> int
