@@ -77,3 +77,5 @@ let winner (state : state) : win_record =
 
 (* let round_check state = if List.length state.cards_on_table = 5 then
    winner state else flop state *)
+
+let player_bet amt all_in = Pot.add amt all_in

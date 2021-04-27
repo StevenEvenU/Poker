@@ -20,3 +20,10 @@ val winner : State.state -> Compare.win_record
 (** This will check who won when the size of the state.cards_on_table is
     equal to 5. *)
 (* val round_check : State.state -> unit *)
+
+(** This will add the amount of money the player desires to the pot *)
+val player_bet : int -> bool -> unit
+
+(** This will add on behalf of the computer a certain amount of money to
+    the pot*)
+val comp_bet : State.players -> bool -> unit
