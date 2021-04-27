@@ -111,7 +111,8 @@ let rec reprompt_player_count (num_players : int) : int =
 
 
 let prompt_bet (state : state) = 
-  print_string "The current bet is "^();
+  print_string "The current bet is "^(string_of_int state.current_bet);
+  print_string "Do you wish call, raise, or fold?"
   print_string "How much do you want to bet?"
 
 let rec betting (state : state) stop = 
@@ -120,8 +121,6 @@ let rec betting (state : state) stop =
   | Computer x -> bet (Computer x)
   in
   state.current_bet = amt
-  
-
 
 
 let main =
