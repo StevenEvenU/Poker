@@ -1,6 +1,28 @@
 open Deck
 open State
 
+let royal_rank = 10
+
+let straight_flush_rank = 9
+
+let four_kind_rank = 8
+
+let full_house_rank = 7
+
+let flush_rank = 6
+
+let straight_rank = 5
+
+let three_kind_rank = 4
+
+let two_pair_rank = 3
+
+let pair_rank = 2
+
+let high_card_rank = 1
+
+let no_card_rank = 0
+
 type win_record = {
   player : players;
   rank : int;
@@ -73,7 +95,8 @@ exception GameNotOver
 let high_card (cards : card_check list) (user : players) : win_record =
   match hand_sort_int cards with
   | [] -> raise GameNotOver
-  | h :: t -> { player = user; rank = 1; value = h.int_value }
+  | h :: t ->
+      { player = user; rank = high_card_rank; value = h.int_value }
 
 let rec one_pair_helper
     (cards : card_check list)
@@ -84,16 +107,16 @@ let rec one_pair_helper
       if h1.int_value = h2.int_value then
         { player = user; rank = hand_rank; value = h1.int_value }
       else one_pair_helper (h2 :: t) user hand_rank
-  | _ -> { player = user; rank = 0; value = 0 }
+  | _ -> { player = user; rank = no_card_rank; value = 0 }
 
 let one_pair (cards : card_check list) (user : players) =
-  one_pair_helper cards user 2
+  one_pair_helper cards user pair_rank
 
 let rec snd_pair_check pair cards user =
   match hand_sort_int cards with
   | h1 :: h2 :: t ->
       if h1.int_value = h2.int_value && pair.value != h1.int_value then
-        { player = user; rank = 3; value = h1.int_value }
+        { player = user; rank = two_pair_rank; value = h1.int_value }
       else snd_pair_check pair (h2 :: t) user
   | _ -> pair
 
@@ -110,10 +133,10 @@ let rec three_kind_helper
       if h1.int_value = h2.int_value && h2.int_value = h3.int_value then
         { player = user; rank = hand_rank; value = h1.int_value }
       else three_kind_helper (h2 :: h3 :: t) user hand_rank
-  | _ -> { player = user; rank = 0; value = 0 }
+  | _ -> { player = user; rank = no_card_rank; value = 0 }
 
 let three_kind (cards : card_check list) (user : players) : win_record =
-  three_kind_helper cards user 4
+  three_kind_helper cards user three_kind_rank
 
 let strght_hand_sort_val (cards : card_check list) =
   List.rev (List.sort_uniq card_compare_int cards)
@@ -127,9 +150,9 @@ let rec straight (cards : card_check list) (user : players) : win_record
         && h2.int_value - 1 = h3.int_value
         && h3.int_value - 1 = h4.int_value
         && h4.int_value - 1 = h5.int_value
-      then { player = user; rank = 5; value = h1.int_value }
+      then { player = user; rank = straight_rank; value = h1.int_value }
       else straight (h2 :: h3 :: h4 :: h5 :: t) user
-  | _ -> { player = user; rank = 0; value = 0 }
+  | _ -> { player = user; rank = no_card_rank; value = 0 }
 
 let rec flush_helper
     (cards : card_check list)
@@ -157,8 +180,8 @@ let rec flush_helper
       if
         spade_count >= 5 || heart_count >= 5 || diamond_count >= 5
         || club_count >= 5
-      then { player = user; rank = 6; value = 0 }
-      else { player = user; rank = 0; value = 0 }
+      then { player = user; rank = flush_rank; value = 0 }
+      else { player = user; rank = high_card_rank; value = 0 }
 
 let flush (cards : card_check list) (user : players) : win_record =
   flush_helper cards user 0 0 0 0
@@ -168,11 +191,11 @@ let rec full_house (cards : card_check list) (user : players) :
   match hand_sort_int cards with
   | h1 :: h2 :: h3 :: t
     when h1.int_value = h2.int_value && h2.int_value = h3.int_value ->
-      one_pair_helper t user 7
+      one_pair_helper t user full_house_rank
   | h1 :: h2 :: t when h1.int_value = h2.int_value ->
-      three_kind_helper t user 7
+      three_kind_helper t user full_house_rank
   | h :: t -> full_house t user
-  | _ -> { player = user; rank = 0; value = 0 }
+  | _ -> { player = user; rank = high_card_rank; value = 0 }
 
 (* let better_full_house (cards : card_check list) (user : players) :
    win_record = let seen = [] in let rec find (card : card_check) list =
@@ -190,9 +213,10 @@ let rec four_kind (cards : card_check list) (user : players) :
         h1.int_value = h2.int_value
         && h2.int_value = h3.int_value
         && h3.int_value = h4.int_value
-      then { player = user; rank = 8; value = h1.int_value }
+      then
+        { player = user; rank = four_kind_rank; value = h1.int_value }
       else four_kind (h2 :: h3 :: h4 :: t) user
-  | _ -> { player = user; rank = 0; value = 0 }
+  | _ -> { player = user; rank = no_card_rank; value = 0 }
 
 let rec straight_flush (cards : card_check list) (user : players) :
     win_record =
@@ -207,9 +231,14 @@ let rec straight_flush (cards : card_check list) (user : players) :
         && h2.string_suit = h3.string_suit
         && h3.string_suit = h4.string_suit
         && h4.string_suit = h5.string_suit
-      then { player = user; rank = 9; value = h1.int_value }
+      then
+        {
+          player = user;
+          rank = straight_flush_rank;
+          value = h1.int_value;
+        }
       else straight_flush (h2 :: h3 :: h4 :: h5 :: t) user
-  | _ -> { player = user; rank = 0; value = 0 }
+  | _ -> { player = user; rank = no_card_rank; value = 0 }
 
 let royal_flush (cards : card_check list) (user : players) : win_record
     =
@@ -221,37 +250,37 @@ let royal_flush (cards : card_check list) (user : players) : win_record
         && h1.string_suit = "♠" && h2.string_suit = "♠"
         && h3.string_suit = "♠" && h4.string_suit = "♠"
         && h5.string_suit = "♠"
-      then { player = user; rank = 10; value = 14 }
-      else { player = user; rank = 0; value = 0 }
-  | _ -> { player = user; rank = 0; value = 0 }
+      then { player = user; rank = royal_rank; value = 14 }
+      else { player = user; rank = no_card_rank; value = 0 }
+  | _ -> { player = user; rank = no_card_rank; value = 0 }
 
 let best_hand (cards : card_check list) (user : players) : win_record =
   let result = royal_flush cards user in
-  if result.rank = 10 then result
+  if result.rank = royal_rank then result
   else
     let result = straight_flush cards user in
-    if result.rank = 9 then result
+    if result.rank = straight_rank then result
     else
       let result = four_kind cards user in
-      if result.rank = 8 then result
+      if result.rank = four_kind_rank then result
       else
         let result = full_house cards user in
-        if result.rank = 7 then result
+        if result.rank = full_house_rank then result
         else
           let result = flush cards user in
-          if result.rank = 6 then result
+          if result.rank = flush_rank then result
           else
             let result = straight cards user in
-            if result.rank = 5 then result
+            if result.rank = straight_rank then result
             else
               let result = three_kind cards user in
-              if result.rank = 4 then result
+              if result.rank = three_kind_rank then result
               else
                 let result = two_pair cards user in
-                if result.rank = 3 then result
+                if result.rank = two_pair_rank then result
                 else
                   let result = one_pair cards user in
-                  if result.rank = 2 then result
+                  if result.rank = pair_rank then result
                   else high_card cards user
 
 let find_best_hand (state : state) (player : players) : win_record list
