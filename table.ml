@@ -55,10 +55,28 @@ let flop state =
     | none -> state.cards_on_table);
   state.deck_rem <- remove_top state.deck_rem
 
-let bet (player : players) (amt : int) : int =
+let player_bet amt all_in =
+  Pot.add amt Player;
+  amt
+
+let comp_bet comp state =
+  match comp with
+  | Computer x ->
+      let idx = x - 1 in
+      let max = state.cpu_moneys.(idx) in
+      let bet_amt = Random.int max + 1 in
+      Pot.add bet_amt (Computer idx);
+      bet_amt
+  | _ -> -1
+
+let rec distr int_list acc state =
+  state.cpu_moneys.(acc) <- int_list.(acc);
+  match acc with 8 -> () | _ -> distr int_list (acc + 1) state
+
+let bet (player : players) (amt : int) (state : state) : int =
   match player with
   | Player -> player_bet amt (state.user_money == amt)
-  | Computer x -> comp_bet (Computer x) false
+  | Computer x -> comp_bet (Computer x) state
 
 let winner (state : state) : win_record =
   let best_player = find_best_hand state Player in
@@ -78,21 +96,3 @@ let winner (state : state) : win_record =
 
 (* let round_check state = if List.length state.cards_on_table = 5 then
    winner state else flop state *)
-
-let player_bet amt all_in =
-  Pot.add amt Player;
-  amt
-
-let rec index_of element arr acc =
-  if arr.(acc) = element then acc else index_of element arr (acc + 1)
-
-let comp_bet comp all_in state =
-  let idx = index_of comp state.cpu_hands 0 in
-  let max = state.cpu_moneys.(idx) in
-  let bet_amt = Random.int max + 1 in
-  Pot.add bet_amt (Computer idx);
-  bet_amt
-
-let rec distr int_list acc state =
-  state.cpu_moneys.(acc) <- int_list.(acc);
-  match acc with 8 -> () | _ -> distr int_list (acc + 1) state
