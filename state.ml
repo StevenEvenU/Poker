@@ -28,7 +28,7 @@ type state = {
   mutable current_bet : int;
 }
 
-let bankrupt players_mon index state =
+let bankrupt index state =
   let players_mon =
     Array.append [| state.user_money |] state.cpu_moneys
   in
