@@ -7,6 +7,9 @@ val is_raised : State.state -> bool
 (** Gets the users next action *)
 val get_action : State.state -> action
 
+(** Updates state.turn and state.current_bet *)
+val next_turn : State.state -> int -> unit
+
 (** Returns string of value *)
 val string_of_value : Deck.value -> string
 
