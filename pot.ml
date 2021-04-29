@@ -101,7 +101,7 @@ let second_place win_list =
           else acc)
     [] win_list
 
-let give_remainder win_list side_cause =
+let remainder win_list side_cause =
   let sub = subtract (top_winners win_list) [ side_cause ] [] in
   if sub <> [] then sub
   else subtract (second_place win_list) [ side_cause ] []
@@ -136,7 +136,7 @@ let yes_side_pot win_list state all_in =
   in
   remove_side_quant;
   give_pot (top_winners win_list) side_pot_sum;
-  give_pot (give_remainder win_list side_cause) (piling 0 0)
+  give_pot (remainder win_list side_cause) (piling 0 0)
 
 let to_winner (win_list : win_record list) (state : State.state) =
   let all_in = Array.make 8 false in
