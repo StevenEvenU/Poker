@@ -1,67 +1,5 @@
 open State
 
-(*let valu_0 = ref 0
-
-  let max_0 = ref 1000
-
-  let valu_1 = ref 0
-
-  let max_1 = ref 0
-
-  let valu_2 = ref 0
-
-  let max_2 = ref 0
-
-  let valu_3 = ref 0
-
-  let max_3 = ref 0
-
-  let valu_4 = ref 0
-
-  let max_4 = ref 0
-
-  let valu_5 = ref 0
-
-  let max_5 = ref 0
-
-  let valu_6 = ref 0
-
-  let max_6 = ref 0
-
-  let valu_7 = ref 0
-
-  let max_7 = ref 0
-
-  (*tuple of pot value and maximum add size*) let pot = (*Array.make 8
-  (ref 0, ref 0)*) [| (valu_0, max_0); (valu_1, max_1); (valu_2, max_2);
-  (valu_3, max_3); (valu_4, max_4); (valu_5, max_5); (valu_6, max_6);
-  (valu_7, max_7); |]
-
-  let minimum (state : State.state) = Array.fold_right (fun x min -> if
-  x < min then x else min) state.cpu_moneys 1000
-
-  let make_side (mon : int) = if !max_1 = 0 then max_1 := mon else if
-  !max_2 = 0 then ( max_2 := mon; valu_2 := mon) else if !max_3 = 0 then
-  ( max_3 := mon; valu_3 := mon) else if !max_4 = 0 then ( max_4 := mon;
-  valu_4 := mon) else if !max_5 = 0 then ( max_5 := mon; valu_5 := mon)
-  else if !max_6 = 0 then ( max_6 := mon; valu_6 := mon) else if !max_7
-  = 0 then ( max_7 := mon; valu_7 := mon)
-
-  let add_to_side mon = failwith "nope"
-
-  let add (state : State.state) (mon : int) (all_in : bool) = let min =
-  minimum state in (* if all_in then make_side mon else if !max_1 = 0
-  then valu_0 := !valu_0 + mon else add_to_side mon*)
-
-  (*if not all_in then pot.(0) := !pot + mon else let looping = 1 in
-  while looping < 9 do pot.(looping - 1) <- (ref mon, ref mon) done*)
-
-  let reset = for i = 0 to 7 do pot.(i) <- (ref 0, ref 0) done
-
-  let to_winner (win_rec_list : win_record list) = failwith
-  "unimplemented"*)
-
-(** If it is -2 at the end of a hand then that player is not in the game*)
 let pot = Array.make 8 (-2)
 
 let money_back = Array.make 8 0
@@ -81,50 +19,23 @@ let add (mon : int) (player : State.players) =
         else pot.(0) <- mon
       else folded.(0) <- true
 
-(*if mon >= 0 then pot.(0) <- pot.(0) + mon else folded.(0) <- true*)
-
 let reset =
   for i = 0 to 7 do
     pot.(i) <- -2;
     folded.(i) <- false
   done
 
-(*let to_winner (win_rec_list : int list) (state : State.state) = let
-  all_in = Array.make 8 false in for i = 0 to 7 do match bankrupt i
-  state with true -> all_in.(i) <- true | _ -> () done; let side_needed
-  = ref false in for i = 0 to 7 do if all_in.(i) = true then side_needed
-  := true else () done; if !side_needed = false then ( let rec
-  money_list lst = match lst with | [] -> () | [ h ] -> money_back.(h)
-  <- 1 | h :: t -> money_back.(h) <- 1; money_list t (* match lst with |
-  [] -> () | [ h ] -> ( match h.player with | Player -> money_back.(0)
-  <- 1 | Computer x -> money_back.(x) <- 1) | h :: t -> (match h.player
-  with | Player -> money_back.(0) <- 1 | Computer x -> money_back.(x) <-
-  1); money_list t*) in money_list win_rec_list; let rec split ind = if
-  ind >= 8 then false else if money_back.(ind) = 1 then true else split
-  (ind + 1) in if split 0 = true then ( let rec pile ind acc = if acc >=
-  8 then acc else pile (ind + 1) (acc + pot.(ind)) in let full_pot =
-  pile 0 0 in if full_pot mod 2 = 0 then for i = 0 to 7 do if
-  money_back.(i) = 1 then money_back.(i) <- full_pot / 2 else () done
-  else let full_pot' = pile 0 0 - 1 in for i = 0 to 7 do if
-  money_back.(i) = 1 then money_back.(i) <- full_pot' / 2 else () done;
-  money_back) else let rec pile ind acc = if acc >= 8 then acc else pile
-  (ind + 1) (acc + pot.(ind)) in let full_pot = pile 0 0 in for i = 0 to
-  7 do if money_back.(i) = 1 then money_back.(i) <- full_pot else ()
-  done; money_back) else money_back
-
-  (*AAAAAAA*)*)
-
 let rec side_pot_need all_in ind =
   if ind >= 8 then false
   else if all_in.(ind) = true then true
   else side_pot_need all_in (ind + 1)
 
-let no_side_pot win_list =
+let rec piling ind acc =
+  if ind >= 8 then acc
+  else piling (ind + 1) (acc + if pot.(ind) >= 0 then pot.(ind) else 0)
+
+let give_pot win_list sum0 =
   let num_winners = List.length win_list in
-  let rec piling ind acc =
-    if ind >= 8 then acc else piling (ind + 1) (acc + pot.(ind))
-  in
-  let sum0 = piling 0 0 in
   let sum =
     if num_winners > 1 && sum0 mod num_winners <> 0 then
       sum0 - (sum0 mod num_winners)
@@ -140,7 +51,44 @@ let no_side_pot win_list =
   in
   splitter win_list
 
-let yes_side_pot win_list state = failwith "not yet"
+let rec subtract (lst1 : int list) (lst2 : int list) (acc : int list) =
+  match lst1 with
+  | [] -> acc
+  | h :: t ->
+      if List.mem h lst2 then subtract t lst2 acc
+      else subtract t lst2 (h :: acc)
+
+let yes_side_pot win_list state all_in =
+  let rec side_amount_calc ind =
+    if ind >= 8 then failwith "not happening"
+    else if all_in.(ind) = true then pot.(ind)
+    else side_amount_calc (ind + 1)
+  in
+  let side_amount = side_amount_calc 0 in
+  (*how much from person in side pot*)
+  let rec side_cause_calc ind =
+    if ind >= 8 then failwith "not happening"
+    else if all_in.(ind) = true then ind
+    else side_cause_calc (ind + 1)
+  in
+  let side_cause = side_cause_calc 0 in
+  (* who went all in*)
+  let rec side_pot_pile ind acc =
+    if ind >= 8 then acc
+    else if pot.(ind) > 0 then
+      side_pot_pile (ind + 1) (acc + side_amount)
+    else side_pot_pile (ind + 1) acc
+  in
+  let side_pot_sum = side_pot_pile 0 0 in
+  (* total amount in side pot*)
+  let remove_side_quant =
+    for i = 0 to 7 do
+      if pot.(i) > 0 then pot.(i) <- pot.(i) - side_pot_sum else ()
+    done
+  in
+  remove_side_quant;
+  give_pot win_list side_pot_sum;
+  give_pot (subtract win_list [ side_cause ] []) (piling 0 0)
 
 let to_winner (win_list : int list) (state : State.state) =
   let all_in = Array.make 8 false in
@@ -148,6 +96,6 @@ let to_winner (win_list : int list) (state : State.state) =
     match bankrupt i state with true -> all_in.(i) <- true | _ -> ()
   done;
   let side_needed = side_pot_need all_in 0 in
-  if side_needed = false then no_side_pot win_list
-  else yes_side_pot win_list state;
+  if side_needed = false then give_pot win_list (piling 0 0)
+  else yes_side_pot win_list state all_in;
   money_back
