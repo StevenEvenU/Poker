@@ -1,4 +1,3 @@
-open Compare
 open State
 
 (*let valu_0 = ref 0
@@ -67,7 +66,7 @@ let pot = Array.make 8 (-2)
 
 let folded = Array.make 8 false
 
-let add (mon : int) (player : players) =
+let add (mon : int) (player : State.players) =
   match player with
   | Computer x ->
       if mon >= 0 then
@@ -90,7 +89,7 @@ let reset =
 
 let waa i = true
 
-let to_winner (win_rec_list : win_record list) (state : State.state) =
+let to_winner (win_rec_list : int list) (state : State.state) =
   let all_in = Array.make 8 false in
   for i = 0 to 7 do
     match bankrupt i state with true -> all_in.(i) <- true | _ -> ()
@@ -99,20 +98,33 @@ let to_winner (win_rec_list : win_record list) (state : State.state) =
   for i = 0 to 7 do
     if all_in.(i) = true then side_needed := true else ()
   done;
-  if !side_needed = false then
+  if !side_needed = false then (
     let money_back = Array.make 8 0 in
     let rec money_list lst =
       match lst with
       | [] -> ()
-      | [ h ] -> (
-          match h.player with
-          | Player -> money_back.(0) <- 1
-          | Computer x -> money_back.(x) <- 1)
+      | [ h ] -> money_back.(h) <- 1
       | h :: t ->
-          (match h.player with
-          | Player -> money_back.(0) <- 1
-          | Computer x -> money_back.(x) <- 1);
+          money_back.(h) <- 1;
           money_list t
+      (* match lst with | [] -> () | [ h ] -> ( match h.player with |
+         Player -> money_back.(0) <- 1 | Computer x -> money_back.(x) <-
+         1) | h :: t -> (match h.player with | Player -> money_back.(0)
+         <- 1 | Computer x -> money_back.(x) <- 1); money_list t*)
     in
-    money_list win_rec_list
+    money_list win_rec_list;
+    let rec split ind =
+      if ind >= 8 then false
+      else if money_back.(ind) = 1 then true
+      else split (ind + 1)
+    in
+    if split 0 = true then ()
+    else
+      let rec pile ind acc =
+        if acc >= 8 then () else pile (ind + 1) (acc + pot.(ind))
+      in
+      let full_pot = pile 0 0 in
+      for i = 0 to 7 do
+        if money_back.(i) = 1 then money_back.(i) <- full_pot else ()
+      done)
   else ()
