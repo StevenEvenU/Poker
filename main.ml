@@ -110,6 +110,9 @@ let rec reprompt_player_count (num_players : int) : int =
   else num_players
 
 
+(***     Betting Logic    ***)
+
+
 let rec get_action input =
   match String.uppercase_ascii input with
   | "CHECK" -> Check
@@ -118,20 +121,64 @@ let rec get_action input =
   | "FOLD" -> Fold
   | _ -> print_string "Invalid, please try again."; get_action read_line
 
-let prompt_bet (state : state) = 
+let next_turn (state : state) players_in current_bet =
+  state.turn <- player_of_int (1 + int_of_player state.turn);
+  state.current_bet <- current_bet
+
+let update_bets bets (player : State.players) bet =
+  bets.(int_of_player player) <- bet
+
+let player_prev_bet (state : state) bets =
+  bets.(int_of_player state.turn)
+
+let get_money (state : state) player =
+  match player with
+  | Player -> state.user_money
+  | Computer x -> state.cpu_moneys.(x-1)
+
+
+let rec get_raise_amount =
+  print_string "How much do you wish to raise by"
+
+let valid_check (state : state) bets =
+  let players_bet = prayer_prev_bet state bets in 
+  match state.current_bet with
+  | 0 -> true
+  | players_bet -> true
+  | _ -> false
+
+let valid_call (state : state) bets =
+  get_money state.turn <= state.current_bet
+
+(* TODO: Implement *)
+let valid_raise (state : state) bets =
+  failwith "Unimplemented"
+
+(* TODO: Only prompt available actions, not all *)
+let rec prompt_action (state : state) bets = 
   print_string "The current bet is "^(string_of_int state.current_bet);
   print_string "Do you wish check, call, raise, or fold?";
   
   let action = get_action read_line in
-  match action
-  print_string "How much do you want to bet?"
+  match action with
+  | Check -> if valid_check state bets then 0
+    else print_string "You can't check at the moment. Try something else"; prompt_action state bets
+  | Call -> if valid_call then update_bets state.turn (bet Player state.current_bet)
+  | Raise -> if valid_raise then update_bets state.turn (bet Player ) ;
+  | Fold ->;
+  print_string "How much do you want to bet?";
 
-let rec betting (state : state) stop = 
-  let amt = match state.turn with 
-  | Player -> bet Player prompt_bet
+let rec rec_betting_round (state : state) stop players_in bets = 
+  let player = state.turn in
+  let amt = match player with 
+  | Player -> prompt_action bets
   | Computer x -> bet (Computer x)
   in
-  state.current_bet = amt
+  next_turn state players_in amt
+
+let betting_round (state : state) players_in stop =
+  let bets = Array.make (1 + Array.length state.cpu_hands) 0 in
+  rec_betting_round state stop players_in bets
 
 
 let main =
@@ -142,6 +189,10 @@ let main =
   let num_players = reprompt_player_count num_players in
   let state = active_state num_players in
   delegate state;
+  let players_in = ref [| Player |] in
+  for x = 1 to num_players do
+    players_in := Array.append !players_in [| (Computer x) |]
+  done;
   print_hands state Player;
   (* First round of betting will occur here *)
   let utg = (int_of_player state.dealer) mod (1 + Array.length state.cpu_hands)
