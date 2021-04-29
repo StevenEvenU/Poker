@@ -122,14 +122,13 @@ let rec get_action input =
       get_action (read_line ())
 
 let next_turn (state : state) players_in current_bet =
-  let next_player =
-    let len = Array.length players_in - 1 in
-    for i = 0 to len do
-      if !(players_in.(i)) = state.turn then i + 1
-      else if i = len then 0
-    done
+  let rec next (state : state) len i =
+    if!players_in.(i) = state.turn then !players_in.(i + 1)
+    else if i = len then !players_in.(0)
+    else next state len (i+1)
   in
-  state.turn <- player_of_int next_player;
+  let next_player = next state (Array.length !players_in - 1) 0 in
+  state.turn <- next_player;
   state.current_bet <- current_bet
 
 let update_bets bets (player : State.players) bet =
@@ -151,7 +150,7 @@ let valid_check (state : state) bets =
   | _ -> false
 
 let valid_call (state : state) bets =
-  get_money state.turn <= state.current_bet
+  (get_money state state.turn) <= state.current_bet
 
 (* TODO: Implement. Make sure they have the funds to raise*)
 let valid_raise (state : state) bets =
@@ -169,7 +168,7 @@ let rec get_raise_amount (state : state) =
     get_raise_amount state)
 
 (* TODO: Only prompt available actions, not all *)
-let rec prompt_action (state : state) bets =
+let rec prompt_action (state : state) players_in bets =
   print_string ("The current bet is " ^ string_of_int state.current_bet);
   print_string "Do you wish check, call, raise, or fold?";
 
@@ -180,32 +179,32 @@ let rec prompt_action (state : state) bets =
         (* Don't need to update `bets` array *)
       else (
         print_string "You can't check at the moment. Try something else";
-        prompt_action state bets)
+        prompt_action state players_in bets)
   | Call ->
       if valid_call state bets then (
-        let amt = Table.bet Player state.current_bet in
-        update_bets state.turn amt;
+        let amt = bet Player state.current_bet state in
+        update_bets bets state.turn amt;
         amt)
       else 0
   | Raise ->
-      let amt = bet Player (get_raise_amount state) state in
-      update_bets state.turn amt;
+      let amt = (Table.bet Player (get_raise_amount state) state) in
+      update_bets bets state.turn amt;
       amt
   | Fold ->
-      let new_player_in = ref [||] in
-      for i = 0 to Array.length players_in do
-        if player_in.(i) = state.turn then ()
-        else new_players_in := Array.append new_players_in player_in.(i)
+      let new_players_in = ref [||] in
+      for i = 0 to (Array.length !players_in) do
+        if !players_in.(i) = state.turn then ()
+        else new_players_in := Array.append !new_players_in [| !players_in.(i) |]
       done;
-      players_in := new_players_in;
-      update_bets state.turn - 1;
+      players_in := !new_players_in;
+      update_bets bets state.turn (-1);
       state.current_bet
 
 let rec rec_betting_round (state : state) players_in bets =
   let player = state.turn in
   let amt =
     match player with
-    | Player -> prompt_action bets
+    | Player -> prompt_action state players_in bets
     | Computer x -> bet (Computer x) 0 state
   in
   (* Update state.turn and state.current_bet *)
