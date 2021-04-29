@@ -106,7 +106,7 @@ let remainder win_list side_cause =
   if sub <> [] then sub
   else subtract (second_place win_list) [ side_cause ] []
 
-let yes_side_pot win_list state all_in =
+let one_side_pot win_list state all_in =
   let rec side_amount_calc ind =
     if ind >= 8 then failwith "not happening"
     else if all_in.(ind) = true then pot.(ind)
@@ -137,6 +137,54 @@ let yes_side_pot win_list state all_in =
   remove_side_quant;
   give_pot (top_winners win_list) side_pot_sum;
   give_pot (remainder win_list side_cause) (piling 0 0)
+
+let rec n_side_pot win_list state all_in n =
+  let rec side_amount_calc ind acc =
+    if ind >= 8 then acc
+    else if all_in.(ind) = true && pot.(ind) < acc then
+      side_amount_calc (ind + 1) pot.(ind)
+    else side_amount_calc (ind + 1) acc
+  in
+  let side_amount = side_amount_calc 0 1001 in
+  (*how much from person in side pot*)
+  let rec side_cause_calc ind =
+    if ind >= 8 then failwith "not happening"
+    else if pot.(ind) = side_amount then ind
+    else side_cause_calc (ind + 1)
+  in
+  let side_cause = side_cause_calc 0 in
+  (* who went all in*)
+  let rec side_pot_pile ind acc =
+    if ind >= 8 then acc
+    else if pot.(ind) > 0 then
+      side_pot_pile (ind + 1) (acc + side_amount)
+    else side_pot_pile (ind + 1) acc
+  in
+  let side_pot_sum = side_pot_pile 0 0 in
+  (* total amount in side pot*)
+  let remove_side_quant =
+    for i = 0 to 7 do
+      if pot.(i) > 0 then pot.(i) <- pot.(i) - side_pot_sum else ()
+    done
+  in
+  remove_side_quant;
+  give_pot (top_winners win_list) side_pot_sum;
+  for i = 0 to 7 do
+    if all_in.(i) = true && pot.(i) = 0 then all_in.(i) <- false else ()
+  done;
+  if n <= 1 then () else n_side_pot win_list state all_in (n - 1);
+  give_pot (remainder win_list side_cause) (piling 0 0)
+
+let yes_side_pot win_list state all_in =
+  let rec num_side_pot_calc ind acc =
+    if ind >= 8 then acc
+    else if all_in.(ind) = true then
+      num_side_pot_calc (ind + 1) (acc + 1)
+    else num_side_pot_calc (ind + 1) acc
+  in
+  let num_side_pot = num_side_pot_calc 0 0 in
+  if num_side_pot = 1 then one_side_pot win_list state all_in
+  else n_side_pot win_list state all_in num_side_pot
 
 let to_winner (win_list : win_record list) (state : State.state) =
   let all_in = Array.make 8 false in
