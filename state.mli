@@ -27,3 +27,7 @@ type state = {
   mutable dealer : players;
   mutable current_bet : int;
 }
+
+(** bankrupt checks if the person is going all in. If so it will return
+    true, otherwise it will return false *)
+val bankrupt : int -> state -> bool

@@ -62,22 +62,57 @@ open State
   let to_winner (win_rec_list : win_record list) = failwith
   "unimplemented"*)
 
-let pot = Array.make 8 0
+(** If it is -2 at the end of a hand then that player is not in the game*)
+let pot = Array.make 8 (-2)
 
 let folded = Array.make 8 false
 
 let add (mon : int) (player : players) =
   match player with
   | Computer x ->
-      if mon >= 0 then pot.(x) <- pot.(x) + mon else folded.(x) <- true
+      if mon >= 0 then
+        if pot.(x) >= 0 then pot.(x) <- pot.(x) + mon
+        else pot.(x) <- mon
+      else folded.(x) <- true
   | Player ->
-      if mon >= 0 then pot.(0) <- pot.(0) + mon else folded.(0) <- true
+      if mon >= 0 then
+        if pot.(0) >= 0 then pot.(0) <- pot.(0) + mon
+        else pot.(0) <- mon
+      else folded.(0) <- true
+
+(*if mon >= 0 then pot.(0) <- pot.(0) + mon else folded.(0) <- true*)
 
 let reset =
   for i = 0 to 7 do
-    pot.(i) <- 0;
+    pot.(i) <- -2;
     folded.(i) <- false
   done
 
-let to_winner (win_rec_list : win_record list) =
-  failwith "unimplemented"
+let waa i = true
+
+let to_winner (win_rec_list : win_record list) (state : state) =
+  let all_in = Array.make 8 false in
+  for i = 0 to 7 do
+    match bankrupt i state with true -> all_in.(i) <- true | _ -> ()
+  done;
+  let side_needed = ref false in
+  for i = 0 to 7 do
+    if all_in.(i) = true then side_needed := true else ()
+  done;
+  if !side_needed = false then
+    let money_back = Array.make 8 0 in
+    let rec money_list lst =
+      match lst with
+      | [] -> ()
+      | [ h ] -> (
+          match h.player with
+          | Player -> money_back.(0) <- 1
+          | Computer x -> money_back.(x) <- 1)
+      | h :: t ->
+          (match h.player with
+          | Player -> money_back.(0) <- 1
+          | Computer x -> money_back.(x) <- 1);
+          money_list t
+    in
+    money_list win_rec_list
+  else ()
