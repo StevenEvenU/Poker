@@ -28,8 +28,8 @@ type state = {
   mutable current_bet : int;
 }
 
-let players_mon state =
-  Array.append [| state.user_money |] state.cpu_moneys
-
-let bankrupt players_mon index =
+let bankrupt players_mon index state =
+  let players_mon =
+    Array.append [| state.user_money |] state.cpu_moneys
+  in
   if players_mon.(index) = 0 then true else false
