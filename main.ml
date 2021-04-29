@@ -215,7 +215,7 @@ let betting_round (state : state) players_in =
   (* bets is the list of how much each player has bet so far in each
      round *)
   let bets = Array.make (1 + Array.length state.cpu_hands) 0 in
-  rec_betting_round state stop players_in bets
+  rec_betting_round state players_in bets
 
 let main =
   (* Get Number of players *)
