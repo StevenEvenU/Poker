@@ -590,8 +590,6 @@ let pot_test =
 let suite =
   "test suite for A2"
   >::: List.flatten
-         [
-           deck_test; table_test; compare_test; (*main_test;*) pot_test;
-         ]
+         [ deck_test; table_test; compare_test; main_test; pot_test ]
 
 let _ = run_test_tt_main suite
