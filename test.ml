@@ -556,7 +556,7 @@ let valid_call_test
     (expected : bool)
     (state : State.state)
     (arr : int array) : test =
-  name >:: fun _ -> assert_equal expected (valid_check state arr)
+  name >:: fun _ -> assert_equal expected (valid_call state arr)
 
 (* *******END HELPER FUNCTIONS********* *)
 let deck_test =
