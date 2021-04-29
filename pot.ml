@@ -1,4 +1,5 @@
 open State
+open Compare
 
 let pot = Array.make 8 (-2)
 
@@ -58,6 +59,53 @@ let rec subtract (lst1 : int list) (lst2 : int list) (acc : int list) =
       if List.mem h lst2 then subtract t lst2 acc
       else subtract t lst2 (h :: acc)
 
+let top_winners (win_list : win_record list) =
+  let maximum =
+    List.fold_left
+      (fun max a ->
+        match a with
+        | { player; rank; value } -> if value > max then value else max)
+      0 win_list
+  in
+  List.fold_left
+    (fun acc a ->
+      match a with
+      | { player; rank; value } ->
+          if value = maximum then
+            (match player with Player -> 0 | Computer x -> x) :: acc
+          else acc)
+    [] win_list
+
+let second_place win_list =
+  let maximum =
+    List.fold_left
+      (fun max a ->
+        match a with
+        | { player; rank; value } -> if value > max then value else max)
+      0 win_list
+  in
+  let second =
+    List.fold_left
+      (fun sec a ->
+        match a with
+        | { player; rank; value } ->
+            if value > sec && value < maximum then value else sec)
+      0 win_list
+  in
+  List.fold_left
+    (fun acc a ->
+      match a with
+      | { player; rank; value } ->
+          if value = second then
+            (match player with Player -> 0 | Computer x -> x) :: acc
+          else acc)
+    [] win_list
+
+let give_remainder win_list side_cause =
+  let sub = subtract (top_winners win_list) [ side_cause ] [] in
+  if sub <> [] then sub
+  else subtract (second_place win_list) [ side_cause ] []
+
 let yes_side_pot win_list state all_in =
   let rec side_amount_calc ind =
     if ind >= 8 then failwith "not happening"
@@ -87,15 +135,16 @@ let yes_side_pot win_list state all_in =
     done
   in
   remove_side_quant;
-  give_pot win_list side_pot_sum;
-  give_pot (subtract win_list [ side_cause ] []) (piling 0 0)
+  give_pot (top_winners win_list) side_pot_sum;
+  give_pot (give_remainder win_list side_cause) (piling 0 0)
 
-let to_winner (win_list : int list) (state : State.state) =
+let to_winner (win_list : win_record list) (state : State.state) =
   let all_in = Array.make 8 false in
   for i = 0 to 7 do
     match bankrupt i state with true -> all_in.(i) <- true | _ -> ()
   done;
   let side_needed = side_pot_need all_in 0 in
-  if side_needed = false then give_pot win_list (piling 0 0)
+  if side_needed = false then
+    give_pot (top_winners win_list) (piling 0 0)
   else yes_side_pot win_list state all_in;
   money_back
