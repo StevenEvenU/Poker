@@ -326,7 +326,7 @@ let t_state_3 =
         Some { suit = Clubs; value = Ace };
         Some { suit = Clubs; value = Jack };
       ];
-    turn = Player;
+    turn = Computer 2;
     user_money = 110;
     cpu_moneys = [| 0; 0 |];
     dealer = Player;
@@ -517,6 +517,38 @@ let to_winner_test
     assert_equal expected.(i) to_win.(i)
   done
 
+(** [next_turn_test] constructs an OUnit test named [name] that asserts
+    with [expected] and [bet_num] how the state changes after
+    [next_turn] with the [state] and [play_arr]. *)
+let next_turn_test
+    (name : string)
+    (expected : players)
+    (state : State.state)
+    (play_arr : players array ref)
+    (bet_num : int) : test =
+  name >:: fun _ ->
+  next_turn state play_arr bet_num;
+  assert_equal expected state.turn;
+  assert_equal state.current_bet bet_num
+
+(** [get_money_test] constructs an OUnit test named [name] that asserts
+    with [expected] and [get_money state play]. *)
+let get_money_test
+    (name : string)
+    (expected : int)
+    (state : State.state)
+    (play : players) : test =
+  name >:: fun _ -> assert_equal expected (get_money state play)
+
+(** [get_money_test] constructs an OUnit test named [name] that asserts
+    with [expected] and [get_money state play]. *)
+let valid_check_test
+    (name : string)
+    (expected : bool)
+    (state : State.state)
+    (arr : int array) : test =
+  name >:: fun _ -> assert_equal expected (valid_check state arr)
+
 (* *******END HELPER FUNCTIONS********* *)
 let deck_test =
   [
@@ -617,6 +649,27 @@ let main_test =
         { suit = Clubs; value = Two };
         { suit = Diamonds; value = Seven };
       ];
+    (************)
+    next_turn_test "Next turn after player, no one folded" (Computer 1)
+      t_state
+      (ref [| Player; Computer 1; Computer 2 |])
+      50;
+    next_turn_test "Next turn after player, Computer 1 folded"
+      (Computer 2) t_state
+      (ref [| Player; Computer 2 |])
+      50;
+    next_turn_test
+      "Next turn after last computer player, another computer folded \
+       folded"
+      Player t_state_3
+      (ref [| Player; Computer 2 |])
+      50;
+    get_money_test "Get player money" 1000 t_state Player;
+    get_money_test "Get computer 1 money" 100 t_state_1 Player;
+    valid_check_test "First in round" true t_state [| 0; 0; 0 |];
+    valid_check_test "First in round" true t_state_3 [| 4; 4; 4 |];
+    valid_check_test "First in round" false t_state_3 [| 5; 5; 0 |];
+    (*valid_call_test ""*)
   ]
 
 let pot_test =
