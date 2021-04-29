@@ -61,7 +61,7 @@ let t_state = {users_hand =
    Some {suit = Spades; value = Seven}; Some {suit = Diamonds; value = Nine};
    Some {suit = Spades; value = Queen}; Some {suit = Spades; value = Ace};
    Some {suit = Spades; value = Five}; Some {suit = Clubs; value = Ace};
-   Some {suit = Clubs; value = Jack}];turn= Player; user_money = 1000; cpu_moneys = Array.make 2 1000; dealer = Player}
+   Some {suit = Clubs; value = Jack}];turn= Player; user_money = 1000; cpu_moneys = Array.make 2 1000; dealer = Player; current_bet = 0}
 (** converts card option to string*)
 let string_of_card_option card1 =
   match card1 with None -> "" | Some x -> string_of_card x
