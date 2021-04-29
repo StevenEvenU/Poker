@@ -121,7 +121,7 @@ let to_winner (win_rec_list : int list) (state : State.state) =
     if split 0 = true then ()
     else
       let rec pile ind acc =
-        if acc >= 8 then () else pile (ind + 1) (acc + pot.(ind))
+        if acc >= 8 then acc else pile (ind + 1) (acc + pot.(ind))
       in
       let full_pot = pile 0 0 in
       for i = 0 to 7 do
