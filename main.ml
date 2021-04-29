@@ -1,5 +1,4 @@
 open Deck
-open Table
 open Compare
 open State
 
