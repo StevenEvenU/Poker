@@ -15,7 +15,7 @@ val deal : State.state -> unit
 val flop : State.state -> unit
 
 (** This will bet whoever's turn it is and the amount *)
-val bet : State.players -> int -> int
+val bet : State.players -> int -> State.state -> int
 
 (** Returns the winner of the round. *)
 val winner : State.state -> Compare.win_record
