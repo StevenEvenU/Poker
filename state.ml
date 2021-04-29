@@ -4,9 +4,7 @@ type players =
   | Player
   | Computer of int
 
-let int_of_player = function
-  | Player -> 0
-  | Computer x -> x
+let int_of_player = function Player -> 0 | Computer x -> x
 
 let player_of_int = function
   | 0 -> Player
@@ -29,3 +27,9 @@ type state = {
   mutable dealer : players;
   mutable current_bet : int;
 }
+
+let players_mon state =
+  Array.append [| state.user_money |] state.cpu_moneys
+
+let bankrupt players_mon index =
+  if players_mon.(index) = 0 then true else false
