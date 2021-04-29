@@ -1,6 +1,7 @@
 open Deck
 open Compare
 open State
+open Table
 
 (** Types of user action *)
 type action =
@@ -124,7 +125,8 @@ let next_turn (state : state) players_in current_bet =
   let next_player =
     let len = Array.length players_in - 1 in
     for i = 0 to len do
-      if !players_in.(i) = state.turn then i + 1 else if i = len then 0
+      if !(players_in.(i)) = state.turn then i + 1
+      else if i = len then 0
     done
   in
   state.turn <- player_of_int next_player;
@@ -142,7 +144,7 @@ let get_money (state : state) player =
   | Computer x -> state.cpu_moneys.(x - 1)
 
 let valid_check (state : state) bets =
-  let players_bet = prayer_prev_bet state bets in
+  let players_bet = player_prev_bet state bets in
   match state.current_bet with
   | 0 -> true
   | players_bet -> true
@@ -162,8 +164,9 @@ let rec get_raise_amount (state : state) =
   print_string "How much do you wish to raise by? \n";
   let amt = read_int () in
   if valid_raise state amt then amt
-  else print_string "Invalid amount, please re-enter. \n";
-  get_raise_amount state
+  else (
+    print_string "Invalid amount, please re-enter. \n";
+    get_raise_amount state)
 
 (* TODO: Only prompt available actions, not all *)
 let rec prompt_action (state : state) bets =
@@ -175,14 +178,15 @@ let rec prompt_action (state : state) bets =
   | Check ->
       if valid_check state bets then state.current_bet
         (* Don't need to update `bets` array *)
-      else
+      else (
         print_string "You can't check at the moment. Try something else";
-      prompt_action state bets
+        prompt_action state bets)
   | Call ->
-      if valid_call then (
-        let amt = bet Player state.current_bet state in
+      if valid_call state bets then (
+        let amt = Table.bet Player state.current_bet in
         update_bets state.turn amt;
         amt)
+      else 0
   | Raise ->
       let amt = bet Player (get_raise_amount state) state in
       update_bets state.turn amt;
