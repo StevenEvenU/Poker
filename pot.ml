@@ -90,7 +90,7 @@ let reset =
 
 let waa i = true
 
-let to_winner (win_rec_list : win_record list) (state : state) =
+let to_winner (win_rec_list : win_record list) (state : State.state) =
   let all_in = Array.make 8 false in
   for i = 0 to 7 do
     match bankrupt i state with true -> all_in.(i) <- true | _ -> ()
