@@ -1,4 +1,4 @@
-MODULES=state main compare table deck authors pot
+MODULES=state compare pot main table deck authors
 OBJECTS=$(MODULES:=.cmo)
 MLS=$(MODULES:=.ml)
 MLIS=$(MODULES:=.mli)

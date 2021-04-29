@@ -1,6 +1,6 @@
 open Deck
-open Compare
 open State
+open Compare
 
 let table_deck = create
 
@@ -80,17 +80,17 @@ let winner (state : state) : win_record =
    winner state else flop state *)
 
 let player_bet amt all_in =
-  Pot.add amt all_in;
+  Pot.add amt Player;
   amt
 
-let rec index_of element lst acc =
-  if lst.(acc) = element then acc else index_of element lst (acc + 1)
+let rec index_of element arr acc =
+  if arr.(acc) = element then acc else index_of element arr (acc + 1)
 
 let comp_bet comp all_in state =
   let idx = index_of comp state.cpu_hands 0 in
   let max = state.cpu_moneys.(idx) in
   let bet_amt = Random.int max + 1 in
-  Pot.add bet_amt all_in;
+  Pot.add bet_amt (Computer idx);
   bet_amt
 
 let rec distr int_list acc state =
