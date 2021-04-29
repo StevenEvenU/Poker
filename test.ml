@@ -549,6 +549,15 @@ let valid_check_test
     (arr : int array) : test =
   name >:: fun _ -> assert_equal expected (valid_check state arr)
 
+(** [get_money_test] constructs an OUnit test named [name] that asserts
+    with [expected] and [get_money state play]. *)
+let valid_call_test
+    (name : string)
+    (expected : bool)
+    (state : State.state)
+    (arr : int array) : test =
+  name >:: fun _ -> assert_equal expected (valid_check state arr)
+
 (* *******END HELPER FUNCTIONS********* *)
 let deck_test =
   [
@@ -669,7 +678,12 @@ let main_test =
     valid_check_test "First in round" true t_state [| 0; 0; 0 |];
     valid_check_test "First in round" true t_state_3 [| 4; 4; 4 |];
     valid_check_test "First in round" false t_state_3 [| 5; 5; 0 |];
-    (*valid_call_test ""*)
+    valid_call_test "Call with enough money" true t_state_1
+      [| 9; 9; 50 |];
+    valid_call_test "Call with not enough money (bankrupt)" false
+      t_state_2 [| 9; 9; 50 |];
+    valid_call_test "Call with not enough money (too high)" true
+      t_state_1 [| 9; 9; 50000 |];
   ]
 
 let pot_test =
