@@ -258,6 +258,83 @@ let t_state_2 =
     current_bet = 0;
   }
 
+let t_state_3 =
+  {
+    users_hand =
+      [
+        { suit = Diamonds; value = Eight };
+        { suit = Hearts; value = Three };
+      ];
+    cpu_hands =
+      [|
+        [
+          { suit = Clubs; value = Eight };
+          { suit = Spades; value = Jack };
+        ];
+      |];
+    cards_on_table =
+      [
+        { suit = Hearts; value = Two };
+        { suit = Hearts; value = Six };
+        { suit = Clubs; value = Ten };
+        { suit = Clubs; value = Queen };
+        { suit = Hearts; value = Queen };
+      ];
+    deck_rem =
+      [
+        Some { suit = Spades; value = Nine };
+        Some { suit = Hearts; value = Jack };
+        Some { suit = Spades; value = Six };
+        Some { suit = Spades; value = King };
+        Some { suit = Clubs; value = Six };
+        Some { suit = Clubs; value = Two };
+        Some { suit = Clubs; value = Four };
+        Some { suit = Clubs; value = Nine };
+        Some { suit = Diamonds; value = Ten };
+        Some { suit = Diamonds; value = Three };
+        Some { suit = Clubs; value = Five };
+        Some { suit = Spades; value = Four };
+        Some { suit = Diamonds; value = Four };
+        Some { suit = Diamonds; value = Six };
+        Some { suit = Hearts; value = Ten };
+        Some { suit = Diamonds; value = Seven };
+        Some { suit = Spades; value = Ten };
+        Some { suit = Diamonds; value = Jack };
+        Some { suit = Hearts; value = Five };
+        Some { suit = Hearts; value = Nine };
+        Some { suit = Diamonds; value = Five };
+        Some { suit = Diamonds; value = Two };
+        Some { suit = Diamonds; value = Ace };
+        Some { suit = Hearts; value = Eight };
+        Some { suit = Clubs; value = Seven };
+        Some { suit = Hearts; value = Four };
+        Some { suit = Diamonds; value = King };
+        Some { suit = Hearts; value = Ace };
+        Some { suit = Spades; value = Three };
+        Some { suit = Clubs; value = King };
+        Some { suit = Spades; value = Two };
+        Some { suit = Spades; value = Eight };
+        Some { suit = Clubs; value = Three };
+        Some { suit = Diamonds; value = Queen };
+        Some { suit = Hearts; value = King };
+        Some { suit = Hearts; value = Seven };
+        Some { suit = Spades; value = Seven };
+        Some { suit = Diamonds; value = Nine };
+        Some { suit = Spades; value = Queen };
+        Some { suit = Spades; value = Ace };
+        Some { suit = Spades; value = Five };
+        Some { suit = Clubs; value = Ace };
+        Some { suit = Clubs; value = Jack };
+      ];
+    turn = Player;
+    user_money = 110;
+    cpu_moneys = [| 0; 0 |];
+    dealer = Player;
+    current_bet = 0;
+  }
+
+(********START HELPER FUNCTIONS*************)
+
 (** converts card option to string*)
 let string_of_card_option card1 =
   match card1 with None -> "" | Some x -> string_of_card x
@@ -420,6 +497,10 @@ let string_of_cards_test
     (cards : Deck.card list) : test =
   name >:: fun _ -> assert_equal expected (string_of_cards cards)
 
+(** [to_winner_test] constructs an OUnit test named [name] that asserts
+    with [expected] how the pot is constructed given players
+    contributing money corresponding to [adding] to the pot and then
+    split amongs the properly according to [winners]. *)
 let to_winner_test
     (name : string)
     (expected : int array)
@@ -584,7 +665,27 @@ let pot_test =
         { player = Computer 2; rank = 3; value = 100 };
       ]
       t_state_2
-      [| 25; 25; 5; 0; 0; 0; 0; 0 |];
+      [| 5; 25; 25; 0; 0; 0; 0; 0 |];
+    to_winner_test "User wins with two computer caused side pots"
+      [| 35; 0; 0; 0; 0; 0; 0; 0 |]
+      [
+        { player = Player; rank = 1; value = 1000 };
+        { player = Computer 1; rank = 2; value = 500 };
+        { player = Computer 2; rank = 3; value = 100 };
+      ]
+      t_state_3
+      [| 25; 5; 5; 0; 0; 0; 0; 0 |];
+    to_winner_test
+      "User wins with their own side pot and computer caused side pot \
+       of different values"
+      [| 30; 10; 35; 0; 0; 0; 0; 0 |]
+      [
+        { player = Player; rank = 1; value = 1000 };
+        { player = Computer 1; rank = 2; value = 500 };
+        { player = Computer 2; rank = 3; value = 100 };
+      ]
+      t_state_3
+      [| 10; 15; 50; 0; 0; 0; 0; 0 |];
   ]
 
 let suite =
