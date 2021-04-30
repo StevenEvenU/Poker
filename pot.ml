@@ -20,7 +20,7 @@ let add (mon : int) (player : State.players) =
         else pot.(0) <- mon
       else folded.(0) <- true
 
-let reset =
+let reset () =
   for i = 0 to 7 do
     pot.(i) <- -2;
     folded.(i) <- false;

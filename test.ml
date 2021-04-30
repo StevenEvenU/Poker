@@ -516,7 +516,7 @@ let to_winner_test
     (state : State.state)
     (adding : int array) : test =
   name >:: fun _ ->
-  Pot.reset;
+  Pot.reset ();
   for i = 0 to 7 do
     if i = 0 then add adding.(i) Player else add adding.(i) (Computer i)
   done;
