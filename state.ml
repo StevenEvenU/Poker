@@ -13,7 +13,7 @@ let player_of_int = function
 
 let string_of_player = function
   | Player -> "You"
-  | Computer x -> "Opponent" ^ string_of_int x
+  | Computer x -> "Opponent " ^ string_of_int x
 
 (* Game state *)
 type state = {
