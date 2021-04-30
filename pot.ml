@@ -46,7 +46,7 @@ let give_pot win_list sum0 =
   let rec splitter lst =
     match lst with
     | [] -> ()
-    | [ h ] -> money_back.(h) <- sum
+    | [ h ] -> money_back.(h) <- sum / num_winners
     | h :: t ->
         money_back.(h) <- sum / num_winners;
         splitter t
