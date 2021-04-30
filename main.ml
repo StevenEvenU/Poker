@@ -10,30 +10,6 @@ type action =
   | Raise
   | Fold
 
-(** Checks whether another player has raised *)
-let is_raised state = failwith "Not implemented yet"
-
-(** Get the user's next action based on the current state *)
-let rec get_action state =
-  if is_raised state then (
-    print_string "Do you wish to Call, Raise, or Fold?";
-    match read_line () with
-    | "Call" -> Call
-    | "Raise" -> Raise
-    | "Fold" -> Fold
-    | _ ->
-        print_string "Not Valid. Try again";
-        get_action state)
-  else (
-    print_string "Do you wish to Check, Raise, or Fold?";
-    match read_line () with
-    | "Check" -> Check
-    | "Raise" -> Raise
-    | "Fold" -> Fold
-    | _ ->
-        print_string "Not Valid. Try again";
-        get_action state)
-
 let string_of_value value =
   match value with
   | Two -> "2"
@@ -233,7 +209,7 @@ let main =
   let utg =
     int_of_player state.dealer mod (1 + Array.length state.cpu_hands)
   in
-  state.turn = utg;
+  state.turn <- player_of_int utg;
 
   deal state;
   print_event state "Flop";

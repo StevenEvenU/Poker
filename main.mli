@@ -1,9 +1,6 @@
 (** Player's action *)
 type action = Check | Call | Raise | Fold
 
-(** Checks whether someone has raised or not *)
-val is_raised : State.state -> bool
-
 (** Returns string of value *)
 val string_of_value : Deck.value -> string
 
@@ -20,7 +17,7 @@ val print_hand : Deck.card list -> State.players -> unit
 val print_event : State.state -> string -> unit
 
 (** Gets the users next action *)
-val get_action : State.state -> action
+val get_action : string -> action
 
 (** Updates state.turn and state.current_bet *)
 val next_turn : State.state -> State.players array ref -> int -> unit
@@ -30,7 +27,7 @@ val next_turn : State.state -> State.players array ref -> int -> unit
 val update_bets : int array -> State.players -> int -> unit
 
 (** Gets the players previous bet in this round *)
-val player_prev_bet : State.players -> int array -> int
+val player_prev_bet : State.state -> int array -> int
 
 (** Retrieves this players money from state *)
 val get_money : State.state -> State.players -> int
@@ -49,7 +46,7 @@ val get_raise_amount : State.state -> int
 
 (** Prompts the user what they wish to do: 
 Check, Call, Raise, or Fold and then does so*)
-val prompt_action : State.state -> int array -> int
+val prompt_action : State.state -> State.players array ref -> int array -> int
 
 (** Iterates through each player at the table during betting round *)
 val rec_betting_round : State.state -> State.players array ref -> int array -> unit
