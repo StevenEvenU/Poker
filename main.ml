@@ -126,9 +126,8 @@ let valid_check (state : state) bets =
   | _ -> false
 
 let valid_call (state : state) bets =
-  get_money state state.turn <= state.current_bet
+  (get_money state state.turn) >= state.current_bet
 
-(* TODO: Implement. Make sure they have the funds to raise*)
 let valid_raise (state : state) bets =
   let curr_player = state.turn in
   match curr_player with
