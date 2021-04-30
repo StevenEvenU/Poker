@@ -5,25 +5,22 @@ let pot = Array.make 8 (-2)
 
 let money_back = Array.make 8 0
 
-let folded = Array.make 8 false
-
 let add (mon : int) (player : State.players) =
   match player with
   | Computer x ->
       if mon >= 0 then
         if pot.(x) >= 0 then pot.(x) <- pot.(x) + mon
         else pot.(x) <- mon
-      else folded.(x) <- true
+      else ()
   | Player ->
       if mon >= 0 then
         if pot.(0) >= 0 then pot.(0) <- pot.(0) + mon
         else pot.(0) <- mon
-      else folded.(0) <- true
+      else ()
 
 let reset () =
   for i = 0 to 7 do
     pot.(i) <- -2;
-    folded.(i) <- false;
     money_back.(i) <- 0
   done
 
@@ -46,9 +43,9 @@ let give_pot win_list sum0 =
   let rec splitter lst =
     match lst with
     | [] -> ()
-    | [ h ] -> money_back.(h) <- sum / num_winners
+    | [ h ] -> money_back.(h) <- money_back.(h) + (sum / num_winners)
     | h :: t ->
-        money_back.(h) <- sum / num_winners;
+        money_back.(h) <- money_back.(h) + (sum / num_winners);
         splitter t
   in
   splitter win_list
@@ -86,11 +83,19 @@ let top_winners (win_list : win_record list) =
     [] win_list
 
 let second_place win_list =
-  let maximum =
+  let rank_max =
     List.fold_left
       (fun max a ->
         match a with
-        | { player; rank; value } -> if value > max then value else max)
+        | { player; rank; value } -> if rank > max then rank else max)
+      0 win_list
+  in
+  let value_max =
+    List.fold_left
+      (fun max a ->
+        match a with
+        | { player; rank; value } ->
+            if rank = rank_max && value > max then value else max)
       0 win_list
   in
   let second =
@@ -98,33 +103,52 @@ let second_place win_list =
       (fun sec a ->
         match a with
         | { player; rank; value } ->
-            if value > sec && value < maximum then value else sec)
+            if value > sec && value < value_max then value else sec)
       0 win_list
   in
-  List.fold_left
-    (fun acc a ->
-      match a with
-      | { player; rank; value } ->
-          if value = second then
-            (match player with Player -> 0 | Computer x -> x) :: acc
-          else acc)
-    [] win_list
+  let sec_lst =
+    List.fold_left
+      (fun acc a ->
+        match a with
+        | { player; rank; value } ->
+            if value = second && rank = rank_max then
+              (match player with Player -> 0 | Computer x -> x) :: acc
+            else acc)
+      [] win_list
+  in
+  if sec_lst <> [] then sec_lst
+  else
+    let rank_sec =
+      List.fold_left
+        (fun max a ->
+          match a with
+          | { player; rank; value } ->
+              if rank > max && rank < rank_max then rank else max)
+        0 win_list
+    in
+    List.fold_left
+      (fun acc a ->
+        match a with
+        | { player; rank; value } ->
+            if rank = rank_sec then
+              (match player with Player -> 0 | Computer x -> x) :: acc
+            else acc)
+      [] win_list
 
 let remainder win_list side_cause =
   let sub = subtract (top_winners win_list) [ side_cause ] [] in
-  if sub <> [] then sub
-  else subtract (second_place win_list) [ side_cause ] []
+  if sub <> [] then sub else second_place win_list
 
 let one_side_pot win_list state all_in =
   let rec side_amount_calc ind =
-    if ind >= 8 then failwith "not happening"
+    if ind >= 8 then failwith "not happening 3"
     else if all_in.(ind) = true then pot.(ind)
     else side_amount_calc (ind + 1)
   in
   let side_amount = side_amount_calc 0 in
   (*how much from person in side pot*)
   let rec side_cause_calc ind =
-    if ind >= 8 then failwith "not happening"
+    if ind >= 8 then failwith "not happening 2"
     else if all_in.(ind) = true then ind
     else side_cause_calc (ind + 1)
   in
@@ -138,12 +162,9 @@ let one_side_pot win_list state all_in =
   in
   let side_pot_sum = side_pot_pile 0 0 in
   (* total amount in side pot*)
-  let remove_side_quant =
-    for i = 0 to 7 do
-      if pot.(i) > 0 then pot.(i) <- pot.(i) - side_pot_sum else ()
-    done
-  in
-  remove_side_quant;
+  for i = 0 to 7 do
+    if pot.(i) > 0 then pot.(i) <- pot.(i) - side_amount else ()
+  done;
   give_pot (top_winners win_list) side_pot_sum;
   give_pot (remainder win_list side_cause) (piling 0 0)
 
@@ -154,10 +175,11 @@ let rec n_side_pot win_list state all_in n =
       side_amount_calc (ind + 1) pot.(ind)
     else side_amount_calc (ind + 1) acc
   in
-  let side_amount = side_amount_calc 0 1001 in
+  let side_amount = side_amount_calc 0 1000 in
   (*how much from person in side pot*)
   let rec side_cause_calc ind =
-    if ind >= 8 then failwith "not happening"
+    if ind >= 8 then
+      failwith ("not happening " ^ string_of_int side_amount)
     else if pot.(ind) = side_amount then ind
     else side_cause_calc (ind + 1)
   in
@@ -173,7 +195,7 @@ let rec n_side_pot win_list state all_in n =
   (* total amount in side pot*)
   let remove_side_quant =
     for i = 0 to 7 do
-      if pot.(i) > 0 then pot.(i) <- pot.(i) - side_pot_sum else ()
+      if pot.(i) > 0 then pot.(i) <- pot.(i) - side_amount else ()
     done
   in
   remove_side_quant;
@@ -181,7 +203,8 @@ let rec n_side_pot win_list state all_in n =
   for i = 0 to 7 do
     if all_in.(i) = true && pot.(i) = 0 then all_in.(i) <- false else ()
   done;
-  if n <= 1 then () else n_side_pot win_list state all_in (n - 1);
+  if n <= 1 || not (side_pot_need all_in 0) then ()
+  else n_side_pot win_list state all_in (n - 1);
   give_pot (remainder win_list side_cause) (piling 0 0)
 
 let yes_side_pot win_list state all_in =
