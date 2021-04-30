@@ -497,6 +497,14 @@ let string_of_cards_test
     (cards : Deck.card list) : test =
   name >:: fun _ -> assert_equal expected (string_of_cards cards)
 
+let stupid str_start arr =
+  str_start := "[|" ^ string_of_int arr.(0);
+  for i = 1 to 7 do
+    str_start := !str_start ^ "," ^ string_of_int arr.(i)
+  done;
+  str_start := !str_start ^ "|]";
+  !str_start
+
 (** [to_winner_test] constructs an OUnit test named [name] that asserts
     with [expected] how the pot is constructed given players
     contributing money corresponding to [adding] to the pot and then
@@ -508,14 +516,12 @@ let to_winner_test
     (state : State.state)
     (adding : int array) : test =
   name >:: fun _ ->
-  reset;
+  Pot.reset;
   for i = 0 to 7 do
     if i = 0 then add adding.(i) Player else add adding.(i) (Computer i)
   done;
   let to_win = to_winner winners state in
-  for i = 0 to 7 do
-    assert_equal expected.(i) to_win.(i)
-  done
+  assert_equal expected to_win ~printer:(stupid (ref ""))
 
 (** [next_turn_test] constructs an OUnit test named [name] that asserts
     with [expected] and [bet_num] how the state changes after

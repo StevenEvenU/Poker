@@ -23,7 +23,8 @@ let add (mon : int) (player : State.players) =
 let reset =
   for i = 0 to 7 do
     pot.(i) <- -2;
-    folded.(i) <- false
+    folded.(i) <- false;
+    money_back.(i) <- 0
   done
 
 let rec side_pot_need all_in ind =
@@ -44,7 +45,7 @@ let give_pot win_list sum0 =
   in
   let rec splitter lst =
     match lst with
-    | [] -> failwith "not gonna happen buddy"
+    | [] -> ()
     | [ h ] -> money_back.(h) <- sum
     | h :: t ->
         money_back.(h) <- sum / num_winners;
@@ -60,18 +61,26 @@ let rec subtract (lst1 : int list) (lst2 : int list) (acc : int list) =
       else subtract t lst2 (h :: acc)
 
 let top_winners (win_list : win_record list) =
-  let maximum =
+  let rank_max =
     List.fold_left
       (fun max a ->
         match a with
-        | { player; rank; value } -> if value > max then value else max)
+        | { player; rank; value } -> if rank > max then rank else max)
+      0 win_list
+  in
+  let value_max =
+    List.fold_left
+      (fun max a ->
+        match a with
+        | { player; rank; value } ->
+            if rank = rank_max && value > max then value else max)
       0 win_list
   in
   List.fold_left
     (fun acc a ->
       match a with
       | { player; rank; value } ->
-          if value = maximum then
+          if rank = rank_max && value = value_max then
             (match player with Player -> 0 | Computer x -> x) :: acc
           else acc)
     [] win_list
