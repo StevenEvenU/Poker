@@ -174,9 +174,9 @@ let rec prompt_action (state : state) players_in bets =
         amt)
       else 0
   | "RAISE" ->
-      let amt = Table.bet Player (get_raise_amount state) state in
+      (let amt = Table.bet Player (get_raise_amount state) state in
       update_bets bets state.turn amt;
-      amt
+      amt)
   | "FOLD" ->
       print_string
         "You can't fold at the moment. Yet to be implemented\n";
@@ -209,7 +209,7 @@ let rec prompt_last_action (state : state) players_in bets =
       if valid_check state bets then state.current_bet
         (* Don't need to update `bets` array *)
       else (
-        print_string "You can't check at the moment. Try something else";
+        print_string "You can't check at the moment. Try something else\n";
         prompt_action state players_in bets)
   | "CALL" ->
       if valid_call state bets then (
