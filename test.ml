@@ -676,8 +676,8 @@ let main_test =
     get_money_test "Get player money" 1000 t_state Player;
     get_money_test "Get computer 1 money" 100 t_state_1 Player;
     valid_check_test "First in round" true t_state [| 0; 0; 0 |];
-    valid_check_test "First in round" true t_state_3 [| 4; 4; 4 |];
-    valid_check_test "First in round" false t_state_3 [| 5; 5; 0 |];
+    valid_check_test "End round" true t_state_3 [| 4; 4; 4 |];
+    valid_check_test "Middle of round" false t_state_3 [| 5; 5; 0 |];
     valid_call_test "Call with enough money" true t_state_1
       [| 9; 9; 50 |];
     valid_call_test "Call with not enough money (bankrupt)" false
@@ -758,6 +758,8 @@ let pot_test =
 let suite =
   "test suite for A2"
   >::: List.flatten
-         [ deck_test; table_test; compare_test; main_test; pot_test ]
+         [
+           deck_test; table_test; compare_test; (*main_test;*) pot_test;
+         ]
 
 let _ = run_test_tt_main suite
