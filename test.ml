@@ -823,11 +823,16 @@ let pot_test =
       ]
       t_state_3
       [| 25; 5; 5; 0; 0; 0; 0; 0 |];
-    (*to_winner_test "User wins with their own side pot and computer
-      caused side pot \ of different values" [| 30; 10; 35; 0; 0; 0; 0;
+    (*to_winner_test "User wins with their own side pot and computer\n\
+      \ caused side pot of different values" [| 30; 10; 35; 0; 0; 0; 0;
       0 |] [ { player = Player; rank = 10; value = 1000 }; { player =
       Computer 1; rank = 7; value = 500 }; { player = Computer 2; rank =
-      3; value = 100 }; ] t_state_4 [| 10; 15; 50; 0; 0; 0; 0; 0 |];*)
+      3; value = 100 }; ] t_state_4 [| 10; 15; 50; 0; 0; 0; 0; 0 |];
+      to_winner_test "User wins with their own side pot and computer\n\
+      \ caused side pot of different values" [| 0; 10; 35; 0; 0; 0; 0; 0
+      |] [ { player = Player; rank = 1; value = 10 }; { player =
+      Computer 1; rank = 7; value = 500 }; { player = Computer 2; rank =
+      3; value = 100 }; ] t_state_4 [| 0; 5; 40; 0; 0; 0; 0; 0 |];*)
   ]
 
 let suite =
