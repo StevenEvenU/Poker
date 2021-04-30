@@ -16,9 +16,6 @@ val print_hand : Deck.card list -> State.players -> unit
 (** Returns string of the state *)
 val print_event : State.state -> string -> unit
 
-(** Gets the users next action *)
-val get_action : string -> action
-
 (** Updates state.turn and state.current_bet *)
 val next_turn : State.state -> State.players array ref -> int -> unit
 
@@ -49,7 +46,7 @@ Check, Call, Raise, or Fold and then does so*)
 val prompt_action : State.state -> State.players array ref -> int array -> int
 
 (** Iterates through each player at the table during betting round *)
-val rec_betting_round : State.state -> State.players array ref -> int array -> unit
+val rec_betting_round : State.state -> State.players array ref -> int array -> State.players -> int -> unit
 
 (** Main function to start round of betting *)
 val betting_round : State.state -> State.players array ref -> unit
