@@ -1,5 +1,11 @@
-let hours_worked_Elias = 21
+let hours_worked_Elias_1 = 21
 
-let hours_worked_Zach = 19
+let hours_worked_Zach_1 = 19
 
-let hours_worked_Steven = 20
+let hours_worked_Steven_1 = 20
+
+let hours_worked_Elias_2 = 10
+
+let hours_worked_Zach_2 = 8
+
+let hours_worked_Steven_2 = 5
