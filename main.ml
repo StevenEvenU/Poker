@@ -146,6 +146,7 @@ let rec prompt_action (state : state) players_in bets =
   print_string "Do you wish check, call, raise, or fold?\n";
 
   let action = (String.uppercase_ascii (read_line ())) in
+  print_string ("Action is: "^action^"\n");
   match action with
   | "CHECK" ->
       if valid_check state bets then state.current_bet
@@ -160,13 +161,15 @@ let rec prompt_action (state : state) players_in bets =
         amt)
       else 0
   | "RAISE" ->
-      let amt = Table.bet Player (get_raise_amount state) state in
+      (let amt = Table.bet Player (get_raise_amount state) state in
       update_bets bets state.turn amt;
-      amt
+      amt)
   | "FOLD" ->
+      (print_string "FOLDING...";
       let new_players_in = ref [||] in
       print_string "defined new_players_in";
-      for i = 0 to Array.length !players_in do
+      for i = 0 to (Array.length !players_in -1)do
+        print_string ("Player is : "^(string_of_player !players_in.(i)));
         if !players_in.(i) = state.turn then ()
         else
           new_players_in :=
@@ -176,7 +179,7 @@ let rec prompt_action (state : state) players_in bets =
       print_string "reset defined players_in";
       update_bets bets state.turn (-1);
       print_string "updated bets";
-      state.current_bet
+      state.current_bet)
   | _ ->
     (print_string "Invalid, please try again.\n";
     prompt_action state players_in bets)
@@ -186,15 +189,12 @@ let rec prompt_last_action (state : state) players_in bets =
   print_string "Do you wish check, call, or fold?\n";
 
   let action = (String.uppercase_ascii (read_line ())) in
-  (* print_string (string_of_action action); *)
-  (* print_string "matching action \n"; *)
   match action with
   | "CHECK" ->
-      print_string ("Valid Check: "^(string_of_bool (valid_check state bets))^"\n");
       if valid_check state bets then state.current_bet
         (* Don't need to update `bets` array *)
       else (
-        print_string "You can't check at the moment. Try something else";
+        print_string "You can't check at the moment. Try something else\n";
         prompt_action state players_in bets)
   | "CALL" ->
       if valid_call state bets then (
@@ -202,13 +202,15 @@ let rec prompt_last_action (state : state) players_in bets =
         update_bets bets state.turn amt;
         amt)
       else 0
-  | "RAISE" ->
-    print_string "You can't raise at the moment. Try something else";
-    prompt_last_action state players_in bets
+  | "RAISE" ->(
+    print_string "You can't raise at the moment. Try something else\n";
+    prompt_last_action state players_in bets)
   | "FOLD" ->
+      print_string "FOLDING...";
       let new_players_in = ref [||] in
       print_string "defined new_players_in";
-      for i = 0 to Array.length !players_in do
+      for i = 0 to (Array.length !players_in -1) do
+        print_string ("Player is : "^(string_of_player !players_in.(i)));
         if !players_in.(i) = state.turn then ()
         else
           new_players_in :=
