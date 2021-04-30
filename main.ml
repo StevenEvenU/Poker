@@ -291,11 +291,9 @@ let main =
 
   (* Delegates cards to players *)
   let players_in = ref [| Player |] in
-  print_string (string_of_int num_players);
   for x = 1 to num_players do
     players_in := Array.append !players_in [| Computer x |]
   done;
-  print_string (stupid (ref "") players_in 0 num_players);
   print_hands state Player;
   print_string
     ("You currently have $"
