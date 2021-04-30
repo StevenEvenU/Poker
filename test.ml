@@ -691,26 +691,26 @@ let pot_test =
     to_winner_test "User wins, no side pot"
       [| 75; 0; 0; 0; 0; 0; 0; 0 |]
       [
-        { player = Player; rank = 1; value = 1000 };
-        { player = Computer 1; rank = 2; value = 500 };
-        { player = Computer 2; rank = 3; value = 100 };
+        { player = Player; rank = 10; value = 1000 };
+        { player = Computer 1; rank = 9; value = 500 };
+        { player = Computer 2; rank = 8; value = 100 };
       ]
       t_state
       [| 25; 25; 25; 0; 0; 0; 0; 0 |];
     to_winner_test "Computer player wins, no side pot"
       [| 0; 75; 0; 0; 0; 0; 0; 0 |]
       [
-        { player = Player; rank = 2; value = 500 };
-        { player = Computer 1; rank = 1; value = 1000 };
-        { player = Computer 2; rank = 3; value = 100 };
+        { player = Player; rank = 8; value = 500 };
+        { player = Computer 1; rank = 10; value = 1000 };
+        { player = Computer 2; rank = 7; value = 100 };
       ]
       t_state
       [| 25; 25; 25; 0; 0; 0; 0; 0 |];
     to_winner_test "Tie, no side pot"
       [| 45; 45; 0; 0; 0; 0; 0; 0 |]
       [
-        { player = Player; rank = 1; value = 1000 };
-        { player = Computer 1; rank = 1; value = 1000 };
+        { player = Player; rank = 10; value = 1000 };
+        { player = Computer 1; rank = 10; value = 1000 };
         { player = Computer 2; rank = 3; value = 100 };
       ]
       t_state
@@ -718,17 +718,17 @@ let pot_test =
     to_winner_test "User wins with computer caused side pot"
       [| 55; 0; 0; 0; 0; 0; 0; 0 |]
       [
-        { player = Player; rank = 1; value = 1000 };
-        { player = Computer 1; rank = 2; value = 500 };
-        { player = Computer 2; rank = 3; value = 100 };
+        { player = Player; rank = 10; value = 1000 };
+        { player = Computer 1; rank = 8; value = 500 };
+        { player = Computer 2; rank = 7; value = 100 };
       ]
       t_state_1
       [| 25; 25; 5; 0; 0; 0; 0; 0 |];
     to_winner_test "User wins with their own caused side pot"
       [| 15; 40; 0; 0; 0; 0; 0; 0 |]
       [
-        { player = Player; rank = 1; value = 1000 };
-        { player = Computer 1; rank = 2; value = 500 };
+        { player = Player; rank = 10; value = 1000 };
+        { player = Computer 1; rank = 9; value = 500 };
         { player = Computer 2; rank = 3; value = 100 };
       ]
       t_state_2
@@ -736,8 +736,8 @@ let pot_test =
     to_winner_test "User wins with two computer caused side pots"
       [| 35; 0; 0; 0; 0; 0; 0; 0 |]
       [
-        { player = Player; rank = 1; value = 1000 };
-        { player = Computer 1; rank = 2; value = 500 };
+        { player = Player; rank = 10; value = 1000 };
+        { player = Computer 1; rank = 6; value = 500 };
         { player = Computer 2; rank = 3; value = 100 };
       ]
       t_state_3
@@ -747,8 +747,8 @@ let pot_test =
        of different values"
       [| 30; 10; 35; 0; 0; 0; 0; 0 |]
       [
-        { player = Player; rank = 1; value = 1000 };
-        { player = Computer 1; rank = 2; value = 500 };
+        { player = Player; rank = 10; value = 1000 };
+        { player = Computer 1; rank = 7; value = 500 };
         { player = Computer 2; rank = 3; value = 100 };
       ]
       t_state_3
