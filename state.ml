@@ -32,4 +32,8 @@ let bankrupt index state =
   let players_mon =
     Array.append [| state.user_money |] state.cpu_moneys
   in
-  if players_mon.(index) = 0 then true else false
+  let players_mon_8 = Array.make 8 0 in
+  for i = 0 to Array.length players_mon - 1 do
+    players_mon_8.(i) <- players_mon.(i)
+  done;
+  if players_mon_8.(index) = 0 then true else false
