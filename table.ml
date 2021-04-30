@@ -55,7 +55,7 @@ let flop state =
     | none -> state.cards_on_table);
   state.deck_rem <- remove_top state.deck_rem
 
-let player_bet amt all_in =
+let player_bet amt =
   Pot.add amt Player;
   amt
 
@@ -75,7 +75,7 @@ let rec distr int_list acc state =
 
 let bet (player : players) (amt : int) (state : state) : int =
   match player with
-  | Player -> player_bet amt (state.user_money == amt)
+  | Player -> player_bet amt
   | Computer x -> comp_bet (Computer x) state
 
 let winner (state : state) : win_record =
