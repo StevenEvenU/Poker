@@ -189,7 +189,7 @@ let yes_side_pot win_list state all_in =
 let to_winner (win_list : win_record list) (state : State.state) =
   let all_in = Array.make 8 false in
   for i = 0 to 7 do
-    match bankrupt i state with true -> all_in.(i) <- true | _ -> ()
+    if bankrupt i state = true then all_in.(i) <- true else ()
   done;
   let side_needed = side_pot_need all_in 0 in
   if side_needed = false then
