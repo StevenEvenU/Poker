@@ -36,4 +36,6 @@ let bankrupt index state =
   for i = 0 to Array.length players_mon - 1 do
     players_mon_8.(i) <- players_mon.(i)
   done;
-  if players_mon_8.(index) = 0 then true else false
+  if players_mon_8.(index) = 0 && index < Array.length players_mon then
+    true
+  else false
