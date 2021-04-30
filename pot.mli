@@ -9,7 +9,7 @@ open Compare
 val add : int -> State.players -> unit
 
 (** Set pot to zero*)
-val reset : unit
+val reset : unit -> unit
 
 (** Splits the pot amongs the winners. Uses a side pot if necessary.
     Assumes it is passed just the winners (one winner, ties, etc.).*)

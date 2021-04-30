@@ -497,6 +497,14 @@ let string_of_cards_test
     (cards : Deck.card list) : test =
   name >:: fun _ -> assert_equal expected (string_of_cards cards)
 
+let stupid str_start arr =
+  str_start := "[|" ^ string_of_int arr.(0);
+  for i = 1 to 7 do
+    str_start := !str_start ^ "," ^ string_of_int arr.(i)
+  done;
+  str_start := !str_start ^ "|]";
+  !str_start
+
 (** [to_winner_test] constructs an OUnit test named [name] that asserts
     with [expected] how the pot is constructed given players
     contributing money corresponding to [adding] to the pot and then
@@ -508,14 +516,12 @@ let to_winner_test
     (state : State.state)
     (adding : int array) : test =
   name >:: fun _ ->
-  reset;
+  Pot.reset ();
   for i = 0 to 7 do
     if i = 0 then add adding.(i) Player else add adding.(i) (Computer i)
   done;
   let to_win = to_winner winners state in
-  for i = 0 to 7 do
-    assert_equal expected.(i) to_win.(i)
-  done
+  assert_equal expected to_win ~printer:(stupid (ref ""))
 
 (** [next_turn_test] constructs an OUnit test named [name] that asserts
     with [expected] and [bet_num] how the state changes after
@@ -691,26 +697,26 @@ let pot_test =
     to_winner_test "User wins, no side pot"
       [| 75; 0; 0; 0; 0; 0; 0; 0 |]
       [
-        { player = Player; rank = 1; value = 1000 };
-        { player = Computer 1; rank = 2; value = 500 };
-        { player = Computer 2; rank = 3; value = 100 };
+        { player = Player; rank = 10; value = 1000 };
+        { player = Computer 1; rank = 9; value = 500 };
+        { player = Computer 2; rank = 8; value = 100 };
       ]
       t_state
       [| 25; 25; 25; 0; 0; 0; 0; 0 |];
     to_winner_test "Computer player wins, no side pot"
       [| 0; 75; 0; 0; 0; 0; 0; 0 |]
       [
-        { player = Player; rank = 2; value = 500 };
-        { player = Computer 1; rank = 1; value = 1000 };
-        { player = Computer 2; rank = 3; value = 100 };
+        { player = Player; rank = 8; value = 500 };
+        { player = Computer 1; rank = 10; value = 1000 };
+        { player = Computer 2; rank = 7; value = 100 };
       ]
       t_state
       [| 25; 25; 25; 0; 0; 0; 0; 0 |];
     to_winner_test "Tie, no side pot"
       [| 45; 45; 0; 0; 0; 0; 0; 0 |]
       [
-        { player = Player; rank = 1; value = 1000 };
-        { player = Computer 1; rank = 1; value = 1000 };
+        { player = Player; rank = 10; value = 1000 };
+        { player = Computer 1; rank = 10; value = 1000 };
         { player = Computer 2; rank = 3; value = 100 };
       ]
       t_state
@@ -718,17 +724,17 @@ let pot_test =
     to_winner_test "User wins with computer caused side pot"
       [| 55; 0; 0; 0; 0; 0; 0; 0 |]
       [
-        { player = Player; rank = 1; value = 1000 };
-        { player = Computer 1; rank = 2; value = 500 };
-        { player = Computer 2; rank = 3; value = 100 };
+        { player = Player; rank = 10; value = 1000 };
+        { player = Computer 1; rank = 8; value = 500 };
+        { player = Computer 2; rank = 7; value = 100 };
       ]
       t_state_1
       [| 25; 25; 5; 0; 0; 0; 0; 0 |];
     to_winner_test "User wins with their own caused side pot"
       [| 15; 40; 0; 0; 0; 0; 0; 0 |]
       [
-        { player = Player; rank = 1; value = 1000 };
-        { player = Computer 1; rank = 2; value = 500 };
+        { player = Player; rank = 10; value = 1000 };
+        { player = Computer 1; rank = 9; value = 500 };
         { player = Computer 2; rank = 3; value = 100 };
       ]
       t_state_2
@@ -736,8 +742,8 @@ let pot_test =
     to_winner_test "User wins with two computer caused side pots"
       [| 35; 0; 0; 0; 0; 0; 0; 0 |]
       [
-        { player = Player; rank = 1; value = 1000 };
-        { player = Computer 1; rank = 2; value = 500 };
+        { player = Player; rank = 10; value = 1000 };
+        { player = Computer 1; rank = 6; value = 500 };
         { player = Computer 2; rank = 3; value = 100 };
       ]
       t_state_3
@@ -747,8 +753,8 @@ let pot_test =
        of different values"
       [| 30; 10; 35; 0; 0; 0; 0; 0 |]
       [
-        { player = Player; rank = 1; value = 1000 };
-        { player = Computer 1; rank = 2; value = 500 };
+        { player = Player; rank = 10; value = 1000 };
+        { player = Computer 1; rank = 7; value = 500 };
         { player = Computer 2; rank = 3; value = 100 };
       ]
       t_state_3
