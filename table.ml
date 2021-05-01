@@ -60,16 +60,16 @@ let bet players amt state =
   | Computer x ->
       let idx = x - 1 in
       let max = state.cpu_moneys.(idx) - state.current_bet in
-      let bet_amt = Random.int max + 1 in
+      let bet_amt = state.current_bet + Random.int max + 1 in
       Pot.add bet_amt (Computer idx);
       bet_amt
   | Player ->
       Pot.add amt Player;
       amt
 
-let rec distr int_list acc state =
-  state.cpu_moneys.(acc) <- int_list.(acc);
-  match acc with 8 -> () | _ -> distr int_list (acc + 1) state
+let rec distr int_arr acc state =
+  state.cpu_moneys.(acc) <- int_arr.(acc);
+  match acc with 8 -> () | _ -> distr int_arr (acc + 1) state
 
 let winner (state : state) : win_record =
   let best_player = find_best_hand state Player in
