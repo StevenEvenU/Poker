@@ -4,6 +4,8 @@ open Compare
 
 let table_deck = create
 
+let start_income = 1000
+
 let init_state (num : int) =
   {
     users_hand = [];
@@ -11,8 +13,8 @@ let init_state (num : int) =
     cards_on_table = [];
     deck_rem = table_deck;
     turn = Player;
-    user_money = 1000;
-    cpu_moneys = Array.make num 1000;
+    user_money = start_income;
+    cpu_moneys = Array.make num start_income;
     dealer = Player;
     current_bet = 0;
   }
