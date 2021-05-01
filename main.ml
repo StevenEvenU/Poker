@@ -383,7 +383,10 @@ let main =
   let win_record_list = [ winner state ] in
   print_win_record win_record_list;
 
-  distr (to_winner (filter_win_rec_list win_record_list !players_in) state) 0 state;
+  let filtered_winners = (filter_win_rec_list win_record_list !players_in) in
+  let pot_array = (to_winner filtered_winners state) in
+  print_string (arr_to_string (ref "") pot_array);
+  distr pot_array state ((List.length filtered_winners) - 1);
   print_balances state
 (* print_string "THE FOLLOWING IS FOR DEVELOPMENT ONLY\n"; *)
 (* print_string "\nThe other players hands were: \n"; print_win_record

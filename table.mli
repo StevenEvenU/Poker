@@ -15,7 +15,7 @@ val deal : State.state -> unit
 val flop : State.state -> unit
 
 (** This will distrbute the split of the pot to the individuals *)
-val distr : int array -> int -> State.state -> unit
+val distr : int array -> State.state -> int -> unit
 
 (** This will bet whoever's turn it is and the amount *)
 val bet : State.players -> int -> State.state -> int
