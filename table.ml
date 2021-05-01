@@ -70,11 +70,9 @@ let bet players amt state =
       amt
 
 let rec distr int_arr state player_count =
-  print_string "Hello 1\n";
   if player_count = 0 then state.user_money <- int_arr.(player_count) else
   state.cpu_moneys.(player_count) <- int_arr.(player_count);
-  print_string "Hello 2\n";
-  match player_count with 0 -> print_string "You found 0\n";() | _ -> print_string "Distrubiting...\n"; distr int_arr state (player_count - 1)
+  match player_count with 0 ->  () | _ -> distr int_arr state (player_count - 1)
 
 let winner (state : state) : win_record =
   let best_player = find_best_hand state Player in
