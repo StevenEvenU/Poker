@@ -385,7 +385,6 @@ let main =
 
   let filtered_winners = (filter_win_rec_list win_record_list !players_in) in
   let pot_array = (to_winner filtered_winners state) in
-  print_string (arr_to_string (ref "") pot_array);
   distr pot_array state ((List.length filtered_winners) - 1);
   print_balances state
 (* print_string "THE FOLLOWING IS FOR DEVELOPMENT ONLY\n"; *)
