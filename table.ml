@@ -59,7 +59,7 @@ let bet players amt state =
   match players with
   | Computer x ->
       let idx = x - 1 in
-      let max = state.cpu_moneys.(idx) in
+      let max = state.cpu_moneys.(idx) - state.current_bet in
       let bet_amt = Random.int max + 1 in
       Pot.add bet_amt (Computer idx);
       bet_amt
