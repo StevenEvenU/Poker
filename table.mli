@@ -14,14 +14,6 @@ val deal : State.state -> unit
 (** This will deal the next card on the table. *)
 val flop : State.state -> unit
 
-(** This will add the amount of money the player desires to the pot and
-    return this amount. *)
-val player_bet : int -> int
-
-(** This will add on behalf of the computer a certain amount of money to
-    the pot and return this amount. *)
-val comp_bet : State.players -> State.state -> int
-
 (** This will distrbute the split of the pot to the individuals *)
 val distr : int array -> int -> State.state -> unit
 
