@@ -16,6 +16,14 @@ let stupid str_start arr min max =
   str_start := !str_start ^ "|]";
   !str_start
 
+let arr_to_string str_start arr =
+  str_start := "[|" ^ string_of_int arr.(0);
+  for i = 1 to 7 do
+    str_start := !str_start ^ "," ^ string_of_int arr.(i)
+  done;
+  str_start := !str_start ^ "|]";
+  !str_start
+
 (** Types of user action *)
 type action =
   | Check
@@ -140,7 +148,9 @@ let get_money (state : state) player =
   | Computer x -> state.cpu_moneys.(x - 1)
 
 let valid_check (state : state) bets =
+  print_string ("VC - Current Bet: "^(string_of_int state.current_bet)^"\n");
   let players_bet = player_prev_bet state bets in
+  print_string ("VC - Players Bet: "^(string_of_int players_bet)^"\n");
   match state.current_bet with
   | 0 -> true
   | x when x != players_bet -> false
@@ -230,7 +240,6 @@ let rec prompt_last_action (state : state) players_in bets =
         prompt_action state players_in bets)
   | "CALL" ->
       if valid_call state bets then (
-        print_string "Valid Call";
         let amt =
           bet Player
             (state.current_bet - player_prev_bet state bets)
@@ -238,9 +247,7 @@ let rec prompt_last_action (state : state) players_in bets =
         in
         update_bets bets state.turn state amt;
         amt)
-      else 
-        (print_string "invalid";
-        0)
+      else 0
   | "RAISE" ->
       print_string "You can't raise at the moment. Try something else";
       prompt_last_action state players_in bets
