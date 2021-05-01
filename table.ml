@@ -55,28 +55,21 @@ let flop state =
     | none -> state.cards_on_table);
   state.deck_rem <- remove_top state.deck_rem
 
-let player_bet amt =
-  Pot.add amt Player;
-  amt
-
-let comp_bet comp state =
-  match comp with
+let bet players amt state =
+  match players with
   | Computer x ->
       let idx = x - 1 in
       let max = state.cpu_moneys.(idx) in
       let bet_amt = Random.int max + 1 in
       Pot.add bet_amt (Computer idx);
       bet_amt
-  | _ -> -1
+  | Player ->
+      Pot.add amt Player;
+      amt
 
 let rec distr int_list acc state =
   state.cpu_moneys.(acc) <- int_list.(acc);
   match acc with 8 -> () | _ -> distr int_list (acc + 1) state
-
-let bet (player : players) (amt : int) (state : state) : int =
-  match player with
-  | Player -> player_bet amt
-  | Computer x -> comp_bet (Computer x) state
 
 let winner (state : state) : win_record =
   let best_player = find_best_hand state Player in

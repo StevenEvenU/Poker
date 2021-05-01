@@ -28,14 +28,8 @@
  ************************************************************)
 
 (** [hours_worked] is the number of hours you worked on this assignment.*)
-val hours_worked_Elias_1 : int
+val hours_worked_Elias : int
 
-val hours_worked_Steven_1 : int
+val hours_worked_Steven : int
 
-val hours_worked_Zach_1 : int
-
-val hours_worked_Elias_2 : int
-
-val hours_worked_Steven_2 : int
-
-val hours_worked_Zach_2 : int
+val hours_worked_Zach : int
