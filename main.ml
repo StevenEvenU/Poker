@@ -148,7 +148,7 @@ let valid_check (state : state) bets =
   | _ -> false
 
 let valid_call (state : state) bets =
-  get_money state state.turn >= state.current_bet
+  get_money state state.turn >= (state.current_bet - player_prev_bet state bets)
 
 let valid_raise (state : state) bets =
   let curr_player = state.turn in
@@ -230,6 +230,7 @@ let rec prompt_last_action (state : state) players_in bets =
         prompt_action state players_in bets)
   | "CALL" ->
       if valid_call state bets then (
+        print_string "Valid Call";
         let amt =
           bet Player
             (state.current_bet - player_prev_bet state bets)
@@ -237,7 +238,9 @@ let rec prompt_last_action (state : state) players_in bets =
         in
         update_bets bets state.turn state amt;
         amt)
-      else 0
+      else 
+        (print_string "invalid";
+        0)
   | "RAISE" ->
       print_string "You can't raise at the moment. Try something else";
       prompt_last_action state players_in bets
@@ -266,8 +269,15 @@ let rec rec_betting_round
   if state.turn = starting_player && plays > 0 then
     let player = state.turn in
     match player with
-    | Player -> prompt_last_action state players_in bets
-    | Computer x -> bet (Computer x) 0 state
+    | Player -> 
+      print_string "last action";
+      let amt = prompt_last_action state players_in bets in
+      print_bet Player amt;
+      amt
+    | Computer x -> 
+      let amt = bet (Computer x) 0 state in
+      print_bet (Computer x) amt;
+      amt
   else
     let player = state.turn in
     let amt =
