@@ -5,7 +5,7 @@ open Table
 open Pot
 
 let players_to_string = function
-  | Player -> "Player"
+  | Player -> "Player "
   | Computer x -> "Computer " ^ string_of_int x
 
 let stupid str_start arr min max =
