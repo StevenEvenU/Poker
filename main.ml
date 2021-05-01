@@ -182,7 +182,6 @@ let rec prompt_action (state : state) players_in bets =
   | "RAISE" ->
       let amt = Table.bet Player (get_raise_amount state) state in
       update_bets bets state.turn amt;
-      print_bet Player amt;
       amt
   | "FOLD" ->
       (print_string
@@ -271,7 +270,7 @@ let betting_round (state : state) players_in =
   (* bets is the list of how much each player has bet so far in each
      round *)
   let bets = Array.make (1 + Array.length state.cpu_hands) 0 in
-  rec_betting_round state players_in bets state.turn 0;
+  let amt = rec_betting_round state players_in bets state.turn 0 in
   ()
 
 let filter_win_rec_list win_rec_list players_in =
