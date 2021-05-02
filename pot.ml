@@ -232,7 +232,7 @@ let rec side_pot (win_list : win_record list) all_in (out : int list) =
         win_list 10000
     in
     let n = List.length (subtract (to_list win_list) out) in
-    give_pot (subtract (top_winners win_list) out) (lowest_side * n);
+    give_pot (top_winners (subtract_1 win_list out)) (lowest_side * n);
     let side_cause =
       List.fold_right
         (fun a acc ->
