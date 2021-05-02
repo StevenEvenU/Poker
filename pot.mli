@@ -11,6 +11,9 @@ val add : int -> State.players -> unit
 (** Set pot to zero*)
 val reset : unit -> unit
 
+(** returns total sum of everything in the pot*)
+val print_pot : unit -> string
+
 (** Splits the pot amongs the winners. Uses a side pot if necessary.
     Assumes it is passed just the winners (one winner, ties, etc.).*)
 val to_winner : win_record list -> State.state -> int array

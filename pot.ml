@@ -178,3 +178,5 @@ let to_winner (win_list : win_record list) (state : State.state) =
   if not side_needed then give_pot (top_winners win_list) (piling 0 0)
   else side_pot win_list all_in [];
   money_back
+
+let print_pot () = string_of_int (piling 0 0 + !folded_pot)
