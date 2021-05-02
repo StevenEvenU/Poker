@@ -186,7 +186,7 @@ let rec side_pot win_list all_in out =
   in
   if num_all_in all_in 0 0 = 0 then
     give_pot (subtract (top_winners win_list) out) (piling 0 0)
-  else 
+  else ()
 
 let to_winner (win_list : win_record list) (state : State.state) =
   let all_in = Array.make 8 false in
