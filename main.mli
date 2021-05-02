@@ -56,7 +56,7 @@ val rec_betting_round :
   State.players array ref ->
   int array ->
   int ->
-
+  State.players ->
   int
 
 (** Main function to start round of betting *)
