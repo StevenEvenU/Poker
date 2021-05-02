@@ -20,6 +20,8 @@ val distr : int array -> State.state -> int -> unit
 (** This will bet whoever's turn it is and the amount *)
 val bet : State.players -> int -> State.state -> int
 
+val bet_specific : State.players -> int -> int
+
 (** Returns the winner of the round. *)
 val winner : State.state -> Compare.win_record list
 
