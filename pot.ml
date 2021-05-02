@@ -7,22 +7,18 @@ let folded_pot = ref 0
 
 let money_back = Array.make 8 0
 
+let add_helper (mon : int) (num : int) =
+  if mon >= 0 then
+    if pot.(num) >= 0 then pot.(num) <- pot.(num) + mon
+    else pot.(num) <- mon
+  else (
+    folded_pot := !folded_pot + pot.(num);
+    pot.(num) <- -2)
+
 let add (mon : int) (player : State.players) =
   match player with
-  | Computer x ->
-      if mon >= 0 then
-        if pot.(x) >= 0 then pot.(x) <- pot.(x) + mon
-        else pot.(x) <- mon
-      else (
-        folded_pot := !folded_pot + pot.(x);
-        pot.(x) <- -2)
-  | Player ->
-      if mon >= 0 then
-        if pot.(0) >= 0 then pot.(0) <- pot.(0) + mon
-        else pot.(0) <- mon
-      else (
-        folded_pot := !folded_pot + pot.(0);
-        pot.(0) <- -2)
+  | Computer x -> add_helper mon x
+  | Player -> add_helper mon 0
 
 let reset () =
   for i = 0 to 7 do
@@ -60,14 +56,14 @@ let top_winners (win_list : win_record list) =
           else acc)
     [] win_list
 
-let rec piling ind acc =
+let rec piling (ind : int) (acc : int) =
   let pile =
     if ind >= 8 then acc
     else piling (ind + 1) (acc + if pot.(ind) >= 0 then pot.(ind) else 0)
   in
   pile + !folded_pot
 
-let give_pot winner_list sum0 =
+let give_pot (winner_list : int list) (sum0 : int) =
   if sum0 = 0 then ()
   else
     let num_winners = List.length winner_list in
@@ -86,7 +82,7 @@ let give_pot winner_list sum0 =
     in
     splitter winner_list
 
-let rec remove_from_pot lst amt =
+let rec remove_from_pot (lst : int list) (amt : int) =
   match lst with
   | [] -> ()
   | [ h ] -> pot.(h) <- pot.(h) - amt
@@ -104,14 +100,32 @@ let subtract_win (lst1 : win_record list) (lst2 : int list) =
       if List.mem num lst2 then false else true)
     lst1
 
-let to_list win_list =
+let to_list (win_list : win_record list) =
   List.fold_right
     (fun a acc ->
       let num = to_player_num a in
       num :: acc)
     win_list []
 
-let rec side_pot (win_list : win_record list) all_in (out : int list) =
+let lowest_side_helper
+    (win_list : win_record list)
+    (all_in : bool array)
+    (out : int list) =
+  List.fold_right
+    (fun a acc ->
+      let p_num = to_player_num a in
+      if
+        (not (List.mem p_num out))
+        && all_in.(p_num)
+        && pot.(p_num) < acc
+      then pot.(p_num)
+      else acc)
+    win_list 10000
+
+let rec side_pot
+    (win_list : win_record list)
+    (all_in : bool array)
+    (out : int list) =
   let rec num_all_in arr acc ind =
     if ind >= 8 then acc
     else if arr.(ind) = true then num_all_in arr (acc + 1) (ind + 1)
@@ -120,18 +134,7 @@ let rec side_pot (win_list : win_record list) all_in (out : int list) =
   if num_all_in all_in 0 0 = List.length out then
     give_pot (top_winners (subtract_win win_list out)) (piling 0 0)
   else
-    let lowest_side =
-      List.fold_right
-        (fun a acc ->
-          let p_num = to_player_num a in
-          if
-            (not (List.mem p_num out))
-            && all_in.(p_num)
-            && pot.(p_num) < acc
-          then pot.(p_num)
-          else acc)
-        win_list 10000
-    in
+    let lowest_side = lowest_side_helper win_list all_in out in
     let n = List.length (subtract (to_list win_list) out) in
     give_pot
       (top_winners (subtract_win win_list out))
