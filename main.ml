@@ -149,11 +149,12 @@ let update_bets bets (player : State.players) state bet =
   (match player with
   | Player -> state.user_money <- state.user_money - bet
   | Computer x ->
-      (* print_string ("Computer money updating: " ^ string_of_int
-         state.cpu_moneys.(x - 1) ^ "\n"); *)
-      state.cpu_moneys.(x - 1) <- state.cpu_moneys.(x - 1) - bet);
-  (* print_string ("Computer money updated: " ^ string_of_int
-     state.cpu_moneys.(x - 1) ^ "\n")*)
+      print_string ("Computer "^(string_of_int x)^"'s money updating: " ^ string_of_int
+         state.cpu_moneys.(x - 1) ^ "\n");
+      state.cpu_moneys.(x - 1) <- state.cpu_moneys.(x - 1) - bet;
+  print_string ("Computer money updated: " ^ string_of_int
+     state.cpu_moneys.(x - 1) ^ "\n")
+     );
   bets.(int_of_player player) <- bet
 
 let player_prev_bet (state : state) bets =
@@ -332,9 +333,11 @@ let rec rec_betting_round (state : state) players_in bets plays =
 
 let last_call state players_in bets =
   let max = Array.fold_left max 0 bets in
+  print_string ("Max bet is: "^(string_of_int max)^"\n");
   for i = 0 to Array.length !players_in - 2 do
     next_turn state players_in state.current_bet;
-    let amt = bet state.turn max state - player_prev_bet state bets in
+    let amt = max - player_prev_bet state bets in
+    print_string ("Calling with an additional: "^(string_of_int amt)^"\n");
     update_bets bets state.turn state amt;
     ()
   done;
@@ -345,6 +348,7 @@ let last_call state players_in bets =
 let betting_round (state : state) players_in =
   (* bets is the list of how much each player has bet so far in each
      round *)
+  print_string ("Starting with player: "^(string_of_player state.turn)^"\n");
   let bets = Array.make (1 + Array.length state.cpu_hands) 0 in
   let amt = rec_betting_round state players_in bets 0 in
   last_call state players_in bets;
