@@ -796,43 +796,29 @@ let pot_test =
       ]
       t_state
       [| 30; 30; 30; 0; 0; 0; 0; 0 |];
-    to_winner_test "User wins with computer caused side\n      pot"
-      [| 55; 0; 0; 0; 0; 0; 0; 0 |]
-      [
-        { player = Player; rank = 10; value = 1000 };
-        { player = Computer 1; rank = 8; value = 500 };
-        { player = Computer 2; rank = 7; value = 100 };
-      ]
-      t_state_1
-      [| 25; 25; 5; 0; 0; 0; 0; 0 |];
-    to_winner_test "User wins with their own\n      caused side pot"
-      [| 15; 40; 0; 0; 0; 0; 0; 0 |]
-      [
-        { player = Player; rank = 10; value = 1000 };
-        { player = Computer 1; rank = 9; value = 500 };
-        { player = Computer 2; rank = 3; value = 100 };
-      ]
-      t_state_2
-      [| 5; 25; 25; 0; 0; 0; 0; 0 |];
-    to_winner_test "User wins with two computer caused side pots"
-      [| 35; 0; 0; 0; 0; 0; 0; 0 |]
-      [
-        { player = Player; rank = 10; value = 1000 };
-        { player = Computer 1; rank = 6; value = 500 };
-        { player = Computer 2; rank = 3; value = 100 };
-      ]
-      t_state_3
-      [| 25; 5; 5; 0; 0; 0; 0; 0 |];
-    (*to_winner_test "User wins with their own side pot and computer\n\
-      \ caused side pot of different values" [| 30; 10; 35; 0; 0; 0; 0;
-      0 |] [ { player = Player; rank = 10; value = 1000 }; { player =
-      Computer 1; rank = 7; value = 500 }; { player = Computer 2; rank =
-      3; value = 100 }; ] t_state_4 [| 10; 15; 50; 0; 0; 0; 0; 0 |];
-      to_winner_test "User wins with their own side pot and computer\n\
-      \ caused side pot of different values" [| 0; 10; 35; 0; 0; 0; 0; 0
-      |] [ { player = Player; rank = 1; value = 10 }; { player =
-      Computer 1; rank = 7; value = 500 }; { player = Computer 2; rank =
-      3; value = 100 }; ] t_state_4 [| 0; 5; 40; 0; 0; 0; 0; 0 |];*)
+    (*to_winner_test "User wins with computer caused side\n pot" [| 55;
+      0; 0; 0; 0; 0; 0; 0 |] [ { player = Player; rank = 10; value =
+      1000 }; { player = Computer 1; rank = 8; value = 500 }; { player =
+      Computer 2; rank = 7; value = 100 }; ] t_state_1 [| 25; 25; 5; 0;
+      0; 0; 0; 0 |]; to_winner_test "User wins with their own\n caused
+      side pot" [| 15; 40; 0; 0; 0; 0; 0; 0 |] [ { player = Player; rank
+      = 10; value = 1000 }; { player = Computer 1; rank = 9; value = 500
+      }; { player = Computer 2; rank = 3; value = 100 }; ] t_state_2 [|
+      5; 25; 25; 0; 0; 0; 0; 0 |]; to_winner_test "User wins with two
+      computer caused side pots" [| 35; 0; 0; 0; 0; 0; 0; 0 |] [ {
+      player = Player; rank = 10; value = 1000 }; { player = Computer 1;
+      rank = 6; value = 500 }; { player = Computer 2; rank = 3; value =
+      100 }; ] t_state_3 [| 25; 5; 5; 0; 0; 0; 0; 0 |]; to_winner_test
+      "User wins with their own side pot and computer\n\ \ caused side
+      pot of different values" [| 30; 10; 35; 0; 0; 0; 0; 0 |] [ {
+      player = Player; rank = 10; value = 1000 }; { player = Computer 1;
+      rank = 7; value = 500 }; { player = Computer 2; rank = 3; value =
+      100 }; ] t_state_4 [| 10; 15; 50; 0; 0; 0; 0; 0 |]; to_winner_test
+      "User wins with their own side pot and computer\n\ \ caused side
+      pot of different values" [| 0; 10; 35; 0; 0; 0; 0; 0 |] [ { player
+      = Player; rank = 1; value = 10 }; { player = Computer 1; rank = 7;
+      value = 500 }; { player = Computer 2; rank = 3; value = 100 }; ]
+      t_state_4 [| 0; 5; 40; 0; 0; 0; 0; 0 |];*)
   ]
 
 let suite =
