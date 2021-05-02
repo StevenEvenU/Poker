@@ -159,33 +159,64 @@ let rec piling ind acc =
   else piling (ind + 1) (acc + if pot.(ind) >= 0 then pot.(ind) else 0)
 
 let give_pot winner_list sum0 =
-  let num_winners = List.length winner_list in
-  let sum =
-    if num_winners > 1 && sum0 mod num_winners <> 0 then
-      sum0 - (sum0 mod num_winners)
-    else sum0
-  in
-  let rec splitter lst =
-    match lst with
-    | [] -> ()
-    | [ h ] -> money_back.(h) <- money_back.(h) + (sum / num_winners)
-    | h :: t ->
-        money_back.(h) <- money_back.(h) + (sum / num_winners);
-        splitter t
-  in
-  splitter winner_list
+  if sum0 = 0 then ()
+  else
+    let num_winners = List.length winner_list in
+    let sum =
+      if num_winners > 1 && sum0 mod num_winners <> 0 then
+        sum0 - (sum0 mod num_winners)
+      else sum0
+    in
+    let rec splitter lst =
+      match lst with
+      | [] -> ()
+      | [ h ] -> money_back.(h) <- money_back.(h) + (sum / num_winners)
+      | h :: t ->
+          money_back.(h) <- money_back.(h) + (sum / num_winners);
+          splitter t
+    in
+    splitter winner_list
 
-let subtract lst1 lst2 =
+let rec remove_from_pot lst amt =
+  match lst with
+  | [] -> ()
+  | [ h ] ->
+      if pot.(h) - amt >= 0 then pot.(h) <- pot.(h) - amt
+      else failwith "negative!"
+  | h :: t ->
+      if pot.(h) - amt >= 0 then pot.(h) <- pot.(h) - amt
+      else failwith "negative!";
+      remove_from_pot t amt
+
+let subtract (lst1 : int list) (lst2 : int list) =
   List.filter (fun a -> if List.mem a lst2 then false else true) lst1
 
-let rec side_pot (win_list : win_record list) all_in out =
+let subtract_1 (lst1 : win_record list) (lst2 : int list) =
+  List.filter
+    (fun a ->
+      match a with
+      | { player; rank; value } ->
+          let y = match player with Player -> 0 | Computer x -> x in
+          if List.mem y lst2 then false else true)
+    lst1
+
+let to_list win_list =
+  List.fold_right
+    (fun a acc ->
+      match a with
+      | { player; rank; value } ->
+          let y = match player with Player -> 0 | Computer x -> x in
+          y :: acc)
+    win_list []
+
+let rec side_pot (win_list : win_record list) all_in (out : int list) =
   let rec num_all_in arr acc ind =
     if ind >= 8 then acc
     else if arr.(ind) = true then num_all_in arr (acc + 1) (ind + 1)
     else num_all_in arr acc (ind + 1)
   in
   if num_all_in all_in 0 0 = List.length out then
-    give_pot (subtract (top_winners win_list) out) (piling 0 0)
+    give_pot (top_winners (subtract_1 win_list out)) (piling 0 0)
   else
     let lowest_side =
       List.fold_right
@@ -200,7 +231,8 @@ let rec side_pot (win_list : win_record list) all_in out =
               else acc)
         win_list 10000
     in
-    give_pot (subtract (top_winners win_list) out) lowest_side;
+    let n = List.length (subtract (to_list win_list) out) in
+    give_pot (subtract (top_winners win_list) out) (lowest_side * n);
     let side_cause =
       List.fold_right
         (fun a acc ->
@@ -212,6 +244,7 @@ let rec side_pot (win_list : win_record list) all_in out =
               if pot.(p) = lowest_side then p else acc)
         win_list (-1)
     in
+    remove_from_pot (subtract (to_list win_list) out) lowest_side;
     side_pot win_list all_in (side_cause :: out)
 
 let to_winner (win_list : win_record list) (state : State.state) =
