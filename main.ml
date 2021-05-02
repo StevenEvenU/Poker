@@ -377,6 +377,8 @@ let main =
   print_string
     "Welcome to Poker! How many people do you want to play against?\n";
   let num_players = read_int () in
+  if num_players = 0 then ()
+  else (
   let num_players = reprompt_player_count num_players in
   let state = active_state num_players in
   delegate state;
@@ -452,7 +454,7 @@ let main =
   print_string (arr_to_string (ref "") pot_array);
   print_balances state;
   distr pot_array state (List.length win_record_list - 1);
-  print_balances state
+  print_balances state)
 (* print_string "THE FOLLOWING IS FOR DEVELOPMENT ONLY\n"; *)
 (* print_string "\nThe other players hands were: \n"; print_win_record
    (find_best_hand state Computer); print_hands state Computer *)
