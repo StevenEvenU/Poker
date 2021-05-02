@@ -341,9 +341,7 @@ let last_call state players_in bets =
     update_bets bets state.turn state amt;
     ()
   done;
-  for i = 0 to 1 do
-    next_turn state players_in state.current_bet
-  done
+  next_turn state players_in state.current_bet
 
 let betting_round (state : state) players_in =
   (* bets is the list of how much each player has bet so far in each
