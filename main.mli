@@ -52,12 +52,7 @@ val prompt_action :
   State.state -> State.players array ref -> int array -> int
 (** Iterates through each player at the table during betting round *)
 val rec_betting_round :
-  State.state ->
-  State.players array ref ->
-  int array ->
-  int ->
-  State.players ->
-  int
+State.state -> State.players array ref -> int array -> int -> int
 
 (** Main function to start round of betting *)
 val betting_round : State.state -> State.players array ref -> unit

@@ -61,7 +61,13 @@ let bet players amt state =
   match players with
   | Computer x ->
       let idx = x - 1 in
-      let bet_amt = if state.current_bet > state.cpu_moneys.(idx) then state.cpu_moneys.(idx) else (let max = state.cpu_moneys.(idx) - state.current_bet in state.current_bet + Random.int (max + 1)) in
+      let bet_amt =
+        if state.current_bet > state.cpu_moneys.(idx) then
+          state.cpu_moneys.(idx)
+        else
+          let max = state.cpu_moneys.(idx) - state.current_bet in
+          state.current_bet + Random.int (max + 1)
+      in
       Pot.add bet_amt (Computer idx);
       bet_amt
   | Player ->
@@ -69,9 +75,14 @@ let bet players amt state =
       amt
 
 let rec distr int_arr state player_count =
-  (if player_count = 0 then state.user_money <- state.user_money + int_arr.(player_count)
-  else state.cpu_moneys.(player_count - 1) <- state.cpu_moneys.(player_count - 1) + int_arr.(player_count));
-  match player_count with 0 ->  () | _ -> distr int_arr state (player_count - 1)
+  if player_count = 0 then
+    state.user_money <- state.user_money + int_arr.(player_count)
+  else
+    state.cpu_moneys.(player_count - 1) <-
+      state.cpu_moneys.(player_count - 1) + int_arr.(player_count);
+  match player_count with
+  | 0 -> ()
+  | _ -> distr int_arr state (player_count - 1)
 
 let winner (state : state) : win_record list =
   let best_player = find_best_hand state Player in
@@ -85,8 +96,8 @@ let winner (state : state) : win_record list =
       else 1
     else 1
   in
-  let sorted = List.sort sf hands in sorted
-  (* List.sort (fun x y -> if x.value > y.value then 1 else -1) *)
-
+  let sorted = List.sort sf hands in
+  sorted
+(* List.sort (fun x y -> if x.value > y.value then 1 else -1) *)
 (* let round_check state = if List.length state.cards_on_table = 5 then
    winner state else flop state *)
