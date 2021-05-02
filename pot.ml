@@ -178,7 +178,7 @@ let give_pot winner_list sum0 =
 let subtract lst1 lst2 =
   List.filter (fun a -> if List.mem a lst2 then false else true) lst1
 
-let rec side_pot win_list all_in out =
+let rec side_pot (win_list : win_record list) all_in out =
   let rec num_all_in arr acc ind =
     if ind >= 8 then acc
     else if arr.(ind) = true then num_all_in arr (acc + 1) (ind + 1)
@@ -200,7 +200,19 @@ let rec side_pot win_list all_in out =
               else acc)
         win_list 10000
     in
-    give_pot (subtract (top_winners win_list) out) lowest_side
+    give_pot (subtract (top_winners win_list) out) lowest_side;
+    let side_cause =
+      List.fold_right
+        (fun a acc ->
+          match a with
+          | { player; rank; value } ->
+              let p =
+                match player with Player -> 0 | Computer x -> x
+              in
+              if pot.(p) = lowest_side then p else acc)
+        win_list (-1)
+    in
+    side_pot win_list all_in (side_cause :: out)
 
 let to_winner (win_list : win_record list) (state : State.state) =
   let all_in = Array.make 8 false in
@@ -231,5 +243,4 @@ let to_winner (win_list : win_record list) (state : State.state) =
   in
   if not side_needed then give_pot (top_winners win_list) (piling 0 0)
   else side_pot win_list all_in [];
-  reset ();
   money_back
