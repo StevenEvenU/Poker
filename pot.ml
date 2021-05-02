@@ -3,6 +3,8 @@ open Compare
 
 let pot = Array.make 8 (-2)
 
+let folded_pot = ref 0
+
 let money_back = Array.make 8 0
 
 let add (mon : int) (player : State.players) =
@@ -11,12 +13,16 @@ let add (mon : int) (player : State.players) =
       if mon >= 0 then
         if pot.(x) >= 0 then pot.(x) <- pot.(x) + mon
         else pot.(x) <- mon
-      else ()
+      else (
+        folded_pot := !folded_pot + pot.(x);
+        pot.(x) <- -2)
   | Player ->
       if mon >= 0 then
         if pot.(0) >= 0 then pot.(0) <- pot.(0) + mon
         else pot.(0) <- mon
-      else ()
+      else (
+        folded_pot := !folded_pot + pot.(0);
+        pot.(0) <- -2)
 
 let reset () =
   for i = 0 to 7 do
@@ -55,8 +61,11 @@ let top_winners (win_list : win_record list) =
     [] win_list
 
 let rec piling ind acc =
-  if ind >= 8 then acc
-  else piling (ind + 1) (acc + if pot.(ind) >= 0 then pot.(ind) else 0)
+  let pile =
+    if ind >= 8 then acc
+    else piling (ind + 1) (acc + if pot.(ind) >= 0 then pot.(ind) else 0)
+  in
+  pile + !folded_pot
 
 let give_pot winner_list sum0 =
   if sum0 = 0 then ()
@@ -124,7 +133,12 @@ let rec side_pot (win_list : win_record list) all_in (out : int list) =
         win_list 10000
     in
     let n = List.length (subtract (to_list win_list) out) in
-    give_pot (top_winners (subtract_win win_list out)) (lowest_side * n);
+    give_pot
+      (top_winners (subtract_win win_list out))
+      ((lowest_side * n)
+      +
+      if !folded_pot - lowest_side >= 0 then lowest_side
+      else !folded_pot);
     let side_cause =
       List.fold_right
         (fun a acc ->
@@ -133,6 +147,9 @@ let rec side_pot (win_list : win_record list) all_in (out : int list) =
         win_list (-1)
     in
     remove_from_pot (subtract (to_list win_list) out) lowest_side;
+    folded_pot :=
+      if !folded_pot - lowest_side >= 0 then !folded_pot - lowest_side
+      else 0;
     side_pot win_list all_in (side_cause :: out)
 
 let to_winner (win_list : win_record list) (state : State.state) =
