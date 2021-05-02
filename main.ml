@@ -23,6 +23,10 @@ let arr_to_string str_start arr =
   done;
   !str_start
 
+let rec list_to_string str_start lst = match lst with
+| [] -> str_start ^ "]"
+| h :: t -> list_to_string (str_start ^ h ^ ", ") t
+
 (** Types of user action *)
 type action =
   | Check
@@ -210,16 +214,19 @@ let rec prompt_action (state : state) players_in bets =
       update_bets bets state.turn state amt;
       amt
   | "FOLD" ->
-      print_string
-        "You can't fold at the moment. Yet to be implemented\n";
-      (* let new_players_in = ref [||] in print_string "defined\n\n
-         new_players_in"; for i = 0 to Array.length !players_in - 1 do
-         if !players_in.(i) = state.turn then () else new_players_in :=
-         Array.append !new_players_in [| !players_in.(i) |] done;
-         players_in := !new_players_in; print_string "reset defined\n
-         players_in"; update_bets bets state.turn (-1); print_string
-         "updated bets"; *)
-      prompt_action state players_in bets
+      let new_players_in = ref [||] in 
+      (* print_string "defined\n\n new_players_in";  *)
+      for i = 0 to Array.length !players_in - 1 do
+         if !players_in.(i) = state.turn then () 
+         else new_players_in :=
+         Array.append !new_players_in [| !players_in.(i) |] 
+        done;
+         players_in := !new_players_in; 
+         (* print_string "reset defined\n players_in";  *)
+         update_bets bets state.turn state (0); 
+         (* print_string "updated bets"; *)
+      (* prompt_action state players_in bets *)
+      state.current_bet
   | _ ->
       print_string "Invalid, please try again.\n";
       prompt_action state players_in bets
@@ -258,17 +265,17 @@ let rec prompt_last_action (state : state) players_in bets =
       print_string "You can't raise at the moment. Try something else";
       prompt_last_action state players_in bets
   | "FOLD" ->
-      print_string
-        "You can't fold at the moment. Yet to be implemented\n";
-      (* let new_players_in = ref [||] in print_string "defined
-         new_players_in\n"; for i = 0 to Array.length !players_in - 1 do
+      let new_players_in = ref [||] in 
+      (* print_string "defined new_players_in\n";  *)
+      for i = 0 to Array.length !players_in - 1 do
          if !players_in.(i) = state.turn then () else new_players_in :=
          Array.append !new_players_in [| !players_in.(i) |] done;
          print_string (stupid (ref "") players_in 0 (Array.length
-         !players_in - 1)); players_in := !new_players_in; print_string
-         "reset defined players_in\n"; update_bets bets state.turn (-1);
-         print_string "updated bets\n"; *)
-      prompt_last_action state players_in bets
+         !players_in - 1)); players_in := !new_players_in; 
+         (* print_string "reset defined players_in\n"; update_bets bets state.turn state (-1); *)
+         print_string "updated bets\n";
+         state.current_bet
+      (* prompt_last_action state players_in bets *)
   | _ ->
       print_string "Invalid, please try again.\n";
       prompt_last_action state players_in bets
@@ -277,21 +284,25 @@ let rec rec_betting_round
     (state : state)
     players_in
     bets
-    starting_player
     plays =
-  if state.turn = starting_player && plays > 0 then
+  if state.turn = !players_in.(0) && plays > 0 then 
     let player = state.turn in
+    print_string ((string_of_player player)^"'s final turn\n");
     match player with
     | Player -> 
       let amt = prompt_last_action state players_in bets in
       print_bet Player amt;
       amt
     | Computer x -> 
+      print_string "Before updating bets \n";
       let amt = bet (Computer x) 0 state in
+      print_string "Updating bets\n";
+      update_bets bets (Computer x) state amt;
       print_bet (Computer x) amt;
       amt
   else
     let player = state.turn in
+    print_string ((string_of_player player)^"'s turn\n");
     let amt =
       match player with
       | Player ->
@@ -306,23 +317,29 @@ let rec rec_betting_round
     in
     (* Update state.turn and state.current_bet *)
     next_turn state players_in amt;
-    rec_betting_round state players_in bets starting_player (plays + 1)
+    rec_betting_round state players_in bets (plays + 1)
 
 let betting_round (state : state) players_in =
   (* bets is the list of how much each player has bet so far in each
      round *)
   let bets = Array.make (1 + Array.length state.cpu_hands) 0 in
-  let amt = rec_betting_round state players_in bets state.turn 0 in
+  let amt = rec_betting_round state players_in bets 0 in
   state.current_bet <- 0
 
 let filter_win_rec_list win_rec_list players_in =
+  print_string "Filtering the following list: \n";
+  print_win_record win_rec_list;
+  print_string "The players still in are: ";
+  print_string (stupid (ref "") players_in 0 (Array.length !players_in - 1));
+  print_string "Done\n";
   let rec playing player players_in i =
-    if i = Array.length players_in then false
-    else if players_in.(i) = player then true
+    if i >= Array.length players_in then false
+    else 
+    if players_in.(i) = player then true
     else playing player players_in (i + 1)
   in
   List.filter
-    (fun (x : win_record) -> playing x.player players_in 0)
+    (fun (x : win_record) -> let p = playing x.player !players_in 0 in p)
     win_rec_list
 
 (***** ***** MAIN GAME OPERATION ***** *****)
@@ -354,7 +371,10 @@ let main =
   state.turn <- player_of_int utg;
 
   (* First round of betting will occur here *)
+  print_string "First Betting Round\n";
   betting_round (state : state) players_in;
+  print_string "Players in: \n";
+  print_string (stupid (ref "") players_in 0 (Array.length !players_in - 1));
   print_balances state;
   print_string "\n";
 
@@ -362,7 +382,10 @@ let main =
   print_event state "Flop";
 
   (* Second round of betting will occur here *)
+  print_string "Second Betting Round\n";
   betting_round (state : state) players_in;
+  print_string "Players in: \n";
+  print_string (stupid (ref "") players_in 0 (Array.length !players_in - 1));
   print_balances state;
   print_string "\n";
 
@@ -370,7 +393,10 @@ let main =
   print_event state "Turn";
 
   (* Third round of betting will occur here *)
+  print_string "Third Betting Round\n";
   betting_round (state : state) players_in;
+  print_string "Players in: \n";
+  print_string (stupid (ref "") players_in 0 (Array.length !players_in - 1));
   print_balances state;
   print_string "\n";
 
@@ -380,13 +406,17 @@ let main =
   hand_of_rank (List.hd (find_best_hand state Player)).rank ^ "\n"
   |> print_string;
   print_string "The WINNER is....\n";
-  let win_record_list = [ winner state ] in
-  print_win_record win_record_list;
+  let win_record_list = winner state in
+  let filtered_winners = (filter_win_rec_list win_record_list players_in) in
+  print_string ("Players count: "^(string_of_int (Array.length !players_in))^"\n");
+  print_string "tesatfdjlk: "; print_int (List.length filtered_winners); print_string "\n";
+  print_win_record filtered_winners;
 
-  let filtered_winners = (filter_win_rec_list win_record_list !players_in) in
   let pot_array = (to_winner filtered_winners state) in
-  distr pot_array state ((List.length filtered_winners) - 1);
-  print_balances state
+  print_string (arr_to_string (ref "") pot_array);
+  print_balances state;
+  distr pot_array state ((List.length win_record_list) - 1);
+  print_balances state;
 (* print_string "THE FOLLOWING IS FOR DEVELOPMENT ONLY\n"; *)
 (* print_string "\nThe other players hands were: \n"; print_win_record
    (find_best_hand state Computer); print_hands state Computer *)

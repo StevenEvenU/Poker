@@ -56,7 +56,6 @@ val rec_betting_round :
   State.state ->
   State.players array ref ->
   int array ->
-  State.players ->
   int ->
   int
 

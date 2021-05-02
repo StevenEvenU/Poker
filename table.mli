@@ -21,7 +21,7 @@ val distr : int array -> State.state -> int -> unit
 val bet : State.players -> int -> State.state -> int
 
 (** Returns the winner of the round. *)
-val winner : State.state -> Compare.win_record
+val winner : State.state -> Compare.win_record list
 
 (** This will check who won when the size of the state.cards_on_table is
     equal to 5. *)
