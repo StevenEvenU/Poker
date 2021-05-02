@@ -145,17 +145,14 @@ let top_winners (win_list : win_record list) =
             if rank = rank_max && value > max then value else max)
       0 win_list
   in
-  let ans =
-    List.fold_left
-      (fun acc a ->
-        match a with
-        | { player; rank; value } ->
-            if rank = rank_max && value = value_max then
-              (match player with Player -> 0 | Computer x -> x) :: acc
-            else acc)
-      [] win_list
-  in
-  match ans with [] -> failwith "error in top_winners" | _ -> ans
+  List.fold_left
+    (fun acc a ->
+      match a with
+      | { player; rank; value } ->
+          if rank = rank_max && value = value_max then
+            (match player with Player -> 0 | Computer x -> x) :: acc
+          else acc)
+    [] win_list
 
 let rec piling ind acc =
   if ind >= 8 then acc
@@ -177,6 +174,19 @@ let give_pot winner_list sum0 =
         splitter t
   in
   splitter winner_list
+
+let subtract lst1 lst2 =
+  List.filter (fun a -> if List.mem a lst2 then false else true) lst1
+
+let rec side_pot win_list all_in out =
+  let rec num_all_in arr acc ind =
+    if ind >= 8 then acc
+    else if arr.(ind) = true then num_all_in arr (acc + 1) (ind + 1)
+    else num_all_in arr acc (ind + 1)
+  in
+  if num_all_in all_in 0 0 = 0 then
+    give_pot (subtract (top_winners win_list) out) (piling 0 0)
+  else 
 
 let to_winner (win_list : win_record list) (state : State.state) =
   let all_in = Array.make 8 false in
@@ -206,5 +216,5 @@ let to_winner (win_list : win_record list) (state : State.state) =
     if not all_all_in then any_all_in win_list else false
   in
   if not side_needed then give_pot (top_winners win_list) (piling 0 0)
-  else ();
+  else side_pot win_list all_in [];
   money_back
