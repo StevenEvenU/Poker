@@ -184,9 +184,23 @@ let rec side_pot win_list all_in out =
     else if arr.(ind) = true then num_all_in arr (acc + 1) (ind + 1)
     else num_all_in arr acc (ind + 1)
   in
-  if num_all_in all_in 0 0 = 0 then
+  if num_all_in all_in 0 0 = List.length out then
     give_pot (subtract (top_winners win_list) out) (piling 0 0)
-  else ()
+  else
+    let lowest_side =
+      List.fold_right
+        (fun a acc ->
+          match a with
+          | { player; rank; value } ->
+              let p =
+                match player with Player -> 0 | Computer x -> x
+              in
+              if (not (List.mem p out)) && all_in.(p) && pot.(p) < acc
+              then pot.(p)
+              else acc)
+        win_list 10000
+    in
+    give_pot (subtract (top_winners win_list) out) lowest_side
 
 let to_winner (win_list : win_record list) (state : State.state) =
   let all_in = Array.make 8 false in
@@ -217,4 +231,5 @@ let to_winner (win_list : win_record list) (state : State.state) =
   in
   if not side_needed then give_pot (top_winners win_list) (piling 0 0)
   else side_pot win_list all_in [];
+  reset ();
   money_back
