@@ -138,12 +138,12 @@ let rec three_kind_helper
 let three_kind (cards : card_check list) (user : players) : win_record =
   three_kind_helper cards user three_kind_rank
 
-let strght_hand_sort_val (cards : card_check list) =
+let strt_hand_sort (cards : card_check list) =
   List.rev (List.sort_uniq card_cmp_int cards)
 
 let rec straight (cards : card_check list) (user : players) : win_record
     =
-  match strght_hand_sort_val cards with
+  match strt_hand_sort cards with
   | h1 :: h2 :: h3 :: h4 :: h5 :: t ->
       if
         h1.int_value - 1 = h2.int_value
@@ -220,7 +220,7 @@ let rec four_kind (cards : card_check list) (user : players) :
 
 let rec straight_flush (cards : card_check list) (user : players) :
     win_record =
-  match strght_hand_sort_val cards with
+  match strt_hand_sort cards with
   | h1 :: h2 :: h3 :: h4 :: h5 :: t ->
       if
         h1.int_value - 1 = h2.int_value
@@ -242,7 +242,7 @@ let rec straight_flush (cards : card_check list) (user : players) :
 
 let royal_flush (cards : card_check list) (user : players) : win_record
     =
-  match strght_hand_sort_val cards with
+  match strt_hand_sort cards with
   | h1 :: h2 :: h3 :: h4 :: h5 :: t ->
       if
         h1.int_value = 14 && h2.int_value = 13 && h3.int_value = 12
