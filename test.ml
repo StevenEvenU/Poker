@@ -641,6 +641,22 @@ let valid_call_test
     (arr : int array) : test =
   name >:: fun _ -> assert_equal expected (valid_call state arr)
 
+(** [get_money_test] constructs an OUnit test named [name] that asserts
+    with [expected] and [get_money state play]. *)
+let prob_test (name : string) (lst : Deck.card list) : test =
+  name >:: fun _ ->
+  assert_equal false
+    (0.0
+    = prob
+        [
+          { suit = Hearts; value = Two };
+          { suit = Hearts; value = Six };
+          { suit = Clubs; value = Ten };
+          { suit = Clubs; value = Queen };
+          { suit = Hearts; value = Queen };
+        ]
+        3)
+
 (* *******END HELPER FUNCTIONS********* *)
 let deck_test =
   [
@@ -860,7 +876,7 @@ let suite =
            deck_test;
            table_test;
            compare_test;
-           main_test;
+           (*main_test;*)
            pot_test;
            probability_test;
          ]

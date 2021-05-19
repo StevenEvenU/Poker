@@ -15,6 +15,21 @@ let deck_remover (lst : Deck.card option list) =
   let deck1 = deck_rec lst deck0 in
   deck1
 
+let cpu_cards_helper cpu_cards c1 c2 deck_left num =
+  for i = 0 to num do
+    (c1 :=
+       match Deck.top_card !deck_left with
+       | Some c -> c
+       | _ -> failwith "oops");
+    deck_left := Deck.remove_top !deck_left;
+    (c2 :=
+       match Deck.top_card !deck_left with
+       | Some c -> c
+       | _ -> failwith "oops");
+    deck_left := Deck.remove_top !deck_left;
+    cpu_cards.(i) <- [ !c1; !c2 ]
+  done
+
 let rec prob_helper lst num acc count =
   if count = 100 then float_of_int acc /. 100.0
   else
@@ -28,19 +43,12 @@ let rec prob_helper lst num acc count =
     in
     let c1 = ref { suit = Clubs; value = Eight } in
     let c2 = ref { suit = Clubs; value = Eight } in
-    for i = 0 to num do
-      (c1 :=
-         match Deck.top_card !deck_left with
-         | Some c -> c
-         | _ -> failwith "oops");
-      deck_left := Deck.remove_top !deck_left;
-      (c2 :=
-         match Deck.top_card !deck_left with
-         | Some c -> c
-         | _ -> failwith "oops");
-      deck_left := Deck.remove_top !deck_left;
-      cpu_cards.(i) <- [ !c1; !c2 ]
-    done;
+    cpu_cards_helper cpu_cards c1 c2 deck_left num;
+    (*for i = 0 to num do (c1 := match Deck.top_card !deck_left with |
+      Some c -> c | _ -> failwith "oops"); deck_left := Deck.remove_top
+      !deck_left; (c2 := match Deck.top_card !deck_left with | Some c ->
+      c | _ -> failwith "oops"); deck_left := Deck.remove_top
+      !deck_left; cpu_cards.(i) <- [ !c1; !c2 ] done;*)
     let state_1 =
       {
         users_hand = hand_cards;
