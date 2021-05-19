@@ -84,11 +84,11 @@ let rec hand_converter acc (cards : Deck.card list) : card_check list =
          :: acc)
         t
 
-let card_compare_int fst_card snd_card =
+let card_cmp_int fst_card snd_card =
   compare fst_card.int_value snd_card.int_value
 
 let hand_sort_int (cards : card_check list) =
-  List.rev (List.sort card_compare_int cards)
+  List.rev (List.sort card_cmp_int cards)
 
 exception GameNotOver
 
@@ -139,7 +139,7 @@ let three_kind (cards : card_check list) (user : players) : win_record =
   three_kind_helper cards user three_kind_rank
 
 let strght_hand_sort_val (cards : card_check list) =
-  List.rev (List.sort_uniq card_compare_int cards)
+  List.rev (List.sort_uniq card_cmp_int cards)
 
 let rec straight (cards : card_check list) (user : players) : win_record
     =
