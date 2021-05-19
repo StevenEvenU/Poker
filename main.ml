@@ -5,13 +5,10 @@ open Table
 open Pot
 open Betting
 
-let stupid str_start arr min max =
-  str_start := "[|" ^ string_of_player !arr.(min);
-  for i = min + 1 to max do
-    str_start := !str_start ^ "," ^ string_of_player !arr.(i)
-  done;
-  str_start := !str_start ^ "|]";
-  !str_start
+(* let stupid str_start arr min max = str_start := "[|" ^
+   string_of_player !arr.(min); for i = min + 1 to max do str_start :=
+   !str_start ^ "," ^ string_of_player !arr.(i) done; str_start :=
+   !str_start ^ "|]"; !str_start *)
 
 let arr_to_string str_start arr =
   str_start := "";
@@ -59,18 +56,18 @@ let string_of_action = function
   | Raise -> "Raise"
   | Fold -> "Fold"
 
-let string_of_card (card : Deck.card) =
+let str_of_card (card : Deck.card) =
   string_of_value card.value ^ string_of_suit card.suit
 
-let rec string_of_cards_rec str cards =
+let rec str_of_card_rec str cards =
   match cards with
   | [] -> str
-  | [ h ] -> str ^ " " ^ string_of_card h
+  | [ h ] -> str ^ " " ^ str_of_card h
   | h :: t ->
-      let s = str ^ " " ^ string_of_card h in
-      string_of_cards_rec s t
+      let s = str ^ " " ^ str_of_card h in
+      str_of_card_rec s t
 
-let string_of_cards cards = string_of_cards_rec "" cards
+let str_of_cards cards = str_of_card_rec "" cards
 
 (* Given a state. This prints the user's hand *)
 let print_hand hand player =
@@ -78,7 +75,7 @@ let print_hand hand player =
     if player = Player then "Your " else string_of_player player ^ "'s"
   in
   if hand <> [] then
-    let s = string_of_cards hand in
+    let s = str_of_cards hand in
     print_string (pronoun ^ "hand is: \n " ^ s ^ "\n")
   else print_string (pronoun ^ "hand is empty. \n")
 
@@ -97,7 +94,7 @@ let print_hands (state : State.state) (player : State.players) =
 let print_event (state : State.state) (event : string) =
   print_string
     ("After the " ^ event ^ " the cards are now: \n"
-    ^ string_of_cards state.cards_on_table
+    ^ str_of_cards state.cards_on_table
     ^ "\n")
 
 let print_balances state =
