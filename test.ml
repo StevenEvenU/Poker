@@ -412,6 +412,14 @@ let t_state_4 =
 
 (********START HELPER FUNCTIONS*************)
 
+let arr_to_string str_start arr =
+  str_start := "[|" ^ string_of_int arr.(0);
+  for i = 1 to 7 do
+    str_start := !str_start ^ "," ^ string_of_int arr.(i)
+  done;
+  str_start := !str_start ^ "|]";
+  !str_start
+
 (** converts card option to string*)
 let string_of_card_option card1 =
   match card1 with None -> "" | Some x -> string_of_card x
@@ -555,6 +563,29 @@ let find_best_hand
     (expected : win_record list) : test =
   name >:: fun _ -> assert_equal expected (find_best_hand state player)
 
+(* **** TABLE HELPER FUNCTIONS **** *)
+let bet_specific_test
+    (name : string)
+    (player : State.players)
+    (amt : int)
+    (expected : int) : test =
+  name >:: fun _ ->
+  let old_pot = print_pot () in
+  bet_specific player amt;
+  assert_equal expected
+    (int_of_string (print_pot ()) - int_of_string old_pot)
+
+let distr_test
+    (name : string)
+    (int_arr : int array)
+    (state : State.state)
+    (player_count : int)
+    (expected : int) : test =
+  name >:: fun _ ->
+  distr int_arr state player_count;
+  print_int state.user_money;
+  assert_equal expected state.user_money
+
 (* **** MAIN HELPER FUNCTIONS **** *)
 
 (* [string_of_card_test] constructs an OUnit test named [name] that
@@ -573,14 +604,6 @@ let string_of_cards_test
     (expected : string)
     (cards : Deck.card list) : test =
   name >:: fun _ -> assert_equal expected (string_of_cards cards)
-
-let arr_to_string str_start arr =
-  str_start := "[|" ^ string_of_int arr.(0);
-  for i = 1 to 7 do
-    str_start := !str_start ^ "," ^ string_of_int arr.(i)
-  done;
-  str_start := !str_start ^ "|]";
-  !str_start
 
 (** [to_winner_test] constructs an OUnit test named [name] that asserts
     with [expected] how the pot is constructed given players
@@ -687,7 +710,12 @@ let deck_test =
       (remove_top create);
   ]
 
-let table_test = []
+let table_test =
+  [
+    bet_specific_test "Player add" Player 100 100;
+    bet_specific_test "Computer add" (Computer 1) 100 100;
+    distr_test "Adding to player" [| 600; 100 |] t_state 1 1600;
+  ]
 
 let compare_test =
   [

@@ -138,7 +138,7 @@ let filter_win_rec_list win_rec_list players_in =
   print_string "The players still in are: ";
   print_string
     (stupid (ref "") players_in 0 (Array.length !players_in - 1));
-  print_string "Done\n";
+  (* print_string "Done\n"; *)
   let rec playing player players_in i =
     if i >= Array.length players_in then false
     else if players_in.(i) = player then true
@@ -160,7 +160,7 @@ let main =
   let num_players = reprompt_player_count num_players in
   let state = active_state num_players in
   delegate state;
-  Sys.command("clear");
+  Sys.command "clear";
 
   (* Delegates cards to players *)
   let players_in = ref [| Player |] in
@@ -180,16 +180,16 @@ let main =
   state.turn <- player_of_int utg;
 
   (* First round of betting will occur here *)
-  print_string "\n First Betting Round is Starting\n";
+  print_string "\nFirst Betting Round is Starting\n";
   betting_round (state : state) players_in;
-  Sys.command("clear");
+  Sys.command "clear";
   print_string "Players in: \n";
   print_string
     (stupid (ref "") players_in 0 (Array.length !players_in - 1));
   print_balances state;
   print_string "\n";
-  print_string "\n Current amount in pot is: \n";
-  print_string (print_pot ());
+  print_string "\nCurrent amount in pot is: \n";
+  print_string (print_pot () ^ "\n");
 
   deal state;
   print_event state "Flop";
@@ -203,8 +203,8 @@ let main =
     (stupid (ref "") players_in 0 (Array.length !players_in - 1));
   print_balances state;
   print_string "\n";
-  print_string "\n Current amount in pot is: \n";
-  print_string (print_pot ());
+  print_string "\nCurrent amount in pot is: \n";
+  print_string (print_pot () ^ "\n");
 
   flop state;
   print_event state "Turn";
@@ -217,8 +217,8 @@ let main =
     (stupid (ref "") players_in 0 (Array.length !players_in - 1));
   print_balances state;
   print_string "\n";
-  print_string "\n Current amount in pot is: \n";
-  print_string (print_pot ());
+  print_string "\nCurrent amount in pot is: \n";
+  print_string (print_pot () ^ "\n");
 
   flop state;
   print_event state "River";
@@ -230,15 +230,15 @@ let main =
   let filtered_winners =
     filter_win_rec_list win_record_list players_in
   in
-  print_string
-    ("Players count: " ^ string_of_int (Array.length !players_in) ^ "\n");
-  print_string "tesatfdjlk: ";
-  print_int (List.length filtered_winners);
+  (* print_string ("Players count: " ^ string_of_int (Array.length
+     !players_in) ^ "\n"); *)
+  (* print_string "tesatfdjlk: "; *)
+  (* print_int (List.length filtered_winners); *)
   print_string "\n";
   print_win_record filtered_winners;
 
   let pot_array = to_winner filtered_winners state in
-  print_string (arr_to_string (ref "") pot_array);
+  (* print_string (arr_to_string (ref "") pot_array); *)
   print_balances state;
   distr pot_array state (List.length win_record_list - 1);
   print_balances state
