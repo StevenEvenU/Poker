@@ -1,4 +1,4 @@
-MODULES=state compare pot main table deck authors probability
+MODULES=state compare pot main table deck authors probability betting
 OBJECTS=$(MODULES:=.cmo)
 MLS=$(MODULES:=.ml)
 MLIS=$(MODULES:=.mli)

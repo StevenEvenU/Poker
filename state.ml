@@ -12,7 +12,7 @@ let player_of_int = function
   | _ -> failwith "Error, maximum of 7 computer players"
 
 let string_of_player = function
-  | Player -> "You"
+  | Player -> "Player"
   | Computer x -> "Opponent " ^ string_of_int x
 
 (* Game state *)
