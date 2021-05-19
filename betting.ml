@@ -74,13 +74,13 @@ let valid_raise (state : state) bets =
   | Player -> state.user_money > state.current_bet
   | Computer x -> state.cpu_moneys.(x - 1) > state.current_bet
 
-let rec get_raise_amount (state : state) =
+let rec get_raise_amt (state : state) =
   print_string "How much do you wish to raise by? \n";
   let amt = read_int () in
   if valid_raise state amt then amt
   else (
     print_string "Invalid amount, please re-enter. \n";
-    get_raise_amount state)
+    get_raise_amt state)
 
 (* Prompt actions *)
 
@@ -110,7 +110,7 @@ let rec prompt_action (state : state) players_in bets =
         amt)
       else 0
   | "RAISE" ->
-      let amt = Table.bet Player (get_raise_amount state) state in
+      let amt = Table.bet Player (get_raise_amt state) state in
       update_bets bets state.turn state amt;
       amt
   | "FOLD" ->
