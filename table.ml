@@ -61,7 +61,7 @@ let bet players amt state =
   match players with
   | Computer x ->
       let idx = x - 1 in
-      let bet_amt =
+      (* let bet_amt =
         if state.current_bet > state.cpu_moneys.(idx) then (
           print_string "If greater: \n";
           state.cpu_moneys.(idx))
@@ -69,9 +69,9 @@ let bet players amt state =
           print_string "If less than: \n";
           let max = state.cpu_moneys.(idx) - state.current_bet in
           state.current_bet + Random.int (max + 1))
-      in
-      Pot.add bet_amt (Computer idx);
-      bet_amt
+      in *)
+      Pot.add amt (Computer idx);
+      amt
   | Player ->
       Pot.add amt Player;
       amt

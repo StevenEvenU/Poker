@@ -51,10 +51,13 @@ let update_bets bets (player : State.players) state bet =
 let player_prev_bet (state : state) bets =
   bets.(int_of_player state.turn)
 
-let get_money (state : state) player =
-  match player with
+let get_money (state : state) = function
   | Player -> state.user_money
   | Computer x -> state.cpu_moneys.(x - 1)
+
+let get_hand (state : state) = function
+  | Player -> state.users_hand
+  | Computer x -> state.cpu_hands.(x - 1)
 
 (* Valid action functions *)
 let valid_check (state : state) bets =
@@ -86,8 +89,25 @@ let rec get_raise_amount (state : state) =
     print_string "Invalid amount, please re-enter. \n";
     get_raise_amount state)
 
+(***      Action Functions      ***)
+let fold_hand state players_in bets update= 
+  let new_players_in = ref [||] in
+  (* print_string "defined\n\n new_players_in"; *)
+  for i = 0 to Array.length !players_in - 1 do
+    if !players_in.(i) = state.turn then ()
+    else
+      new_players_in :=
+        Array.append !new_players_in [| !players_in.(i) |]
+  done;
+  players_in := !new_players_in;
+  (* print_string "reset defined\n players_in"; *)
+  if update then update_bets bets state.turn state 0;
+  (* print_string "updated bets"; *)
+  (* prompt_action state players_in bets *)
+  state.current_bet
 
-(* Prompt actions *)
+    
+(***      Human Prompt Actions      ***)
 
 (* TODO: Only prompt available actions, not all *)
 let rec prompt_action (state : state) players_in bets =
@@ -118,21 +138,7 @@ let rec prompt_action (state : state) players_in bets =
       let amt = Table.bet Player (get_raise_amount state) state in
       update_bets bets state.turn state amt;
       amt
-  | "FOLD" ->
-      let new_players_in = ref [||] in
-      (* print_string "defined\n\n new_players_in"; *)
-      for i = 0 to Array.length !players_in - 1 do
-        if !players_in.(i) = state.turn then ()
-        else
-          new_players_in :=
-            Array.append !new_players_in [| !players_in.(i) |]
-      done;
-      players_in := !new_players_in;
-      (* print_string "reset defined\n players_in"; *)
-      update_bets bets state.turn state 0;
-      (* print_string "updated bets"; *)
-      (* prompt_action state players_in bets *)
-      state.current_bet
+  | "FOLD" -> fold_hand state players_in bets true
   | _ ->
       print_string "Invalid, please try again.\n";
       prompt_action state players_in bets
@@ -170,27 +176,27 @@ let rec prompt_last_action (state : state) players_in bets =
   | "RAISE" ->
       print_string "You can't raise at the moment. Try something else";
       prompt_last_action state players_in bets
-  | "FOLD" ->
-      let new_players_in = ref [||] in
-      (* print_string "defined new_players_in\n"; *)
-      for i = 0 to Array.length !players_in - 1 do
-        if !players_in.(i) = state.turn then ()
-        else
-          new_players_in :=
-            Array.append !new_players_in [| !players_in.(i) |]
-      done;
-      print_string
-        (stupid (ref "") players_in 0 (Array.length !players_in - 1));
-      players_in := !new_players_in;
-      (* print_string "reset defined players_in\n"; update_bets bets
-         state.turn state (-1); *)
-      print_string "updated bets\n";
-      state.current_bet
-      (* prompt_last_action state players_in bets *)
+  | "FOLD" -> fold_hand state players_in bets false
   | _ ->
       print_string "Invalid, please try again.\n";
       prompt_last_action state players_in bets
 
+
+(***      Computer Prompt Actions       ***)
+
+let comp_action (state : state) players_in bets = 
+  let player = state.turn in
+  let hand = get_hand state player in 
+  let p = Probability.prob (hand @ state.cards_on_table) 10 in 
+  let v = p *. Float.of_int (get_money state player) in
+  match v with
+  | v when v < 0.9 *. Float.of_int (state.current_bet) -> fold_hand state players_in bets false (* FOLD *)
+  | v when v > 1.1 *. Float.of_int (state.current_bet) -> bet player (Float.to_int v) state (* RAISE *)
+  | _ -> if player_prev_bet state bets = state.current_bet then 
+    bet player 0 state else bet player state.current_bet state
+
+
+(***      Recursive Betting Round       ***)
 let rec rec_betting_round (state : state) players_in bets plays =
   if state.turn = !players_in.(0) && plays > 0 then (
     let player = state.turn in
@@ -202,7 +208,7 @@ let rec rec_betting_round (state : state) players_in bets plays =
         amt
     | Computer x ->
         print_string "Before updating bets \n";
-        let amt = bet (Computer x) 0 state in
+        let amt = comp_action state players_in bets in
         print_string "Updating bets\n";
         update_bets bets (Computer x) state amt;
         print_bet (Computer x) amt;
