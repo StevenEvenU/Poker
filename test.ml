@@ -583,7 +583,6 @@ let distr_test
     (expected : int) : test =
   name >:: fun _ ->
   distr int_arr state player_count;
-  print_int state.user_money;
   assert_equal expected state.user_money
 
 (* **** MAIN HELPER FUNCTIONS **** *)
