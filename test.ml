@@ -641,10 +641,14 @@ let valid_call_test
     (arr : int array) : test =
   name >:: fun _ -> assert_equal expected (valid_call state arr)
 
-(** [get_money_test] constructs an OUnit test named [name] that asserts
-    with [expected] and [get_money state play]. *)
-let prob_test (name : string) (lst : Deck.card list) : test =
-  name >:: fun _ -> assert_equal false (0.0 = prob lst 3)
+(** [prob_test] constructs an OUnit test named [name] that asserts that
+    [prob lst n] is within an acceptable range of [expected]. IMPORTANT
+    NOTE: this test may fail even if the code is correct due to its
+    probabilistic nature. *)
+let prob_test (name : string) (expected : float) (lst : Deck.card list)
+    : test =
+  name >:: fun _ ->
+  assert_equal true (Float.abs (expected -. prob lst 3) < 0.15)
 
 (* *******END HELPER FUNCTIONS********* *)
 let deck_test =
@@ -861,13 +865,48 @@ let pot_test =
     probability using randomization*)
 let probability_test =
   [
-    prob_test "probability isn't 0"
+    prob_test "moderately low probability of hand winning pre-turn" 0.20
       [
         { suit = Hearts; value = Two };
         { suit = Hearts; value = Six };
         { suit = Clubs; value = Ten };
         { suit = Clubs; value = Queen };
         { suit = Hearts; value = Queen };
+      ];
+    prob_test "moderately low probability of hand winning pre-river"
+      0.15
+      [
+        { suit = Hearts; value = Two };
+        { suit = Hearts; value = Six };
+        { suit = Clubs; value = Ten };
+        { suit = Clubs; value = Queen };
+        { suit = Hearts; value = Queen };
+        { suit = Diamonds; value = Ace };
+      ];
+    prob_test "moderately high probability of hand winning pre-turn"
+      0.85
+      [
+        { suit = Spades; value = Queen };
+        { suit = Clubs; value = Nine };
+        { suit = Clubs; value = Ten };
+        { suit = Clubs; value = Queen };
+        { suit = Hearts; value = Queen };
+      ];
+    prob_test "almost certain probability of hand winning pre-turn" 0.99
+      [
+        { suit = Spades; value = Queen };
+        { suit = Diamonds; value = Queen };
+        { suit = Clubs; value = Ten };
+        { suit = Clubs; value = Queen };
+        { suit = Hearts; value = Queen };
+      ];
+    prob_test "almost certain probability of hand losing pre-turn" 0.10
+      [
+        { suit = Diamonds; value = Two };
+        { suit = Hearts; value = Three };
+        { suit = Spades; value = Queen };
+        { suit = Clubs; value = Jack };
+        { suit = Clubs; value = King };
       ];
   ]
 
