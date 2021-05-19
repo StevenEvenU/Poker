@@ -57,7 +57,7 @@ let int_of_val = function
   | King -> 13
   | Ace -> 14
 
-let string_of_suit suit =
+let str_of_suit suit =
   match suit with
   | Spades -> "♠"
   | Hearts -> "♥"
@@ -78,7 +78,7 @@ let rec hand_converter acc (cards : Deck.card list) : card_check list =
   | h :: t ->
       hand_converter
         ({
-           string_suit = string_of_suit h.suit;
+           string_suit = str_of_suit h.suit;
            int_value = int_of_val h.value;
          }
          :: acc)
