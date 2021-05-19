@@ -3,8 +3,6 @@ open Compare
 
 let unused = -2
 
-let over_total_money = 10000
-
 let max_players = 8
 
 let pot = Array.make max_players unused
@@ -12,6 +10,8 @@ let pot = Array.make max_players unused
 let folded_pot = ref 0
 
 let money_back = Array.make max_players 0
+
+let over_total_money = 10000
 
 let add_helper (mon : int) (num : int) =
   if mon >= 0 then
