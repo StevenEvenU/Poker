@@ -4,13 +4,10 @@ open State
 open Table
 open Pot
 
-let stupid str_start arr min max =
-  str_start := "[|" ^ string_of_player !arr.(min);
-  for i = min + 1 to max do
-    str_start := !str_start ^ "," ^ string_of_player !arr.(i)
-  done;
-  str_start := !str_start ^ "|]";
-  !str_start
+(* let stupid str_start arr min max = str_start := "[|" ^
+   string_of_player !arr.(min); for i = min + 1 to max do str_start :=
+   !str_start ^ "," ^ string_of_player !arr.(i) done; str_start :=
+   !str_start ^ "|]"; !str_start *)
 
 let print_bet (player : State.players) amt =
   match player with
@@ -186,7 +183,7 @@ let rec prompt_last_action (state : state) players_in bets =
       print_string "Invalid, please try again.\n";
       prompt_last_action state players_in bets
 
-let rec rec_betting_round (state : state) players_in bets plays =
+let rec bet_round (state : state) players_in bets plays =
   if state.turn = !players_in.(0) && plays > 0 then (
     let player = state.turn in
     (* print_string (string_of_player player ^ "'s final turn\n"); *)
@@ -219,7 +216,7 @@ let rec rec_betting_round (state : state) players_in bets plays =
     in
     (* Update state.turn and state.current_bet *)
     next_turn state players_in amt;
-    rec_betting_round state players_in bets (plays + 1)
+    bet_round state players_in bets (plays + 1)
 
 let last_call state players_in bets =
   let max = Array.fold_left max 0 bets in
