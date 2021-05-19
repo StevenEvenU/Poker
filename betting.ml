@@ -4,14 +4,10 @@ open State
 open Table
 open Pot
 
-
-let stupid str_start arr min max =
-  str_start := "[|" ^ string_of_player !arr.(min);
-  for i = min + 1 to max do
-    str_start := !str_start ^ "," ^ string_of_player !arr.(i)
-  done;
-  str_start := !str_start ^ "|]";
-  !str_start
+(* let stupid str_start arr min max = str_start := "[|" ^
+   string_of_player !arr.(min); for i = min + 1 to max do str_start :=
+   !str_start ^ "," ^ string_of_player !arr.(i) done; str_start :=
+   !str_start ^ "|]"; !str_start *)
 
 let print_bet (player : State.players) amt =
   match player with
@@ -19,7 +15,7 @@ let print_bet (player : State.players) amt =
   | Computer x ->
       print_string
         ("Opponent " ^ string_of_int x ^ " bet: " ^ string_of_int amt
-        ^ "\n")
+       ^ "\n")
 
 (*** Betting Logic ***)
 
@@ -37,15 +33,11 @@ let update_bets bets (player : State.players) state bet =
   (match player with
   | Player -> state.user_money <- state.user_money - bet
   | Computer x ->
-      print_string
-        ("Computer " ^ string_of_int x ^ "'s money updating: "
-        ^ string_of_int state.cpu_moneys.(x - 1)
-        ^ "\n");
-      state.cpu_moneys.(x - 1) <- state.cpu_moneys.(x - 1) - bet;
-      print_string
-        ("Computer money updated: "
-        ^ string_of_int state.cpu_moneys.(x - 1)
-        ^ "\n"));
+      (* print_string ("Computer " ^ string_of_int x ^ "'s money
+         updating: " ^ string_of_int state.cpu_moneys.(x - 1) ^ "\n"); *)
+      state.cpu_moneys.(x - 1) <- state.cpu_moneys.(x - 1) - bet);
+  (* print_string ("Computer money updated: " ^ string_of_int
+     state.cpu_moneys.(x - 1) ^ "\n")); *)
   bets.(int_of_player player) <- bet
 
 let player_prev_bet (state : state) bets =
@@ -61,10 +53,11 @@ let get_hand (state : state) = function
 
 (* Valid action functions *)
 let valid_check (state : state) bets =
-  print_string
-    ("VC - Current Bet: " ^ string_of_int state.current_bet ^ "\n");
+  (* print_string ("VC - Current Bet: " ^ string_of_int
+     state.current_bet ^ "\n"); *)
   let players_bet = player_prev_bet state bets in
-  print_string ("VC - Players Bet: " ^ string_of_int players_bet ^ "\n");
+  (* print_string ("VC - Players Bet: " ^ string_of_int players_bet ^
+     "\n"); *)
   match state.current_bet with
   | 0 -> true
   | x when x != players_bet -> false
@@ -81,7 +74,7 @@ let valid_raise (state : state) bets =
   | Player -> state.user_money > state.current_bet
   | Computer x -> state.cpu_moneys.(x - 1) > state.current_bet
 
-let rec get_raise_amount (state : state) =
+let rec get_raise_amt (state : state) =
   print_string "How much do you wish to raise by? \n";
   let amt = read_int () in
   if valid_raise state amt then amt
@@ -135,7 +128,7 @@ let rec prompt_action (state : state) players_in bets =
         amt)
       else 0
   | "RAISE" ->
-      let amt = Table.bet Player (get_raise_amount state) state in
+      let amt = Table.bet Player (get_raise_amt state) state in
       update_bets bets state.turn state amt;
       amt
   | "FOLD" -> fold_hand state players_in bets true
@@ -200,18 +193,18 @@ let comp_action (state : state) players_in bets =
 let rec rec_betting_round (state : state) players_in bets plays =
   if state.turn = !players_in.(0) && plays > 0 then (
     let player = state.turn in
-    print_string (string_of_player player ^ "'s final turn\n");
+    (* print_string (string_of_player player ^ "'s final turn\n"); *)
     match player with
     | Player ->
         let amt = prompt_last_action state players_in bets in
-        print_bet Player amt;
+        (* print_bet Player amt; *)
         amt
     | Computer x ->
         print_string "Before updating bets \n";
         let amt = comp_action state players_in bets in
         print_string "Updating bets\n";
         update_bets bets (Computer x) state amt;
-        print_bet (Computer x) amt;
+        (* print_bet (Computer x) amt; *)
         amt)
   else
     let player = state.turn in
@@ -220,33 +213,30 @@ let rec rec_betting_round (state : state) players_in bets plays =
       match player with
       | Player ->
           let amt = prompt_action state players_in bets in
-          print_bet Player amt;
+          (* print_bet Player amt; *)
           amt
       | Computer x ->
           let amt = bet (Computer x) 0 state in
           update_bets bets (Computer x) state amt;
-          print_bet (Computer x) amt;
+          (* print_bet (Computer x) amt; *)
           amt
     in
     (* Update state.turn and state.current_bet *)
     next_turn state players_in amt;
-    rec_betting_round state players_in bets (plays + 1)
+    bet_round state players_in bets (plays + 1)
 
 let last_call state players_in bets =
   let max = Array.fold_left max 0 bets in
-  print_string ("Max bet is: " ^ string_of_int max ^ "\n");
+  (* print_string ("Max bet is: " ^ string_of_int max ^ "\n"); *)
   for i = 0 to Array.length !players_in - 2 do
     next_turn state players_in state.current_bet;
     let test = max - player_prev_bet state bets in
-    print_string
-      (string_of_player state.turn
-      ^ "calling before with an additional: " ^ string_of_int test
-      ^ "\n");
+    (* print_string (string_of_player state.turn ^ "calling before with
+       an additional: " ^ string_of_int test ^ "\n"); *)
     let amt = bet_specific state.turn test in
-    print_string
-      (string_of_player state.turn
-      ^ "calling with an additional: " ^ string_of_int amt ^ "\n");
-    update_bets bets state.turn state test;
+    (* print_string (string_of_player state.turn ^ "calling with an
+       additional: " ^ string_of_int amt ^ "\n"); update_bets bets
+       state.turn state test; *)
     ()
   done;
   next_turn state players_in state.current_bet

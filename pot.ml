@@ -1,11 +1,17 @@
 open State
 open Compare
 
-let pot = Array.make 8 (-2)
+let unused = -2
+
+let max_players = 8
+
+let pot = Array.make max_players unused
 
 let folded_pot = ref 0
 
-let money_back = Array.make 8 0
+let money_back = Array.make max_players 0
+
+let over_total_money = 10000
 
 let add_helper (mon : int) (num : int) =
   if mon >= 0 then
@@ -13,7 +19,7 @@ let add_helper (mon : int) (num : int) =
     else pot.(num) <- mon
   else (
     folded_pot := !folded_pot + pot.(num);
-    pot.(num) <- -2)
+    pot.(num) <- unused)
 
 let add (mon : int) (player : State.players) =
   match player with
@@ -21,8 +27,8 @@ let add (mon : int) (player : State.players) =
   | Player -> add_helper mon 0
 
 let reset () =
-  for i = 0 to 7 do
-    pot.(i) <- -2;
+  for i = 0 to max_players - 1 do
+    pot.(i) <- unused;
     money_back.(i) <- 0
   done
 
@@ -58,7 +64,7 @@ let top_winners (win_list : win_record list) =
 
 let rec piling (ind : int) (acc : int) =
   let pile =
-    if ind >= 8 then acc
+    if ind >= max_players then acc
     else piling (ind + 1) (acc + if pot.(ind) >= 0 then pot.(ind) else 0)
   in
   pile + !folded_pot
@@ -120,14 +126,14 @@ let lowest_side_helper
         && pot.(p_num) < acc
       then pot.(p_num)
       else acc)
-    win_list 10000
+    win_list over_total_money
 
 let rec side_pot
     (win_list : win_record list)
     (all_in : bool array)
     (out : int list) =
   let rec num_all_in arr acc ind =
-    if ind >= 8 then acc
+    if ind >= max_players then acc
     else if arr.(ind) = true then num_all_in arr (acc + 1) (ind + 1)
     else num_all_in arr acc (ind + 1)
   in
@@ -156,8 +162,8 @@ let rec side_pot
     side_pot win_list all_in (side_cause :: out)
 
 let to_winner (win_list : win_record list) (state : State.state) =
-  let all_in = Array.make 8 false in
-  for i = 0 to 7 do
+  let all_in = Array.make max_players false in
+  for i = 0 to max_players - 1 do
     if bankrupt i state = true then all_in.(i) <- true else ()
   done;
   let rec all_all_in_helper lst =

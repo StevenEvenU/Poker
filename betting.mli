@@ -13,10 +13,10 @@ val player_prev_bet : State.state -> int array -> int
 val get_money : State.state -> State.players -> int
 
 (** Asks the user how much they want to raise by *)
-val get_raise_amount : State.state -> int
+val get_raise_amt : State.state -> int
 
 (** Checks if this person can check or not *)
-    val valid_check : State.state -> int array -> bool
+val valid_check : State.state -> int array -> bool
 
 (** Checks if this person can call or not *)
 val valid_call : State.state -> int array -> bool
@@ -26,10 +26,14 @@ val valid_raise : State.state -> int array -> bool
 
 (** Prompts the user what they wish to do: Check, Call, Raise, or Fold
     and then does so*)
-val prompt_action : State.state -> State.players array ref -> int array -> int
-    
-(** Iterates through each player at the table during betting round *)
-val rec_betting_round : State.state -> State.players array ref -> int array -> int -> int
+val prompt_action :
+  State.state -> State.players array ref -> int array -> int
 
-(* Last part of a betting round, where we make sure everyone has either called or folded *)
-val last_call : State.state -> State.players array ref -> int array -> unit
+(** Iterates through each player at the table during betting round *)
+val bet_round :
+  State.state -> State.players array ref -> int array -> int -> int
+
+(* Last part of a betting round, where we make sure everyone has either
+   called or folded *)
+val last_call :
+  State.state -> State.players array ref -> int array -> unit
