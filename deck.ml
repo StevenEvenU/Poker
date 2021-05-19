@@ -75,33 +75,25 @@ let create : deck = create_helper [] 0
    let shuffle (deck1 : deck) (seed : int) = to_deck (shuffle_repeater
    deck1 [] 0 30 seed) *)
 
-let rec shuffle_helper
-    (deck1 : deck)
-    (shuff_list : card option list)
-    (num : int) =
-  Random.self_init ();
+let rec shuffle_helper (deck1 : deck) (num : int) =
   if num < deck_size then
     match deck1 with
     | h :: t ->
-        if Random.bool () then h :: shuffle_helper t shuff_list (num + 1)
-        else shuffle_helper t shuff_list (num + 1) @ [ h ]
+        if Random.bool () then h :: shuffle_helper t (num + 1)
+        else shuffle_helper t (num + 1) @ [ h ]
     | [] -> []
-  else shuff_list
+  else []
 
-let rec shuffle_repeater
-    (deck1 : deck)
-    (shuff_list : card option list)
-    (num : int)
-    (repetitions : int) =
+let rec shuffle_repeater (deck1 : deck) (num : int) (repetitions : int)
+    =
   if num < repetitions then
-    shuffle_repeater
-      (shuffle_helper deck1 [] 0)
-      [] (num + 1) repetitions
+    shuffle_repeater (shuffle_helper deck1 0) (num + 1) repetitions
   else deck1
 
 (*IGNORE SEED*)
 let shuffle (deck1 : deck) (seed : int) =
-  to_deck (shuffle_repeater deck1 [] 0 30)
+  Random.self_init ();
+  to_deck (shuffle_repeater deck1 0 30)
 
 let rec top_card (deck1 : deck) : card option =
   match deck1 with [] -> None | [ h ] -> h | h :: t -> top_card t

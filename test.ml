@@ -644,18 +644,7 @@ let valid_call_test
 (** [get_money_test] constructs an OUnit test named [name] that asserts
     with [expected] and [get_money state play]. *)
 let prob_test (name : string) (lst : Deck.card list) : test =
-  name >:: fun _ ->
-  assert_equal false
-    (0.0
-    = prob
-        [
-          { suit = Hearts; value = Two };
-          { suit = Hearts; value = Six };
-          { suit = Clubs; value = Ten };
-          { suit = Clubs; value = Queen };
-          { suit = Hearts; value = Queen };
-        ]
-        3)
+  name >:: fun _ -> assert_equal false (0.0 = prob lst 3)
 
 (* *******END HELPER FUNCTIONS********* *)
 let deck_test =
@@ -867,7 +856,20 @@ let pot_test =
       [| 0; 5; 40; 0; 0; 0; 0; 0 |];
   ]
 
-let probability_test = []
+(** IMPORTANT NOTE: there is a not insigificant probability of this
+    failing even if the code is correct because it is based on
+    probability using randomization*)
+let probability_test =
+  [
+    prob_test "probability isn't 0"
+      [
+        { suit = Hearts; value = Two };
+        { suit = Hearts; value = Six };
+        { suit = Clubs; value = Ten };
+        { suit = Clubs; value = Queen };
+        { suit = Hearts; value = Queen };
+      ];
+  ]
 
 let suite =
   "test suite for A2"
