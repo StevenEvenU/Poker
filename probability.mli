@@ -9,4 +9,9 @@ open State
 open Compare
 open Deck
 
-val prob : Deck.card list -> float
+(** [prob] is the approximate probability of winning the hand given a
+    player's cards and cards on the table and the number of players.
+    [prob] is given a list of cards (with the FIRST TWO the cards in the
+    hand and the rest the ones on the table) as well as the number of
+    players *)
+val prob : Deck.card list -> int -> float
