@@ -5,6 +5,8 @@ open Main
 open Table
 open State
 open Pot
+open Betting
+open Probability
 
 let t_player_hand =
   [ { suit = Spades; value = Three }; { suit = Spades; value = Six } ]
@@ -849,11 +851,18 @@ let pot_test =
       [| 0; 5; 40; 0; 0; 0; 0; 0 |];
   ]
 
+let probability_test = []
+
 let suite =
   "test suite for A2"
   >::: List.flatten
          [
-           deck_test; table_test; compare_test; (*main_test;*) pot_test;
+           deck_test;
+           table_test;
+           compare_test;
+           main_test;
+           pot_test;
+           probability_test;
          ]
 
 let _ = run_test_tt_main suite
