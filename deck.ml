@@ -82,7 +82,7 @@ let shuffle (deck1 : deck) (seed : int) =
   to_deck (shuffle_repeater deck1 0 30)
 
 let rec top_card (deck1 : deck) : card option =
-  match deck1 with [] -> None | [ h ] -> h | h :: t -> top_card t
+  try List.hd (List.rev deck1) with _ -> None
 
 let rec remove_top (deck1 : deck) =
   match deck1 with

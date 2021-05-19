@@ -3,7 +3,7 @@ open Table
 open Deck
 open Pot
 
-let repitions = 200
+let repitions = 100
 
 let deck_remover (lst : Deck.card option list) =
   let deck0 = Deck.create in
