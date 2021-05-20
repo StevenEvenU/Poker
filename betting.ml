@@ -80,10 +80,10 @@ let rec get_raise_amt (state : state) =
   if valid_raise state amt then amt
   else (
     print_string "Invalid amount, please re-enter. \n";
-    get_raise_amount state)
+    get_raise_amt state)
 
-(***      Action Functions      ***)
-let fold_hand state players_in bets update= 
+(*** Action Functions ***)
+let fold_hand state players_in bets update =
   let new_players_in = ref [||] in
   (* print_string "defined\n\n new_players_in"; *)
   for i = 0 to Array.length !players_in - 1 do
@@ -99,8 +99,7 @@ let fold_hand state players_in bets update=
   (* prompt_action state players_in bets *)
   state.current_bet
 
-    
-(***      Human Prompt Actions      ***)
+(*** Human Prompt Actions ***)
 
 (* TODO: Only prompt available actions, not all *)
 let rec prompt_action (state : state) players_in bets =
@@ -174,23 +173,25 @@ let rec prompt_last_action (state : state) players_in bets =
       print_string "Invalid, please try again.\n";
       prompt_last_action state players_in bets
 
+(*** Computer Prompt Actions ***)
 
-(***      Computer Prompt Actions       ***)
-
-let comp_action (state : state) players_in bets = 
+let comp_action (state : state) players_in bets =
   let player = state.turn in
-  let hand = get_hand state player in 
-  let p = Probability.prob (hand @ state.cards_on_table) 10 in 
+  let hand = get_hand state player in
+  let p = Probability.prob (hand @ state.cards_on_table) 10 in
   let v = p *. Float.of_int (get_money state player) in
   match v with
-  | v when v < 0.9 *. Float.of_int (state.current_bet) -> fold_hand state players_in bets false (* FOLD *)
-  | v when v > 1.1 *. Float.of_int (state.current_bet) -> bet player (Float.to_int v) state (* RAISE *)
-  | _ -> if player_prev_bet state bets = state.current_bet then 
-    bet player 0 state else bet player state.current_bet state
+  | v when v < 0.9 *. Float.of_int state.current_bet ->
+      fold_hand state players_in bets false (* FOLD *)
+  | v when v > 1.1 *. Float.of_int state.current_bet ->
+      bet player (Float.to_int v) state (* RAISE *)
+  | _ ->
+      if player_prev_bet state bets = state.current_bet then
+        bet player 0 state
+      else bet player state.current_bet state
 
-
-(***      Recursive Betting Round       ***)
-let rec rec_betting_round (state : state) players_in bets plays =
+(*** Recursive Betting Round ***)
+let rec bet_round (state : state) players_in bets plays =
   if state.turn = !players_in.(0) && plays > 0 then (
     let player = state.turn in
     (* print_string (string_of_player player ^ "'s final turn\n"); *)
