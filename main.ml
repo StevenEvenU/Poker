@@ -100,6 +100,7 @@ let print_event (state : State.state) (event : string) =
     ^ str_of_cards state.cards_on_table
     ^ "\n")
 
+
 let print_balances state =
   print_string ("Your money: " ^ string_of_int state.user_money ^ "\n");
   print_string (arr_to_str (ref "") state.cpu_moneys)
