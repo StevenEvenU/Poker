@@ -5,12 +5,15 @@ open Table
 open Pot
 open Betting
 
-(* let stupid str_start arr min max = str_start := "[|" ^
-   string_of_player !arr.(min); for i = min + 1 to max do str_start :=
-   !str_start ^ "," ^ string_of_player !arr.(i) done; str_start :=
-   !str_start ^ "|]"; !str_start *)
+let players_to_str str_start arr min max =
+  str_start := "[|" ^ string_of_player !arr.(min);
+  for i = min + 1 to max do
+    str_start := !str_start ^ "," ^ string_of_player !arr.(i)
+  done;
+  str_start := !str_start ^ "|]";
+  !str_start
 
-let arr_to_string str_start arr =
+let arr_to_str str_start arr =
   str_start := "";
   for i = 0 to Array.length arr - 1 do
     str_start :=
@@ -22,10 +25,10 @@ let arr_to_string str_start arr =
   done;
   !str_start
 
-let rec list_to_string str_start lst =
+let rec list_to_str str_start lst =
   match lst with
   | [] -> str_start ^ "]"
-  | h :: t -> list_to_string (str_start ^ h ^ ", ") t
+  | h :: t -> list_to_str (str_start ^ h ^ ", ") t
 
 (** Types of user action *)
 type action =
@@ -34,7 +37,7 @@ type action =
   | Raise
   | Fold
 
-let string_of_value value =
+let str_of_val value =
   match value with
   | Two -> "2"
   | Three -> "3"
@@ -50,14 +53,14 @@ let string_of_value value =
   | King -> "K"
   | Ace -> "A"
 
-let string_of_action = function
+let str_of_action = function
   | Check -> "Check"
   | Call -> "Call"
   | Raise -> "Raise"
   | Fold -> "Fold"
 
 let str_of_card (card : Deck.card) =
-  string_of_value card.value ^ string_of_suit card.suit
+  str_of_val card.value ^ str_of_suit card.suit
 
 let rec str_of_card_rec str cards =
   match cards with
@@ -99,7 +102,7 @@ let print_event (state : State.state) (event : string) =
 
 let print_balances state =
   print_string ("Your money: " ^ string_of_int state.user_money ^ "\n");
-  print_string (arr_to_string (ref "") state.cpu_moneys)
+  print_string (arr_to_str (ref "") state.cpu_moneys)
 
 let print_win_record (records : win_record list) =
   let rec print_win_rec = function
@@ -125,7 +128,7 @@ let betting_round (state : state) players_in =
   print_string
     ("Starting with player: " ^ string_of_player state.turn ^ "\n");
   let bets = Array.make (1 + Array.length state.cpu_hands) 0 in
-  let amt = rec_betting_round state players_in bets 0 in
+  let amt = bet_round state players_in bets 0 in
   Betting.last_call state players_in bets;
   state.current_bet <- 0
 
@@ -134,7 +137,8 @@ let filter_win_rec_list win_rec_list players_in =
   print_win_record win_rec_list;
   print_string "The players still in are: ";
   print_string
-    (stupid (ref "") players_in 0 (Array.length !players_in - 1));
+    (players_to_str (ref "") players_in 0
+       (Array.length !players_in - 1));
   (* print_string "Done\n"; *)
   let rec playing player players_in i =
     if i >= Array.length players_in then false
@@ -182,7 +186,8 @@ let main =
   Sys.command "clear";
   print_string "Players in: \n";
   print_string
-    (stupid (ref "") players_in 0 (Array.length !players_in - 1));
+    (players_to_str (ref "") players_in 0
+       (Array.length !players_in - 1));
   print_balances state;
   print_string "\n";
   print_string "\nCurrent amount in pot is: \n";
@@ -197,7 +202,8 @@ let main =
   (* Sys.command("clear"); *)
   print_string "Players in: \n";
   print_string
-    (stupid (ref "") players_in 0 (Array.length !players_in - 1));
+    (players_to_str (ref "") players_in 0
+       (Array.length !players_in - 1));
   print_balances state;
   print_string "\n";
   print_string "\nCurrent amount in pot is: \n";
@@ -211,7 +217,8 @@ let main =
   betting_round (state : state) players_in;
   print_string "Players in: \n";
   print_string
-    (stupid (ref "") players_in 0 (Array.length !players_in - 1));
+    (players_to_str (ref "") players_in 0
+       (Array.length !players_in - 1));
   print_balances state;
   print_string "\n";
   print_string "\nCurrent amount in pot is: \n";
@@ -235,7 +242,7 @@ let main =
   print_win_record filtered_winners;
 
   let pot_array = to_winner filtered_winners state in
-  (* print_string (arr_to_string (ref "") pot_array); *)
+  (* print_string (arr_to_str (ref "") pot_array); *)
   print_balances state;
   distr pot_array state (List.length win_record_list - 1);
   print_balances state

@@ -6,13 +6,13 @@ type action =
   | Fold
 
 (** Returns string of value *)
-val string_of_value : Deck.value -> string
+val str_of_val : Deck.value -> string
 
 (** Returns string of card *)
-val string_of_card : Deck.card -> string
+val str_of_card : Deck.card -> string
 
 (** Returns string of card list *)
-val string_of_cards : Deck.card list -> string
+val str_of_cards : Deck.card list -> string
 
 (**  *)
 val print_hand : Deck.card list -> State.players -> unit
