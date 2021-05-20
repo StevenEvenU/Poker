@@ -4,10 +4,10 @@ open State
 open Table
 open Pot
 
-(* let stupid str_start arr min max = str_start := "[|" ^
-   string_of_player !arr.(min); for i = min + 1 to max do str_start :=
-   !str_start ^ "," ^ string_of_player !arr.(i) done; str_start :=
-   !str_start ^ "|]"; !str_start *)
+(* let stupid str_start arr min max = str_start := "[|" ^ str_of_player
+   !arr.(min); for i = min + 1 to max do str_start := !str_start ^ "," ^
+   str_of_player !arr.(i) done; str_start := !str_start ^ "|]";
+   !str_start *)
 
 let print_bet (player : State.players) amt =
   match player with
@@ -194,7 +194,7 @@ let comp_action (state : state) players_in bets =
 let rec bet_round (state : state) players_in bets plays =
   if state.turn = !players_in.(0) && plays > 0 then (
     let player = state.turn in
-    (* print_string (string_of_player player ^ "'s final turn\n"); *)
+    (* print_string (str_of_player player ^ "'s final turn\n"); *)
     match player with
     | Player ->
         let amt = prompt_last_action state players_in bets in
@@ -209,7 +209,7 @@ let rec bet_round (state : state) players_in bets plays =
         amt)
   else
     let player = state.turn in
-    print_string (string_of_player player ^ "'s turn\n");
+    print_string (str_of_player player ^ "'s turn\n");
     let amt =
       match player with
       | Player ->
@@ -232,10 +232,10 @@ let last_call state players_in bets =
   for i = 0 to Array.length !players_in - 2 do
     next_turn state players_in state.current_bet;
     let test = max - player_prev_bet state bets in
-    (* print_string (string_of_player state.turn ^ "calling before with
-       an additional: " ^ string_of_int test ^ "\n"); *)
+    (* print_string (str_of_player state.turn ^ "calling before with an
+       additional: " ^ string_of_int test ^ "\n"); *)
     let amt = bet_specific state.turn test in
-    (* print_string (string_of_player state.turn ^ "calling with an
+    (* print_string (str_of_player state.turn ^ "calling with an
        additional: " ^ string_of_int amt ^ "\n"); update_bets bets
        state.turn state test; *)
     ()

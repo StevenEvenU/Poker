@@ -11,7 +11,7 @@ let player_of_int = function
   | x when x <= 7 -> Computer x
   | _ -> failwith "Error, maximum of 7 computer players"
 
-let string_of_player = function
+let str_of_player = function
   | Player -> "Player"
   | Computer x -> "Opponent " ^ string_of_int x
 
