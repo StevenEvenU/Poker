@@ -157,30 +157,23 @@ let rec straight (cards : card_check list) (user : players) : win_record
 let rec flush_helper
     (cards : card_check list)
     (user : players)
-    (spade_count : int)
-    (heart_count : int)
-    (diamond_count : int)
-    (club_count : int) : win_record =
+    (spades : int)
+    (hearts : int)
+    (diamonds : int)
+    (clubs : int) : win_record =
   match hand_sort_int cards with
   (* FIND THE HIGHEST VALUE IN THE FLUSH *)
   | h :: t ->
       if h.string_suit = "♠" then
-        flush_helper t user (spade_count + 1) heart_count diamond_count
-          club_count
+        flush_helper t user (spades + 1) hearts diamonds clubs
       else if h.string_suit = "♥" then
-        flush_helper t user spade_count (heart_count + 1) diamond_count
-          club_count
+        flush_helper t user spades (hearts + 1) diamonds clubs
       else if h.string_suit = "♦" then
-        flush_helper t user spade_count heart_count (diamond_count + 1)
-          club_count
-      else
-        flush_helper t user spade_count heart_count diamond_count
-          (club_count + 1)
+        flush_helper t user spades hearts (diamonds + 1) clubs
+      else flush_helper t user spades hearts diamonds (clubs + 1)
   | [] ->
-      if
-        spade_count >= 5 || heart_count >= 5 || diamond_count >= 5
-        || club_count >= 5
-      then { player = user; rank = flush_rank; value = 0 }
+      if spades >= 5 || hearts >= 5 || diamonds >= 5 || clubs >= 5 then
+        { player = user; rank = flush_rank; value = 0 }
       else { player = user; rank = high_card_rank; value = 0 }
 
 let flush (cards : card_check list) (user : players) : win_record =
@@ -196,14 +189,6 @@ let rec full_house (cards : card_check list) (user : players) :
       three_kind_helper t user full_house_rank
   | h :: t -> full_house t user
   | _ -> { player = user; rank = high_card_rank; value = 0 }
-
-(* let better_full_house (cards : card_check list) (user : players) :
-   win_record = let seen = [] in let rec find (card : card_check) list =
-   match list with | [] -> -1 | (k, v)::t -> if card.int_value =
-   k.int_value then v else lookup value t in let rec loop cards (seen:
-   tuple list) = match cards with | [] -> seen |h::t -> if 0 = find h
-   seen then loop t acc::(h, 1) else List.map (fun (k,v) -> if k=h then
-   (k, v+1) else (k,v)) in let quantity = loop cards *)
 
 let rec four_kind (cards : card_check list) (user : players) :
     win_record =
