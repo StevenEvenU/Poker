@@ -412,7 +412,7 @@ let t_state_4 =
 
 (********START HELPER FUNCTIONS*************)
 
-let arr_to_string str_start arr =
+let arr_to_str str_start arr =
   str_start := "[|" ^ string_of_int arr.(0);
   for i = 1 to 7 do
     str_start := !str_start ^ "," ^ string_of_int arr.(i)
@@ -618,7 +618,7 @@ let to_winner_test
     if i = 0 then add adding.(i) Player else add adding.(i) (Computer i)
   done;
   let to_win = to_winner winners state in
-  assert_equal expected to_win ~printer:(arr_to_string (ref ""))
+  assert_equal expected to_win ~printer:(arr_to_str (ref ""))
 
 (** [next_turn_test] constructs an OUnit test named [name] that asserts
     with [expected] and [bet_num] how the state changes after

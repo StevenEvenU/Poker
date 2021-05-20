@@ -109,31 +109,34 @@ let rec prompt_action (state : state) players_in bets =
 
   let action = String.uppercase_ascii (read_line ()) in
   match action with
-  | "CHECK" ->
-      if valid_check state bets then state.current_bet
-        (* Don't need to update `bets` array *)
-      else (
-        print_string
-          "You can't check at the moment. Try something else\n";
-        prompt_action state players_in bets)
-  | "CALL" ->
-      if valid_call state bets then (
-        let amt =
-          bet Player
-            (state.current_bet - player_prev_bet state bets)
-            state
-        in
-        update_bets bets state.turn state amt;
-        amt)
-      else 0
-  | "RAISE" ->
-      let amt = Table.bet Player (get_raise_amt state) state in
-      update_bets bets state.turn state amt;
-      amt
+  | "CHECK" -> human_check state players_in bets
+  | "CALL" -> human_call state players_in bets
+  | "RAISE" -> human_raise state players_in bets
   | "FOLD" -> fold_hand state players_in bets true
   | _ ->
       print_string "Invalid, please try again.\n";
       prompt_action state players_in bets
+
+and human_check (state : state) players_in bets =
+  if valid_check state bets then state.current_bet
+    (* Don't need to update `bets` array *)
+  else (
+    print_string "You can't check at the moment. Try something else\n";
+    prompt_action state players_in bets)
+
+and human_call (state : state) players_in bets =
+  if valid_call state bets then (
+    let amt =
+      bet Player (state.current_bet - player_prev_bet state bets) state
+    in
+    update_bets bets state.turn state amt;
+    amt)
+  else 0
+
+and human_raise (state : state) players_in bets =
+  let amt = Table.bet Player (get_raise_amt state) state in
+  update_bets bets state.turn state amt;
+  amt
 
 let rec prompt_last_action (state : state) players_in bets =
   print_string
@@ -144,27 +147,8 @@ let rec prompt_last_action (state : state) players_in bets =
   (* print_string (string_of_action action); *)
   (* print_string "matching action \n"; *)
   match action with
-  | "CHECK" ->
-      print_string
-        ("Valid Check: "
-        ^ string_of_bool (valid_check state bets)
-        ^ "\n");
-      if valid_check state bets then state.current_bet
-        (* Don't need to update `bets` array *)
-      else (
-        print_string
-          "You can't check at the moment. Try something else\n";
-        prompt_last_action state players_in bets)
-  | "CALL" ->
-      if valid_call state bets then (
-        let amt =
-          bet Player
-            (state.current_bet - player_prev_bet state bets)
-            state
-        in
-        update_bets bets state.turn state amt;
-        amt)
-      else 0
+  | "CHECK" -> last_human_check state players_in bets
+  | "CALL" -> last_human_call state players_in bets
   | "RAISE" ->
       print_string "You can't raise at the moment. Try something else";
       prompt_last_action state players_in bets
@@ -172,6 +156,24 @@ let rec prompt_last_action (state : state) players_in bets =
   | _ ->
       print_string "Invalid, please try again.\n";
       prompt_last_action state players_in bets
+
+and last_human_check (state : state) players_in bets =
+  print_string
+    ("Valid Check: " ^ string_of_bool (valid_check state bets) ^ "\n");
+  if valid_check state bets then state.current_bet
+    (* Don't need to update `bets` array *)
+  else (
+    print_string "You can't check at the moment. Try something else\n";
+    prompt_last_action state players_in bets)
+
+and last_human_call state players_in bets =
+  if valid_call state bets then (
+    let amt =
+      bet Player (state.current_bet - player_prev_bet state bets) state
+    in
+    update_bets bets state.turn state amt;
+    amt)
+  else 0
 
 (*** Computer Prompt Actions ***)
 
@@ -192,39 +194,47 @@ let comp_action (state : state) players_in bets =
 
 (*** Recursive Betting Round ***)
 let rec bet_round (state : state) players_in bets plays =
-  if state.turn = !players_in.(0) && plays > 0 then (
+  if state.turn = !players_in.(0) && plays > 0 then
     let player = state.turn in
     (* print_string (str_of_player player ^ "'s final turn\n"); *)
     match player with
-    | Player ->
-        let amt = prompt_last_action state players_in bets in
-        (* print_bet Player amt; *)
-        amt
-    | Computer x ->
-        print_string "Before updating bets \n";
-        let amt = comp_action state players_in bets in
-        print_string "Updating bets\n";
-        update_bets bets (Computer x) state amt;
-        (* print_bet (Computer x) amt; *)
-        amt)
+    | Player -> looped_to_player state players_in bets plays
+    | Computer x -> looped_to_cpu state players_in bets plays x
   else
     let player = state.turn in
     print_string (str_of_player player ^ "'s turn\n");
     let amt =
       match player with
-      | Player ->
-          let amt = prompt_action state players_in bets in
-          (* print_bet Player amt; *)
-          amt
-      | Computer x ->
-          let amt = bet (Computer x) 0 state in
-          update_bets bets (Computer x) state amt;
-          (* print_bet (Computer x) amt; *)
-          amt
+      | Player -> player_in_loop state players_in bets plays
+      | Computer x -> cpu_in_loop state players_in bets plays x
     in
     (* Update state.turn and state.current_bet *)
     next_turn state players_in amt;
     bet_round state players_in bets (plays + 1)
+
+and looped_to_player state players_in bets plays =
+  let amt = prompt_last_action state players_in bets in
+  (* print_bet Player amt; *)
+  amt
+
+and looped_to_cpu state players_in bets plays cpu_int =
+  print_string "Before updating bets \n";
+  let amt = comp_action state players_in bets in
+  print_string "Updating bets\n";
+  update_bets bets (Computer cpu_int) state amt;
+  (* print_bet (Computer cpu_int) amt; *)
+  amt
+
+and player_in_loop state players_in bets plays =
+  let amt = prompt_action state players_in bets in
+  amt
+  (* print_bet Player amt; *)
+
+and cpu_in_loop state players_in bets plays cpu_int =
+  let amt = bet (Computer cpu_int) 0 state in
+  update_bets bets (Computer cpu_int) state amt;
+  (* print_bet (Computer cpu_int) amt; *)
+  amt
 
 let last_call state players_in bets =
   let max = Array.fold_left max 0 bets in
