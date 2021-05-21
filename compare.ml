@@ -239,34 +239,47 @@ let royal_flush (cards : card_check list) (user : players) : win_record
       else { player = user; rank = no_card_rank; value = 0 }
   | _ -> { player = user; rank = no_card_rank; value = 0 }
 
+let hand_fun_list (cards : card_check list) (user : players) =
+  [
+    royal_flush cards user;
+    straight_flush cards user;
+    four_kind cards user;
+    full_house cards user;
+    flush cards user;
+    straight cards user;
+    three_kind cards user;
+    two_pair cards user;
+    one_pair cards user;
+  ]
+
+let rank_list =
+  [
+    royal_rank;
+    straight_flush_rank;
+    four_kind_rank;
+    full_house_rank;
+    flush_rank;
+    straight_rank;
+    three_kind_rank;
+    two_pair_rank;
+    pair_rank;
+  ]
+
+let rec result
+    (hand_funcs : win_record list)
+    (rank_list : int list)
+    (cards : card_check list)
+    (user : players) : win_record =
+  match (hand_funcs, rank_list) with
+  | [], [] -> high_card cards user
+  | h_func :: t_func, h_rank :: t_rank ->
+      if h_func.rank = h_rank then h_func
+      else result t_func t_rank cards user
+  | _ -> failwith "Error: List should be equal size"
+
 let best_hand (cards : card_check list) (user : players) : win_record =
-  let result = royal_flush cards user in
-  if result.rank = royal_rank then result
-  else
-    let result = straight_flush cards user in
-    if result.rank = straight_rank then result
-    else
-      let result = four_kind cards user in
-      if result.rank = four_kind_rank then result
-      else
-        let result = full_house cards user in
-        if result.rank = full_house_rank then result
-        else
-          let result = flush cards user in
-          if result.rank = flush_rank then result
-          else
-            let result = straight cards user in
-            if result.rank = straight_rank then result
-            else
-              let result = three_kind cards user in
-              if result.rank = three_kind_rank then result
-              else
-                let result = two_pair cards user in
-                if result.rank = two_pair_rank then result
-                else
-                  let result = one_pair cards user in
-                  if result.rank = pair_rank then result
-                  else high_card cards user
+  let hand_check = hand_fun_list cards user in
+  result hand_check rank_list cards user
 
 let find_best_hand (state : state) (player : players) : win_record list
     =
