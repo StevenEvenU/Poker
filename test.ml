@@ -412,7 +412,7 @@ let t_state_4 =
 
 (********START HELPER FUNCTIONS*************)
 
-let arr_to_string str_start arr =
+let arr_to_str str_start arr =
   str_start := "[|" ^ string_of_int arr.(0);
   for i = 1 to 7 do
     str_start := !str_start ^ "," ^ string_of_int arr.(i)
@@ -422,23 +422,21 @@ let arr_to_string str_start arr =
 
 (** converts card option to string*)
 let string_of_card_option card1 =
-  match card1 with None -> "" | Some x -> string_of_card x
+  match card1 with None -> "" | Some x -> str_of_card x
 
 (** converts card option list to string*)
 let rec string_of_card_options str cards =
   match cards with
   | [] -> str
   | [ h ] -> (
-      match h with
-      | None -> str
-      | Some x -> str ^ " " ^ string_of_card x)
+      match h with None -> str | Some x -> str ^ " " ^ str_of_card x)
   | h :: t -> (
       match h with
       | None ->
           let s = str in
           string_of_card_options s t
       | Some x ->
-          let s = str ^ " " ^ string_of_card x in
+          let s = str ^ " " ^ str_of_card x in
           string_of_card_options s t)
 
 (** Maps suits to multiples of 100 to assist [total_compare]*)
@@ -495,7 +493,7 @@ let create_card_test
     (valu : value)
     (sut : suit) : test =
   name >:: fun _ ->
-  assert_equal expected (string_of_card (create_card valu sut))
+  assert_equal expected (str_of_card (create_card valu sut))
 
 let rec top_card_helper (deck1 : deck) (times : int) =
   if times >= 2 then top_card_helper (remove_top deck1) (times - 1)
@@ -534,7 +532,7 @@ let str_of_suit_test
     (name : string)
     (suit : Deck.suit)
     (expected : string) : test =
-  name >:: fun _ -> assert_equal expected (string_of_suit suit)
+  name >:: fun _ -> assert_equal expected (str_of_suit suit)
 
 let total_hand_test
     (name : string)
@@ -593,7 +591,7 @@ let string_of_card_test
     (name : string)
     (expected : string)
     (card : Deck.card) : test =
-  name >:: fun _ -> assert_equal expected (string_of_card card)
+  name >:: fun _ -> assert_equal expected (str_of_card card)
 
 (* [string_of_cards_test] constructs an OUnit test named [name] that
    asserts the string produced from the card list [cards] is what is
@@ -602,7 +600,7 @@ let string_of_cards_test
     (name : string)
     (expected : string)
     (cards : Deck.card list) : test =
-  name >:: fun _ -> assert_equal expected (string_of_cards cards)
+  name >:: fun _ -> assert_equal expected (str_of_cards cards)
 
 (** [to_winner_test] constructs an OUnit test named [name] that asserts
     with [expected] how the pot is constructed given players
@@ -620,7 +618,7 @@ let to_winner_test
     if i = 0 then add adding.(i) Player else add adding.(i) (Computer i)
   done;
   let to_win = to_winner winners state in
-  assert_equal expected to_win ~printer:(arr_to_string (ref ""))
+  assert_equal expected to_win ~printer:(arr_to_str (ref ""))
 
 (** [next_turn_test] constructs an OUnit test named [name] that asserts
     with [expected] and [bet_num] how the state changes after

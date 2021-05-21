@@ -6,7 +6,7 @@ type action =
   | Fold
 
 (** Returns string of value *)
-val string_of_value : Deck.value -> string
+val str_of_val : Deck.value -> string
 
 (** Returns string of card *)
 val str_of_card : Deck.card -> string

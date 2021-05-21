@@ -11,7 +11,7 @@ val int_of_player : players -> int
 val player_of_int : int -> players
 
 (** Returns string of a players type *)
-val string_of_player : players -> string
+val str_of_player : players -> string
 
 (** The state type is keeping track of the cards that the user and
     player has along with keeping track was cards are on the table and
