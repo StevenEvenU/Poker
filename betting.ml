@@ -27,7 +27,7 @@ let next_turn (state : state) players_in current_bet =
     else next state len (i + 1)
   in
   let next_player = next state (Array.length !players_in - 1) 0 in
-  print_string ("Next player: "^(string_of_player next_player)^"\n");
+  print_string ("Next player: "^(str_of_player next_player)^"\n");
   state.turn <- next_player;
   state.current_bet <- current_bet
 
@@ -189,22 +189,22 @@ let comp_action (state : state) players_in bets =
   let v = p *. Float.of_int (get_money state player) in
   match v with
   | v when v < 0.9 *. Float.of_int (state.current_bet) -> (* FOLD *)
-    (print_string ((string_of_player player)^" is folding \n");  
+    (print_string ((str_of_player player)^" is folding \n");  
     let amt = fold_hand state players_in bets true in
     print_int amt; print_string "\n"; amt)
   | v when v > 1.1 *. Float.of_int (state.current_bet) && valid_raise state bets -> (* RAISE *)
-    (print_string ((string_of_player player)^" is raising \n");
+    (print_string ((str_of_player player)^" is raising \n");
     let amt = bet player (Float.to_int v) state in 
     update_bets bets state.turn state amt;
     print_int amt; print_string "\n"; amt)
   | _ -> if valid_check state bets then (* CHECK *)
-    (print_string ((string_of_player player)^" is checking \n");
+    (print_string ((str_of_player player)^" is checking \n");
     bet player 0 state) else
     if valid_call state bets then (* CALL *)
-    (print_string ((string_of_player player)^" is calling \n");
+    (print_string ((str_of_player player)^" is calling \n");
     let amt = bet player state.current_bet state in 
     update_bets bets state.turn state amt; amt) else (* FOLD *)
-    (print_string ((string_of_player player)^" is folding after failing to call \n");
+    (print_string ((str_of_player player)^" is folding after failing to call \n");
     fold_hand state players_in bets true)
 
 
@@ -212,7 +212,7 @@ let comp_action (state : state) players_in bets =
 let rec rec_bet_round (state : state) players_in bets plays =
   if state.turn = !players_in.(0) && plays > 0 then (
     let player = state.turn in
-    (* print_string (string_of_player player ^ "'s final turn\n"); *)
+    (* print_string (str_of_player player ^ "'s final turn\n"); *)
 
     match player with
     | Player ->

@@ -132,7 +132,7 @@ let betting_round (state : state) players_in =
   Betting.last_call state players_in bets;
   state.current_bet <- 0
 
-let filter_win_rec_list win_rec_list players_in =
+let filter_winner win_rec_list players_in =
   (* print_string "Filtering the following list: \n";
   print_win_record win_rec_list; *)
   (* print_string "The players still in are: "; *)
