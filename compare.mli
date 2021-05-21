@@ -18,9 +18,9 @@ val hand_of_rank : int -> string
     int for easier in compare.ml. *)
 val int_of_val : Deck.value -> int
 
-(** string_of_suit takes the Deck.suit and returns a string with the
+(** str_of_suit takes the Deck.suit and returns a string with the
     unicode for that suit. *)
-val string_of_suit : Deck.suit -> string
+val str_of_suit : Deck.suit -> string
 
 (** total_hand combines the two lists of Deck.card into one list *)
 val total_hand : Deck.card list -> Deck.card list -> Deck.card list
