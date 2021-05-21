@@ -27,15 +27,25 @@
 
  ************************************************************)
 
-(** [hours_worked] is the number of hours you worked on this assignment.*)
+(** [hours_worked_Elias_1] is the number of hours that Elias worked in
+    MS1.*)
 val hours_worked_Elias_1 : int
 
+(** [hours_worked_Steven_1] is the number of hours that Steven worked in
+    MS1.*)
 val hours_worked_Steven_1 : int
 
+(** [hours_worked_Zach_1] is the number of hours that Zach worked in
+    MS1.*)
 val hours_worked_Zach_1 : int
 
+(** [hours_worked_Elias_2] is the number of hours that Elias worked in
+    MS2.*)
 val hours_worked_Elias_2 : int
 
+(** [hours_worked_Steven_2] is the number of hours that Steven worked in
+    MS2.*)
 val hours_worked_Steven_2 : int
 
+(** [hours_worked_Zach_2] is the number of hours Zach worked in MS2 .*)
 val hours_worked_Zach_2 : int
