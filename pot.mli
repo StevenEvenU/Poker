@@ -1,4 +1,5 @@
-(** The money on the table*)
+(** The module Pot stores the pot and consists of functions necessary to
+    the game of Poker *)
 open State
 
 open Compare

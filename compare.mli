@@ -1,3 +1,7 @@
+(** The module Compare serves the purpose of helping compare cards
+    against each other to pick out the best 5 cards out of seven and
+    identify what hand those 5 cards make up *)
+
 (** Type card_check turns the card suit into a string and the card value
     into an int *)
 type card_check

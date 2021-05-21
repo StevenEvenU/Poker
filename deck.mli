@@ -1,4 +1,5 @@
-(** The deck of cards in order. Able to be shuffled.*)
+(** The module Deck creates the deck along with performing other
+    functionalities on the deck in order to play the game. *)
 
 (** The type of suits. *)
 type suit =

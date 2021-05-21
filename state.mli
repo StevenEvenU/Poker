@@ -1,5 +1,9 @@
-(** The turn type decides whether it is the computer's or the player's
-    turn. *)
+(** The module State helps keep track of values changing throughout the
+    game such as users hand, hands of computers, cards on table, the
+    remaining deck, whose turn it is, users money, the money that the
+    cpu has, the dealer, and the current bet. *)
+
+(** A type to indetify a player and different computers. *)
 type players =
   | Player
   | Computer of int

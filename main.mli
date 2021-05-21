@@ -1,3 +1,6 @@
+(** The module Main is where the interactivity between the player and
+    the terminal takes place. *)
+
 (** Player's action *)
 type action =
   | Check

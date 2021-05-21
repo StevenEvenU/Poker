@@ -1,3 +1,7 @@
+(** The module Table takes control of playing through one round of
+    poker. Essentially performing the duties that a dealer normally
+    would do in a game themselves. *)
+
 open Deck
 
 (** The active state of a game. It is inputted the number of computer

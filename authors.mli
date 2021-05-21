@@ -1,3 +1,6 @@
+(** The module Authors gives credit to those who helped create this game
+    along with the hours they worked per milestone. *)
+
 (** CS 3110 Spring 2021 Final Project
 
     @author Elias Little (ejl242)

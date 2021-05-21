@@ -5,6 +5,7 @@ MLIS=$(MODULES:=.mli)
 TEST=test.byte
 MAIN=main.byte
 OCAMLBUILD=ocamlbuild -use-ocamlfind
+PKGS=ounit2,str
 
 default: build
 	OCAMLRUNPARAM=b utop
@@ -28,14 +29,14 @@ docs: docs-public docs-private
 	
 docs-public: build
 	mkdir -p _doc.public
-	ocamlfind ocamldoc -I _build -package \
+	ocamlfind ocamldoc -I _build -package $(PKGS) \
 		-html -stars -d _doc.public $(MLIS)
 
 docs-private: build
 	mkdir -p _doc.private
-	ocamlfind ocamldoc -I _build -package \
+	ocamlfind ocamldoc -I _build -package $(PKGS) \
 		-html -stars -d _doc.private \
-		-inv-merge-ml-mli -m A $(MLIS) $(MLS)
+		-inv-merge-ml-mli -m A -hide-warnings $(MLIS) $(MLS)
 
 clean:
 	ocamlbuild -clean
