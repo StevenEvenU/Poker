@@ -57,7 +57,7 @@ let string_of_action = function
   | Fold -> "Fold"
 
 let str_of_card (card : Deck.card) =
-  string_of_value card.value ^ string_of_suit card.suit
+  string_of_value card.value ^ str_of_suit card.suit
 
 let rec str_of_card_rec str cards =
   match cards with
@@ -126,16 +126,16 @@ let betting_round (state : state) players_in =
   print_string
     ("Starting with player: " ^ string_of_player state.turn ^ "\n");
   let bets = Array.make (1 + Array.length state.cpu_hands) 0 in
-  let amt = rec_betting_round state players_in bets 0 in
+  let amt = rec_bet_round state players_in bets 0 in
   Betting.last_call state players_in bets;
   state.current_bet <- 0
 
 let filter_win_rec_list win_rec_list players_in =
-  print_string "Filtering the following list: \n";
-  print_win_record win_rec_list;
-  print_string "The players still in are: ";
-  print_string
-    (stupid (ref "") players_in 0 (Array.length !players_in - 1));
+  (* print_string "Filtering the following list: \n";
+  print_win_record win_rec_list; *)
+  (* print_string "The players still in are: "; *)
+  (* print_string
+    (stupid (ref "") players_in 0 (Array.length !players_in - 1)); *)
   (* print_string "Done\n"; *)
   let rec playing player players_in i =
     if i >= Array.length players_in then false
@@ -178,48 +178,59 @@ let main =
   state.turn <- player_of_int utg;
 
   (* First round of betting will occur here *)
-  print_string "\nFirst Betting Round is Starting\n";
+  print_string "\n";
+  print_string "First Betting Round is Starting\n";
+  print_string "-------------------------------\n";
   betting_round (state : state) players_in;
   Sys.command "clear";
-  print_string "Players in: \n";
+  (* print_string "Players in: \n";
   print_string
-    (stupid (ref "") players_in 0 (Array.length !players_in - 1));
+    (stupid (ref "") players_in 0 (Array.length !players_in - 1)); *)
   print_balances state;
   print_string "\n";
   print_string "\nCurrent amount in pot is: \n";
   print_string (print_pot () ^ "\n");
 
   deal state;
+  print_hands state Player;
   print_event state "Flop";
 
   (* Second round of betting will occur here *)
+  print_string "\n";
   print_string "Second Betting Round\n";
+  print_string "-------------------------------\n";
   betting_round (state : state) players_in;
-  (* Sys.command("clear"); *)
-  print_string "Players in: \n";
+  Sys.command("clear");
+  (* print_string "Players in: \n";
   print_string
-    (stupid (ref "") players_in 0 (Array.length !players_in - 1));
+    (stupid (ref "") players_in 0 (Array.length !players_in - 1)); *)
   print_balances state;
   print_string "\n";
   print_string "\nCurrent amount in pot is: \n";
   print_string (print_pot () ^ "\n");
 
   flop state;
+  print_hands state Player;
   print_event state "Turn";
 
   (* Third round of betting will occur here *)
+  print_string "\n";
   print_string "Third Betting Round\n";
+  print_string "-------------------------------\n";
   betting_round (state : state) players_in;
-  print_string "Players in: \n";
+  Sys.command "clear";
+  (* print_string "Players in: \n";
   print_string
-    (stupid (ref "") players_in 0 (Array.length !players_in - 1));
+    (stupid (ref "") players_in 0 (Array.length !players_in - 1)); *)
   print_balances state;
   print_string "\n";
   print_string "\nCurrent amount in pot is: \n";
   print_string (print_pot () ^ "\n");
 
   flop state;
+  print_hands state Player;
   print_event state "River";
+
   print_string "You have a ";
   hand_of_rank (List.hd (find_best_hand state Player)).rank ^ "\n"
   |> print_string;

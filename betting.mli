@@ -30,7 +30,7 @@ val prompt_action :
   State.state -> State.players array ref -> int array -> int
 
 (** Iterates through each player at the table during betting round *)
-val bet_round :
+val rec_bet_round :
   State.state -> State.players array ref -> int array -> int -> int
 
 (* Last part of a betting round, where we make sure everyone has either
