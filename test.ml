@@ -887,7 +887,9 @@ let pot_test =
 
 (** IMPORTANT NOTE: there is a not insigificant probability of this
     failing even if the code is correct because it is based on
-    probability using randomization*)
+    probability using randomization. I selected ranges of possible
+    values that are a valid enough interval to usually work, but there
+    is always a chance that the value will fall outside the range*)
 let probability_test =
   [
     prob_test "moderately low probability of hand winning pre-turn" 0.20
