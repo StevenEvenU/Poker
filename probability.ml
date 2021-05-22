@@ -18,7 +18,7 @@ let deck_remov (lst : Deck.card option list) =
   deck1
 
 let cpu_cards_helper cpu_cards c1 c2 deck_left num =
-  deck_left := Deck.shuffle !deck_left 0;
+  deck_left := Deck.shuffle !deck_left;
   for i = 0 to num - 1 do
     (c1 :=
        match Deck.top_card !deck_left with

@@ -78,7 +78,7 @@ let rec shuffle_repeater (deck1 : deck) (num : int) (repetitions : int)
   else deck1
 
 (*IGNORE SEED*)
-let shuffle (deck1 : deck) (seed : int) =
+let shuffle (deck1 : deck) =
   Random.self_init ();
   to_deck (shuffle_repeater deck1 0 30)
 

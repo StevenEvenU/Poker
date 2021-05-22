@@ -23,7 +23,7 @@ let active_state (num : int) = init_state num
 
 let delegate state =
   Random.self_init ();
-  state.deck_rem <- shuffle state.deck_rem (Random.int 100000);
+  state.deck_rem <- shuffle state.deck_rem;
   for j = 0 to Array.length state.cpu_hands - 1 do
     for i = 0 to 1 do
       state.cpu_hands.(j) <-
@@ -61,15 +61,11 @@ let bet players amt state =
   match players with
   | Computer x ->
       let idx = x - 1 in
-      (* let bet_amt =
-        if state.current_bet > state.cpu_moneys.(idx) then (
-          print_string "If greater: \n";
-          state.cpu_moneys.(idx))
-        else (
-          print_string "If less than: \n";
-          let max = state.cpu_moneys.(idx) - state.current_bet in
-          state.current_bet + Random.int (max + 1))
-      in *)
+      (* let bet_amt = if state.current_bet > state.cpu_moneys.(idx)
+         then ( print_string "If greater: \n"; state.cpu_moneys.(idx))
+         else ( print_string "If less than: \n"; let max =
+         state.cpu_moneys.(idx) - state.current_bet in state.current_bet
+         + Random.int (max + 1)) in *)
       Pot.add amt (Computer idx);
       amt
   | Player ->
@@ -104,6 +100,7 @@ let winner (state : state) : win_record list =
   in
   let sorted = List.sort sf hands in
   sorted
+
 (* List.sort (fun x y -> if x.value > y.value then 1 else -1) *)
 (* let round_check state = if List.length state.cards_on_table = 5 then
    winner state else flop state *)

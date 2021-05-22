@@ -674,9 +674,9 @@ let prob_test (name : string) (expected : float) (lst : Deck.card list)
 let deck_test =
   [
     full_deck_test "Create unshuffled deck" create;
-    full_deck_test "Create a shuffled deck" (shuffle create 7);
+    full_deck_test "Create a shuffled deck" (shuffle create);
     decks_equality_test "See if two shuffled decks are different"
-      (shuffle create 135) (shuffle create 2349) false;
+      (shuffle create) (shuffle create) false;
     (*NOTE: if shuffle is truly random, there is approximately a 1/52!
       probability of this failing even if correct. Random module is
       pseudo-random, but the chance is still negligable.*)

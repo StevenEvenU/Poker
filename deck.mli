@@ -47,7 +47,7 @@ val create : deck
    deck -> card option list -> int -> int -> int -> deck *)
 
 (** Shuffles a deck of cards*)
-val shuffle : deck -> int -> deck
+val shuffle : deck -> deck
 
 (** Gives the top card from the deck*)
 val top_card : deck -> card option
