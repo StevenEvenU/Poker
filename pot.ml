@@ -27,6 +27,7 @@ let add (mon : int) (player : State.players) =
   | Player -> add_helper mon 0
 
 let reset () =
+  folded_pot := 0;
   for i = 0 to max_players - 1 do
     pot.(i) <- unused;
     money_back.(i) <- 0

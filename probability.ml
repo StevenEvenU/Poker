@@ -5,7 +5,7 @@ open Pot
 
 let repitions = 100
 
-let deck_remover (lst : Deck.card option list) =
+let deck_remov (lst : Deck.card option list) =
   let deck0 = Deck.create in
   let rec deck_rec lst0 deck1 =
     match lst0 with
@@ -33,12 +33,23 @@ let cpu_cards_helper cpu_cards c1 c2 deck_left num =
     cpu_cards.(i) <- [ !c1; !c2 ]
   done
 
+let make_state hand_cards cpu_cards table_cards deck_left num =
+  {
+    users_hand = hand_cards;
+    cpu_hands = cpu_cards;
+    cards_on_table = table_cards;
+    deck_rem = !deck_left;
+    turn = Player;
+    user_money = 1000;
+    cpu_moneys = Array.make num 1000;
+    dealer = Player;
+    current_bet = 0;
+  }
+
 let rec prob_helper lst num acc count =
   if count = repitions then float_of_int acc /. float_of_int repitions
   else
-    let deck_left =
-      ref (deck_remover (List.map (fun a -> Some a) lst))
-    in
+    let deck_left = ref (deck_remov (List.map (fun a -> Some a) lst)) in
     let hand_cards = [ List.hd lst; List.hd (List.tl lst) ] in
     let table_cards = List.tl (List.tl lst) in
     let cpu_cards =
@@ -48,17 +59,7 @@ let rec prob_helper lst num acc count =
     let c2 = ref { suit = Clubs; value = Eight } in
     cpu_cards_helper cpu_cards c1 c2 deck_left num;
     let state_1 =
-      {
-        users_hand = hand_cards;
-        cpu_hands = cpu_cards;
-        cards_on_table = table_cards;
-        deck_rem = !deck_left;
-        turn = Player;
-        user_money = 1000;
-        cpu_moneys = Array.make num 1000;
-        dealer = Player;
-        current_bet = 0;
-      }
+      make_state hand_cards cpu_cards table_cards deck_left num
     in
     let win_rec = Table.winner state_1 in
     let win_lst = Pot.top_winners win_rec in
