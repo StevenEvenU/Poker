@@ -10,13 +10,13 @@ val active_state : int -> State.state
 
 (** This will delegate the cards amongst the players, thus changing the
     state. *)
-val delegate : State.state -> unit
+val deal_player : State.state -> unit
 
 (** This will deal the first three cards on the table. *)
-val deal : State.state -> unit
+val flop_table : State.state -> unit
 
 (** This will deal the next card on the table. *)
-val flop : State.state -> unit
+val deal_table : State.state -> unit
 
 (** This will distrbute the split of the pot to the individuals *)
 val distr : int array -> State.state -> int -> unit

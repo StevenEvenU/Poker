@@ -21,7 +21,7 @@ let init_state (num : int) =
 
 let active_state (num : int) = init_state num
 
-let delegate state =
+let deal_player state =
   Random.self_init ();
   state.deck_rem <- shuffle state.deck_rem;
   for j = 0 to Array.length state.cpu_hands - 1 do
@@ -41,7 +41,7 @@ let delegate state =
     state.deck_rem <- remove_top state.deck_rem
   done
 
-let deal state =
+let flop_table state =
   for i = 0 to 2 do
     state.cards_on_table <-
       (match top_card state.deck_rem with
@@ -50,7 +50,7 @@ let deal state =
     state.deck_rem <- remove_top state.deck_rem
   done
 
-let flop state =
+let deal_table state =
   state.cards_on_table <-
     (match top_card state.deck_rem with
     | Some card -> card :: state.cards_on_table
