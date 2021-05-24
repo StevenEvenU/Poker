@@ -133,11 +133,11 @@ let betting_round (state : state) players_in =
   state.current_bet <- 0
 
 let filter_winner win_rec_list players_in =
-  (* print_string "Filtering the following list: \n";
-  print_win_record win_rec_list; *)
+  (* print_string "Filtering the following list: \n"; print_win_record
+     win_rec_list; *)
   (* print_string "The players still in are: "; *)
-  (* print_string
-    (stupid (ref "") players_in 0 (Array.length !players_in - 1)); *)
+  (* print_string (stupid (ref "") players_in 0 (Array.length
+     !players_in - 1)); *)
   (* print_string "Done\n"; *)
   let rec playing player players_in i =
     if i >= Array.length players_in then false
@@ -150,8 +150,6 @@ let filter_winner win_rec_list players_in =
       p)
     win_rec_list
 
-
-
 (***** ***** MAIN GAME OPERATION ***** *****)
 
 let main =
@@ -161,7 +159,7 @@ let main =
   let num_players = read_int () in
   let num_players = reprmpt_player_count num_players in
   let state = active_state num_players in
-  delegate state;
+  deal_player state;
   Sys.command "clear";
 
   (* Delegates cards to players *)
@@ -197,7 +195,7 @@ let main =
   print_string "\nCurrent amount in pot is: \n";
   print_string (print_pot () ^ "\n");
 
-  deal state;
+  flop_table state;
   print_hands state Player;
   print_event state "Flop";
 
@@ -206,7 +204,7 @@ let main =
   print_string "Second Betting Round\n";
   print_string "-------------------------------\n";
   betting_round (state : state) players_in;
-  Sys.command("clear");
+  Sys.command "clear";
   print_string "Players in: \n";
   print_string
     (players_to_str (ref "") players_in 0
@@ -216,7 +214,7 @@ let main =
   print_string "\nCurrent amount in pot is: \n";
   print_string (print_pot () ^ "\n");
 
-  flop state;
+  deal_table state;
   print_hands state Player;
   print_event state "Turn";
 
@@ -235,7 +233,7 @@ let main =
   print_string "\nCurrent amount in pot is: \n";
   print_string (print_pot () ^ "\n");
 
-  flop state;
+  deal_table state;
   print_hands state Player;
   print_event state "River";
 
