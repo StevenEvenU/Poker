@@ -160,8 +160,10 @@ let rec prompt_action (state : state) players_in bets =
   print_string
     ("The current bet is $" ^ string_of_int state.current_bet ^ "\n");
   print_string "Do you wish check, call, raise, or fold?\n";
-
   let action = String.uppercase_ascii (read_line ()) in
+  human_action action state players_in bets
+
+and human_action action state players_in bets =
   match action with
   | "CHECK" ->
       let amt = human_check state players_in bets in
