@@ -162,15 +162,14 @@ let fold_hand state players_in bets =
 (*** Human Prompt Actions ***)
 
 let rec prompt_action (state : state) players_in bets =
-  print_string
+  let action = if Array.length !players_in = 1 then "CHECK" else
+  (print_string
     ("The current bet is $" ^ string_of_int state.current_bet ^ "\n");
   print_string "Do you wish check, call, raise, or fold?\n";
-  let action = String.uppercase_ascii (read_line ()) in
+  String.uppercase_ascii (read_line ())) in
   human_action action state players_in bets
 
-and human_action given_action state players_in bets =
-  let action = if Array.length !players_in = 1 then "CHECK" else given_action
-  in
+and human_action action state players_in bets =
   match action with
   | "CHECK" ->
       let amt = human_check state players_in bets in
@@ -221,12 +220,11 @@ and human_raise (state : state) players_in bets =
   amt
 
 let rec prompt_last_action (state : state) players_in bets =
-  print_string "DEBUG: LAST ACTION\n";
-  print_string
+  let action = if Array.length !players_in = 1 then "CHECK" else
+  (print_string
     ("The current bet is " ^ string_of_int state.current_bet ^ "\n");
   print_string "Do you wish check, call, or fold?\n";
-
-  let action = String.uppercase_ascii (read_line ()) in
+  String.uppercase_ascii (read_line ())) in
   (* print_string (string_of_action action); *)
   (* print_string "matching action \n"; *)
   match action with
