@@ -650,7 +650,7 @@ let valid_check_test
     (expected : bool)
     (state : State.state)
     (arr : int array) : test =
-  name >:: fun _ -> assert_equal expected (valid_check state arr)
+  name >:: fun _ -> assert_equal expected (valid_check state state.turn arr)
 
 (** [get_money_test] constructs an OUnit test named [name] that asserts
     with [expected] and [get_money state play]. *)
@@ -659,7 +659,7 @@ let valid_call_test
     (expected : bool)
     (state : State.state)
     (arr : int array) : test =
-  name >:: fun _ -> assert_equal expected (valid_call state arr)
+  name >:: fun _ -> assert_equal expected (valid_call state state.turn arr)
 
 (** [prob_test] constructs an OUnit test named [name] that asserts that
     [prob lst n] is within an acceptable range of [expected]. IMPORTANT

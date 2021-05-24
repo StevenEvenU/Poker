@@ -19,13 +19,13 @@ val get_money : State.state -> State.players -> int
 val get_raise_amt : State.state -> int
 
 (** Checks if this person can check or not *)
-val valid_check : State.state -> int array -> bool
+val valid_check : State.state -> State.players -> int array -> bool
 
 (** Checks if this person can call or not *)
-val valid_call : State.state -> int array -> bool
+val valid_call : State.state -> State.players -> int array -> bool
 
 (** Checks if this person can raise or not *)
-val valid_raise : State.state -> int array -> bool
+val valid_raise : State.state -> State.players -> int array -> bool
 
 (** Prompts the user what they wish to do: Check, Call, Raise, or Fold
     and then does so*)
