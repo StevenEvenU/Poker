@@ -6,11 +6,11 @@ open Pot
 open Betting
 
 let players_to_str str_start arr min max =
-  str_start := "[|" ^ str_of_player !arr.(min);
+  str_start := "[" ^ str_of_player !arr.(min);
   for i = min + 1 to max do
-    str_start := !str_start ^ "," ^ str_of_player !arr.(i)
+    str_start := !str_start ^ ", " ^ str_of_player !arr.(i)
   done;
-  str_start := !str_start ^ "|]";
+  str_start := !str_start ^ "]";
   !str_start
 
 let arr_to_str str_start arr =
@@ -150,6 +150,8 @@ let filter_winner win_rec_list players_in =
       p)
     win_rec_list
 
+
+
 (***** ***** MAIN GAME OPERATION ***** *****)
 
 let main =
@@ -189,6 +191,7 @@ let main =
   print_string
     (players_to_str (ref "") players_in 0
        (Array.length !players_in - 1));
+  print_string "\n";
   print_bal state;
   print_string "\n";
   print_string "\nCurrent amount in pot is: \n";
