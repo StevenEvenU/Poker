@@ -6,7 +6,7 @@ val player_index :
   State.players -> State.players array ref -> int -> int
 
 (** Safely iterates [num] players ahead in the [players_in] array starting from position [idx] *)
-val iterate_players : int -> State.players array ref -> int -> State.player
+val iterate_player : int -> State.players array ref -> int -> State.players
 
 (** Updates the [bets] array that keeps track of each persons bet in a
     round of betting. Changes [player]'s latest bet to [bet] *)

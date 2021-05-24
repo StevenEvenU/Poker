@@ -166,7 +166,9 @@ let rec prompt_action (state : state) players_in bets =
   let action = String.uppercase_ascii (read_line ()) in
   human_action action state players_in bets
 
-and human_action action state players_in bets =
+and human_action given_action state players_in bets =
+  let action = if Array.length !players_in = 1 then "CHECK" else given_action
+  in
   match action with
   | "CHECK" ->
       let amt = human_check state players_in bets in
