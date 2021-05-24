@@ -58,12 +58,14 @@ let next_turn (state : state) players_in current_bet =
   state.turn <- next_player;
   state.current_bet <- current_bet
 
+(* Returns the index of [player] in the [players_in] array. [i] is an iterator *)
 let rec player_index player players_in i =
   if i >= Array.length !players_in then
     failwith "player not in players_in"
   else if player = !players_in.(i) then i
   else player_index player players_in (i + 1)
 
+(* Safely iterates [num] players ahead in the [players_in] array starting from position [idx] *)
 let iterate_player idx players_in num =
   print_string
     ("Iterating " ^ string_of_int num ^ " players from index "
@@ -79,6 +81,7 @@ let iterate_player idx players_in num =
   print_string ("Returning player: " ^ str_of_player v ^ "\n");
   v
 
+(* Updates the [bets] array of [player]'s latest [bet] *)
 let update_bets bets (player : State.players) state bet =
   (match player with
   | Player -> state.user_money <- state.user_money - bet
