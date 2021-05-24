@@ -2,7 +2,8 @@
 val next_turn : State.state -> State.players array ref -> int -> unit
 
 (** Returns index of player in the players_in array *)
-val player_index : State.players -> State.players array ref -> int -> int
+val player_index :
+  State.players -> State.players array ref -> int -> int
 
 (** Updates the bets array that keeps track of each persons bet in a
     round of betting *)

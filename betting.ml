@@ -260,7 +260,8 @@ and last_human_call state players_in bets =
 let comp_action (state : state) players_in bets =
   let player = state.turn in
   let hand = get_hand state player in
-  (* ATTENTION: Uncomment the below line when there is a helper function for checking *)
+  (* ATTENTION: Uncomment the below line when there is a helper function
+     for checking *)
   (* if 1 = (Array.length !players_in ) then comp_check else *)
   let p = Probability.prob (hand @ state.cards_on_table) 10 in
   let v = p *. Float.of_int (get_money state player) in
@@ -309,30 +310,16 @@ let rec rec_bet_round (state : state) players_in bets plays =
   print_string "Current Bets: \n";
   player_prev_bet state.turn bets;
   if state.turn = !players_in.(0) && plays > 0 then
-    let player = state.turn in
+    final_play state players_in bets plays
+  else play state players_in bets plays
 
-    (* print_string (str_of_player player ^ "'s final turn\n"); *)
-    match player with
-    | Player -> final_play_player state players_in bets plays
-    | Computer x -> final_play_cpu state players_in bets plays x
-  else
-    let player = state.turn in
-    print_string (">>> " ^ str_of_player player ^ "'s turn\n");
-    let player_count = Array.length !players_in in
-    let turn_index = player_index player players_in 0 in
-    (* print_string ("Player index is: "^(string_of_int
-       turn_index)^"\n"); *)
-    let amt =
-      match player with
-      | Player -> play_player state players_in bets plays
-      | Computer x -> play_cpu state players_in bets plays x
-    in
-    (* Update state.turn and state.current_bet *)
-    if player_count = Array.length !players_in then
-      state.turn <- iterate_player turn_index players_in 1
-    else state.turn <- iterate_player turn_index players_in 0;
-    state.current_bet <- amt;
-    rec_bet_round state players_in bets (plays + 1)
+and final_play state players_in bets plays =
+  let player = state.turn in
+
+  (* print_string (str_of_player player ^ "'s final turn\n"); *)
+  match player with
+  | Player -> final_play_player state players_in bets plays
+  | Computer x -> final_play_cpu state players_in bets plays x
 
 and final_play_player state players_in bets plays =
   let amt = prompt_last_action state players_in bets in
@@ -341,6 +328,24 @@ and final_play_player state players_in bets plays =
 and final_play_cpu state players_in bets plays cpu_int =
   let amt = comp_action state players_in bets in
   amt
+
+and play state players_in bets plays =
+  let player = state.turn in
+  print_string (">>> " ^ str_of_player player ^ "'s turn\n");
+  let player_count = Array.length !players_in in
+  let turn_index = player_index player players_in 0 in
+  (* print_string ("Player index is: "^(string_of_int turn_index)^"\n"); *)
+  let amt =
+    match player with
+    | Player -> play_player state players_in bets plays
+    | Computer x -> play_cpu state players_in bets plays x
+  in
+  (* Update state.turn and state.current_bet *)
+  if player_count = Array.length !players_in then
+    state.turn <- iterate_player turn_index players_in 1
+  else state.turn <- iterate_player turn_index players_in 0;
+  state.current_bet <- amt;
+  rec_bet_round state players_in bets (plays + 1)
 
 and play_player state players_in bets plays =
   let amt = prompt_action state players_in bets in
