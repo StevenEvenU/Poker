@@ -3,10 +3,10 @@
     identify what hand those 5 cards make up *)
 
 (** Type card_check turns the card suit into a string and the card value
-    into an int *)
+    into an int, then stores these into one type. *)
 type card_check
 
-(** Type win_record holds knowledge of which players, the rank of their
+(** Type win_record holds knowledge of the player, the rank of their
     hand, and a value for tiebreakers *)
 type win_record = {
   player : State.players;

@@ -3,7 +3,7 @@
     remaining deck, whose turn it is, users money, the money that the
     cpu has, the dealer, and the current bet. *)
 
-(** A type to indetify a player and different computers. *)
+(** A type to identify a player and different computers. *)
 type players =
   | Player
   | Computer of int
@@ -11,10 +11,10 @@ type players =
 (** Returns integer of a players type *)
 val int_of_player : players -> int
 
-(** Returns player type of corresponding integer *)
+(** Returns player type of a corresponding integer *)
 val player_of_int : int -> players
 
-(** Returns string of a players type *)
+(** Returns the string of a players type *)
 val str_of_player : players -> string
 
 (** The state type is keeping track of the cards that the user and

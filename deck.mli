@@ -1,14 +1,14 @@
 (** The module Deck creates the deck along with performing other
     functionalities on the deck in order to play the game. *)
 
-(** The type of suits. *)
+(** The type of suits that are used in a deck of cards. *)
 type suit =
   | Spades
   | Hearts
   | Diamonds
   | Clubs
 
-(** The type of values. *)
+(** The type of values used in a deck of cards. *)
 type value =
   | Two
   | Three
