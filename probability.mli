@@ -1,9 +1,10 @@
-(** Brute force strategy of calculating aproximate probability of
-    winning, given your two cards and whatever is on the table. Does
-    this by randomly assigning other players remaining cards and
-    completing the cards on the table and then finding the winner. Do
-    the above [repetitions] number of times and the number of wins
-    divided by [reptitions] is the aproximate probability.*)
+(** The module Probability is a brute force strategy. It calculates the
+    aproximate probability of winning, given your two cards and whatever
+    is on the table. It does this by randomly assigning other players
+    remaining cards and completing the cards on the table and then
+    finding the winner. Do the above [repetitions] number of times and
+    the number of wins divided by [reptitions] is the aproximate
+    probability.*)
 
 open State
 open Compare
