@@ -562,14 +562,15 @@ let find_best_hand
   name >:: fun _ -> assert_equal expected (find_best_hand state player)
 
 (* **** TABLE HELPER FUNCTIONS **** *)
-let bet_specific_test
+let bet_test
     (name : string)
     (player : State.players)
     (amt : int)
+    (state : state)
     (expected : int) : test =
   name >:: fun _ ->
   let old_pot = print_pot () in
-  bet_specific player amt;
+  bet player amt state;
   assert_equal expected
     (int_of_string (print_pot ()) - int_of_string old_pot)
 
@@ -672,21 +673,31 @@ let prob_test (name : string) (expected : float) (lst : Deck.card list)
   name >:: fun _ ->
   assert_equal true (Float.abs (expected -. prob lst 3) < 0.15)
 
+(* [player_index_test] constructs an OUnit test named [name] that
+   asserts that [player_index player players_in 0] is equal to
+   [expected]. *)
+let player_index_test
+    (name : string)
+    (expected : int)
+    (player : State.players)
+    (players_in : State.players array ref) : test =
+  name >:: fun _ ->
+  assert_equal expected (player_index player players_in 0)
 
-(* [player_index_test] constructs an OUnit test named [name] that asserts that
-  [player_index player players_in 0] is equal to [expected]. *)
-let player_index_test (name : string) (expected : int) (player : State.players) (players_in : State.players array ref) : test = 
-  name >:: fun _ -> assert_equal expected (player_index player players_in 0)
+(* [iterate_player_test] constructs an OUnit test named [name] that
+   asserts that [iterate_player idx players_in num] is equal to
+   [expected] *)
+let iterate_player_test
+    (name : string)
+    (expected : State.players)
+    (idx : int)
+    (players_in : State.players array ref)
+    (num : int) : test =
+  name >:: fun _ ->
+  assert_equal expected (iterate_player idx players_in num)
 
-(* [iterate_player_test] constructs an OUnit test named [name] that asserts that 
-  [iterate_player idx players_in num] is equal to [expected] *)
-let iterate_player_test (name : string) (expected : State.players) (idx : int) (players_in : State.players array ref) (num : int) : test = 
-  name >:: fun _ -> assert_equal expected (iterate_player idx players_in num)
-
-(* [update_bets_test] constructs an OUnit test named [name] that asserts that
-  [update_bets bets player state bet] is equal to [expected] *)
-
-
+(* [update_bets_test] constructs an OUnit test named [name] that asserts
+   that [update_bets bets player state bet] is equal to [expected] *)
 
 (* *******END HELPER FUNCTIONS********* *)
 let deck_test =
@@ -720,8 +731,8 @@ let deck_test =
 
 let table_test =
   [
-    bet_specific_test "Player add" Player 100 100;
-    bet_specific_test "Computer add" (Computer 1) 100 100;
+    bet_test "Player add" Player 100 t_state 100;
+    bet_test "Computer add" (Computer 1) 100 t_state 100;
     distr_test "Adding to player" [| 600; 100 |] t_state 1 1600;
   ]
 
@@ -975,10 +986,7 @@ let probability_test =
       [ { suit = Hearts; value = Ace }; { suit = Clubs; value = Ace } ];
   ]
 
-let betting_test = [
-
-
-]
+let betting_test = []
 
 let suite =
   "test suite for A2"
