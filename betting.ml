@@ -4,11 +4,6 @@ open State
 open Table
 open Pot
 
-(* let stupid str_start arr min max = str_start := "[|" ^ str_of_player
-   !arr.(min); for i = min + 1 to max do str_start := !str_start ^ "," ^
-   str_of_player !arr.(i) done; str_start := !str_start ^ "|]";
-   !str_start *)
-
 let comp_arr_to_str str_start arr =
   str_start := "";
   for i = 0 to Array.length arr - 1 do
