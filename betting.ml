@@ -79,10 +79,10 @@ let update_bets bets (player : State.players) state bet =
   print_bet player bet
 
 let player_prev_bet player bets =
-  (* print_string "DEBUG: \n"; *)
-  (* print_string "----player_prev_bet----\n"; *)
-  (* print_string (bets_arr_to_str (ref "") bets); *)
-  (* print_string "----^^^^^^^^^^^^^^^----\n"; *)
+  print_string "DEBUG: \n";
+  print_string "----player_prev_bet----\n";
+  print_string (bets_arr_to_str (ref "") bets);
+  print_string "----^^^^^^^^^^^^^^^----\n";
   bets.(int_of_player player)
 
 let get_money (state : state) = function
@@ -142,7 +142,6 @@ let fold_hand state players_in bets =
 
 (*** Human Prompt Actions ***)
 
-(* TODO: Only prompt available actions, not all *)
 let rec prompt_action (state : state) players_in bets =
   print_string
     ("The current bet is $" ^ string_of_int state.current_bet ^ "\n");
@@ -176,13 +175,13 @@ and human_call (state : state) players_in bets =
 
 and human_raise (state : state) players_in bets =
   let amt = Table.bet Player (get_raise_amt state) state in
-  (* print_string "DEBUG:\n";
+  print_string "DEBUG:\n";
   print_string "vvvvvvvvvvvvvvvvvv\n";
   print_string ("Prev bet: "^(string_of_int (player_prev_bet Player bets))^"\n");
-  print_string "Updating bets: \n"; *)
+  print_string "Updating bets: \n";
   update_bets bets state.turn state amt;
-  (* print_string ("New bet: "^(string_of_int (player_prev_bet Player bets))^"\n");
-  print_string "^^^^^^^^^^^^^^^^^^\n"; *)
+  print_string ("New bet: "^(string_of_int (player_prev_bet Player bets))^"\n");
+  print_string "^^^^^^^^^^^^^^^^^^\n";
   amt
 
 let rec prompt_last_action (state : state) players_in bets =
@@ -257,9 +256,9 @@ let comp_action (state : state) players_in bets =
 
 (***      Recursive Betting Round       ***)
 let rec rec_bet_round (state : state) players_in bets plays =
-  (* print_string "Current Balances: \n";
+  print_string "Current Balances: \n";
   print_bal state;
-  print_string "Current Bets: \n"; *)
+  print_string "Current Bets: \n";
   player_prev_bet state.turn bets;
   if state.turn = !players_in.(0) && plays > 0 then (
     let player = state.turn in
