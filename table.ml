@@ -72,10 +72,6 @@ let bet players amt state =
       Pot.add amt Player;
       amt
 
-let bet_specific players amt =
-  Pot.add amt players;
-  amt
-
 let rec distr int_arr state player_count =
   if player_count = 0 then
     state.user_money <- state.user_money + int_arr.(player_count)

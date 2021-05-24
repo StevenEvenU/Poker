@@ -303,21 +303,22 @@ let comp_action (state : state) players_in bets =
   let hand = get_hand state player in
   (* ATTENTION: Uncomment the below line when there is a helper function
      for checking *)
-  (* if 1 = (Array.length !players_in ) then comp_check else *)
-  let p = Probability.prob (hand @ state.cards_on_table) 10 in
-  let v = p *. Float.of_int (get_money state player) in
-  match v with
-  | v when v < 0.9 *. Float.of_int state.current_bet ->
-      fold_action state players_in bets player
-  | v
-    when v > 1.1 *. Float.of_int state.current_bet
-         && valid_raise state player bets ->
-      raise_action state bets player hand v
-  | _ ->
-      if valid_check state player bets then check_action state player
-      else if valid_call state player bets then
-        call_action state bets player
-      else fold_after_call state players_in bets player
+  if 1 = Array.length !players_in then check_action state player
+  else
+    let p = Probability.prob (hand @ state.cards_on_table) 10 in
+    let v = p *. Float.of_int (get_money state player) in
+    match v with
+    | v when v < 0.9 *. Float.of_int state.current_bet ->
+        fold_action state players_in bets player
+    | v
+      when v > 1.1 *. Float.of_int state.current_bet
+           && valid_raise state player bets ->
+        raise_action state bets player hand v
+    | _ ->
+        if valid_check state player bets then check_action state player
+        else if valid_call state player bets then
+          call_action state bets player
+        else fold_after_call state players_in bets player
 
 (*** Recursive Betting Round ***)
 let rec rec_bet_round (state : state) players_in bets plays =
@@ -384,7 +385,7 @@ let last_call state players_in bets =
       (str_of_player state.turn
       ^ "calling before with an\n       additional: "
       ^ string_of_int residual ^ "\n");
-    let amt = bet_specific state.turn residual in
+    let amt = bet state.turn residual state in
     print_string
       (str_of_player state.turn
       ^ "calling with an\n       additional: " ^ string_of_int amt
