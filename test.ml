@@ -562,14 +562,15 @@ let find_best_hand
   name >:: fun _ -> assert_equal expected (find_best_hand state player)
 
 (* **** TABLE HELPER FUNCTIONS **** *)
-let bet_specific_test
+let bet_test
     (name : string)
     (player : State.players)
     (amt : int)
+    (state : state)
     (expected : int) : test =
   name >:: fun _ ->
   let old_pot = print_pot () in
-  bet_specific player amt;
+  bet player amt state;
   assert_equal expected
     (int_of_string (print_pot ()) - int_of_string old_pot)
 
@@ -704,8 +705,8 @@ let deck_test =
 
 let table_test =
   [
-    bet_specific_test "Player add" Player 100 100;
-    bet_specific_test "Computer add" (Computer 1) 100 100;
+    bet_test "Player add" Player 100 t_state 100;
+    bet_test "Computer add" (Computer 1) 100 t_state 100;
     distr_test "Adding to player" [| 600; 100 |] t_state 1 1600;
   ]
 
