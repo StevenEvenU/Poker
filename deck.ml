@@ -54,22 +54,15 @@ let valu (deck1 : card option list) (place : int) =
   else if place mod 13 = 11 then King
   else Ace
 
-let rec create_helper (deck1 : card option list) (place : int) =
-  if place < deck_size then
-    Some (create_card (valu deck1 place) (sut deck1 place))
-    :: create_helper deck1 (place + 1)
-  else to_deck deck1
-
-let create : deck = create_helper [] 0
-
 let rec shuffle_helper (deck1 : deck) (num : int) =
-  if num < deck_size then
-    match deck1 with
-    | h :: t ->
-        if Random.bool () then h :: shuffle_helper t (num + 1)
-        else shuffle_helper t (num + 1) @ [ h ]
-    | [] -> []
-  else []
+  if num < deck_size then shuffle_helper_1 deck1 num else []
+
+and shuffle_helper_1 (deck1 : deck) (num : int) =
+  match deck1 with
+  | h :: t ->
+      if Random.bool () then h :: shuffle_helper t (num + 1)
+      else shuffle_helper t (num + 1) @ [ h ]
+  | [] -> []
 
 let rec shuffle_repeater (deck1 : deck) (num : int) (repetitions : int)
     =
@@ -80,6 +73,14 @@ let rec shuffle_repeater (deck1 : deck) (num : int) (repetitions : int)
 let shuffle (deck1 : deck) =
   Random.self_init ();
   to_deck (shuffle_repeater deck1 0 30)
+
+let rec create_helper (deck1 : card option list) (place : int) =
+  if place < deck_size then
+    Some (create_card (valu deck1 place) (sut deck1 place))
+    :: create_helper deck1 (place + 1)
+  else to_deck deck1
+
+let create : deck = create_helper [] 0
 
 let rec top_card (deck1 : deck) : card option =
   try List.hd (List.rev deck1) with _ -> None

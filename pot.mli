@@ -4,19 +4,24 @@ open State
 
 open Compare
 
-(** Add money to the pot. Must be given the state, the amount
-    (IMPORTANT: give 0 if a player is calling, give a negative number if
-    a player is folding), and the player betting *)
+(** [add] sees if money should be added to the pot and does so if
+    needed. Must be given the player betting and the amount (IMPORTANT:
+    give 0 if a player is calling, give a negative number if a player is
+    folding). *)
 val add : int -> State.players -> unit
 
-(** Set pot to zero*)
+(** [reset] sets pot to zero and prepares all mutable variables for
+    future rounds*)
 val reset : unit -> unit
 
-(** returns total sum of everything in the pot*)
+(** [print_pot] is the total sum of everything in the pot*)
 val print_pot : unit -> string
 
+(** [top_winners] is the list of winners' (ties included) from the end
+    of a round integer locations in an array (the user is 0,
+    [Computer x] is x) *)
 val top_winners : win_record list -> int list
 
-(** Splits the pot amongs the winners. Uses a side pot if necessary.
-    Assumes it is passed just the winners (one winner, ties, etc.).*)
+(** [to_winner] splits the pot amongs the winners, using a side pot if
+    necessary.*)
 val to_winner : win_record list -> State.state -> int array

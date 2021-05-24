@@ -30,30 +30,23 @@ type card = {
   value : value;
 }
 
-(** The abstract type of cards in order in a deck.*)
+(** The type of cards in a deck.*)
 type deck = card option list
 
-(* TODO: DELETE THIS. TEMPORARY ONLY *)
-val to_deck : card option list -> deck
-
-(** Creates a card value of suit*)
+(** [create_card] creates a card with the given value and suit*)
 val create_card : value -> suit -> card
 
-(** Creates a shuffled deck of cards and returns it*)
+(** [create] is an unshuffled full deck of cards*)
 val create : deck
 
-(* TODO: DELETE THIS. TEMPORARY ONLY val shuffle_helper : deck -> card
-   option list -> int -> int -> card option list val shuffle_repeater :
-   deck -> card option list -> int -> int -> int -> deck *)
-
-(** Shuffles a deck of cards*)
+(** [shuffle deck] is [deck] randomly shuffled*)
 val shuffle : deck -> deck
 
-(** Gives the top card from the deck*)
+(** [top_card deck] is the top card from [deck]*)
 val top_card : deck -> card option
 
-(** Removes the top card from the deck*)
+(** [remove_top deck] is [deck] with the top card removed*)
 val remove_top : deck -> deck
 
-(** Returns size of deck*)
+(** [size deck] is the number of cards in [deck]*)
 val size : deck -> int

@@ -66,6 +66,4 @@ let rec prob_helper lst num acc count =
     if List.mem 0 win_lst then prob_helper lst num (acc + 1) (count + 1)
     else prob_helper lst num acc (count + 1)
 
-let prob (lst : Deck.card list) (num : int) =
-  Printf.printf "Probability: %fs\n" (prob_helper lst num 0 0);
-  prob_helper lst num 0 0
+let prob (lst : Deck.card list) (num : int) = prob_helper lst num 0 0

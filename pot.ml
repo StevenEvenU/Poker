@@ -38,22 +38,24 @@ let to_player_num (win_rec : win_record) =
   | { player; rank; value } -> (
       match player with Player -> 0 | Computer x -> x)
 
+let rank_max_calc win_list =
+  List.fold_left
+    (fun max a ->
+      match a with
+      | { player; rank; value } -> if rank > max then rank else max)
+    0 win_list
+
+let value_max_calc win_list rank_max =
+  List.fold_left
+    (fun max a ->
+      match a with
+      | { player; rank; value } ->
+          if rank = rank_max && value > max then value else max)
+    0 win_list
+
 let top_winners (win_list : win_record list) =
-  let rank_max =
-    List.fold_left
-      (fun max a ->
-        match a with
-        | { player; rank; value } -> if rank > max then rank else max)
-      0 win_list
-  in
-  let value_max =
-    List.fold_left
-      (fun max a ->
-        match a with
-        | { player; rank; value } ->
-            if rank = rank_max && value > max then value else max)
-      0 win_list
-  in
+  let rank_max = rank_max_calc win_list in
+  let value_max = value_max_calc win_list rank_max in
   List.fold_left
     (fun acc a ->
       match a with
@@ -129,6 +131,13 @@ let lowest_side_helper
       else acc)
     win_list over_total_money
 
+let side_cause_help win_list lowest_side =
+  List.fold_right
+    (fun a acc ->
+      let p_num = to_player_num a in
+      if pot.(p_num) = lowest_side then p_num else acc)
+    win_list (-1)
+
 let rec side_pot
     (win_list : win_record list)
     (all_in : bool array)
@@ -140,50 +149,46 @@ let rec side_pot
   in
   if num_all_in all_in 0 0 = List.length out then
     give_pot (top_winners (subtract_win win_list out)) (piling 0 0)
-  else
-    let lowest_side = lowest_side_helper win_list all_in out in
-    let n = List.length (subtract (to_list win_list) out) in
-    give_pot
-      (top_winners (subtract_win win_list out))
-      ((lowest_side * n)
-      +
-      if !folded_pot - lowest_side >= 0 then lowest_side
-      else !folded_pot);
-    let side_cause =
-      List.fold_right
-        (fun a acc ->
-          let p_num = to_player_num a in
-          if pot.(p_num) = lowest_side then p_num else acc)
-        win_list (-1)
-    in
-    remove_from_pot (subtract (to_list win_list) out) lowest_side;
-    folded_pot :=
-      if !folded_pot - lowest_side >= 0 then !folded_pot - lowest_side
-      else 0;
-    side_pot win_list all_in (side_cause :: out)
+  else side_pot_addition win_list all_in out
+
+and side_pot_addition win_list all_in out =
+  let lowest_side = lowest_side_helper win_list all_in out in
+  let n = List.length (subtract (to_list win_list) out) in
+  give_pot
+    (top_winners (subtract_win win_list out))
+    ((lowest_side * n)
+    +
+    if !folded_pot - lowest_side >= 0 then lowest_side else !folded_pot
+    );
+  let side_cause = side_cause_help win_list lowest_side in
+  remove_from_pot (subtract (to_list win_list) out) lowest_side;
+  folded_pot :=
+    if !folded_pot - lowest_side >= 0 then !folded_pot - lowest_side
+    else 0;
+  side_pot win_list all_in (side_cause :: out)
+
+let rec all_all_in_helper lst all_in =
+  match lst with
+  | h :: t ->
+      let num = to_player_num h in
+      if all_in.(num) = false then false else all_all_in_helper t all_in
+  | [] -> true
+
+let rec any_all_in lst all_in =
+  match lst with
+  | [] -> false
+  | h :: t ->
+      let num = to_player_num h in
+      if all_in.(num) = true then true else any_all_in t all_in
 
 let to_winner (win_list : win_record list) (state : State.state) =
   let all_in = Array.make max_players false in
   for i = 0 to max_players - 1 do
     if bankrupt i state = true then all_in.(i) <- true else ()
   done;
-  let rec all_all_in_helper lst =
-    match lst with
-    | h :: t ->
-        let num = to_player_num h in
-        if all_in.(num) = false then false else all_all_in_helper t
-    | [] -> true
-  in
-  let all_all_in = all_all_in_helper win_list in
-  let rec any_all_in lst =
-    match lst with
-    | [] -> false
-    | h :: t ->
-        let num = to_player_num h in
-        if all_in.(num) = true then true else any_all_in t
-  in
+  let all_all_in = all_all_in_helper win_list all_in in
   let side_needed =
-    if not all_all_in then any_all_in win_list else false
+    if not all_all_in then any_all_in win_list all_in else false
   in
   if not side_needed then give_pot (top_winners win_list) (piling 0 0)
   else side_pot win_list all_in [];
