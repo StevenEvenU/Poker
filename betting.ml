@@ -163,15 +163,15 @@ let rec prompt_action (state : state) players_in bets =
 
   let action = String.uppercase_ascii (read_line ()) in
   match action with
-  | "CHECK" ->
-      human_check state players_in bets;
-      Sys.command "clear"
+  | "CHECK" ->(
+      let amt = human_check state players_in bets in
+      Sys.command "clear"; amt)
   | "CALL" ->
-      human_call state players_in bets;
-      Sys.command "clear"
+      (let amt = human_call state players_in bets in
+      Sys.command "clear"; amt)
   | "RAISE" ->
-      human_raise state players_in bets;
-      Sys.command "clear"
+      (let amt = human_raise state players_in bets in
+      Sys.command "clear"; amt)
   | "FOLD" ->
       update_bets bets state.turn state 0;
       fold_hand state players_in bets
@@ -341,14 +341,16 @@ and play state players_in bets plays =
     | Computer x -> play_cpu state players_in bets plays x
   in
   (* Update state.turn and state.current_bet *)
+  print_string ("Setting current_bet to: "^(string_of_int amt)^"\n");
+  state.current_bet <- amt;
   if player_count = Array.length !players_in then
     state.turn <- iterate_player turn_index players_in 1
   else state.turn <- iterate_player turn_index players_in 0;
-  state.current_bet <- amt;
   rec_bet_round state players_in bets (plays + 1)
 
 and play_player state players_in bets plays =
   let amt = prompt_action state players_in bets in
+  print_string ("play_player amt: "^(string_of_int amt)^"\n");
   amt
 
 and play_cpu state players_in bets plays cpu_int =
