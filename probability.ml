@@ -56,12 +56,6 @@ let rec table_fill lst deck_left =
     table_fill (!card :: lst) deck_left
   else lst
 
-(*match lst with | [] -> let card = rand_card card deck_left in
-  table_fill [ !card ] deck_left | [ h ] -> let card = rand_card card
-  deck_left in table_fill [ h; !card ] deck_left | [ h1; h2 ] -> let
-  card = rand_card card deck_left in table_fill [ h1; h2; !card ]
-  deck_left | h :: t -> h :: t*)
-
 let rec prob_helper lst num acc count =
   if count = repitions then float_of_int acc /. float_of_int repitions
   else

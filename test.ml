@@ -670,7 +670,6 @@ let valid_call_test
 let prob_test (name : string) (expected : float) (lst : Deck.card list)
     : test =
   name >:: fun _ ->
-  print_prob lst 3;
   assert_equal true (Float.abs (expected -. prob lst 3) < 0.15)
 
 (* *******END HELPER FUNCTIONS********* *)

@@ -16,5 +16,3 @@ open Deck
     hand and the rest the ones on the table) as well as the number of
     players *)
 val prob : Deck.card list -> int -> float
-
-val print_prob : Deck.card list -> int -> unit
