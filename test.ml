@@ -650,7 +650,8 @@ let valid_check_test
     (expected : bool)
     (state : State.state)
     (arr : int array) : test =
-  name >:: fun _ -> assert_equal expected (valid_check state state.turn arr)
+  name >:: fun _ ->
+  assert_equal expected (valid_check state state.turn arr)
 
 (** [get_money_test] constructs an OUnit test named [name] that asserts
     with [expected] and [get_money state play]. *)
@@ -659,7 +660,8 @@ let valid_call_test
     (expected : bool)
     (state : State.state)
     (arr : int array) : test =
-  name >:: fun _ -> assert_equal expected (valid_call state state.turn arr)
+  name >:: fun _ ->
+  assert_equal expected (valid_call state state.turn arr)
 
 (** [prob_test] constructs an OUnit test named [name] that asserts that
     [prob lst n] is within an acceptable range of [expected]. IMPORTANT
@@ -668,6 +670,7 @@ let valid_call_test
 let prob_test (name : string) (expected : float) (lst : Deck.card list)
     : test =
   name >:: fun _ ->
+  print_prob lst 3;
   assert_equal true (Float.abs (expected -. prob lst 3) < 0.15)
 
 (* *******END HELPER FUNCTIONS********* *)
@@ -935,6 +938,26 @@ let probability_test =
         { suit = Clubs; value = Jack };
         { suit = Clubs; value = King };
       ];
+    prob_test "high probability of hand winning pre-river" 0.90
+      [
+        { suit = Hearts; value = Ace };
+        { suit = Clubs; value = Ace };
+        { suit = Clubs; value = Ten };
+        { suit = Clubs; value = Queen };
+        { suit = Hearts; value = Queen };
+        { suit = Diamonds; value = Ace };
+      ];
+    prob_test "low probability of hand winning pre-river" 0.20
+      [
+        { suit = Hearts; value = Two };
+        { suit = Clubs; value = Seven };
+        { suit = Diamonds; value = Ten };
+        { suit = Clubs; value = Queen };
+        { suit = Clubs; value = Queen };
+        { suit = Diamonds; value = Ace };
+      ];
+    prob_test "pocket aces pre-flop hand" 0.86
+      [ { suit = Hearts; value = Ace }; { suit = Clubs; value = Ace } ];
   ]
 
 let suite =
