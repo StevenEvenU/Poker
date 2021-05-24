@@ -163,15 +163,18 @@ let rec prompt_action (state : state) players_in bets =
 
   let action = String.uppercase_ascii (read_line ()) in
   match action with
-  | "CHECK" ->(
+  | "CHECK" ->
       let amt = human_check state players_in bets in
-      Sys.command "clear"; amt)
+      Sys.command "clear";
+      amt
   | "CALL" ->
-      (let amt = human_call state players_in bets in
-      Sys.command "clear"; amt)
+      let amt = human_call state players_in bets in
+      Sys.command "clear";
+      amt
   | "RAISE" ->
-      (let amt = human_raise state players_in bets in
-      Sys.command "clear"; amt)
+      let amt = human_raise state players_in bets in
+      Sys.command "clear";
+      amt
   | "FOLD" ->
       update_bets bets state.turn state 0;
       fold_hand state players_in bets
@@ -257,6 +260,42 @@ and last_human_call state players_in bets =
 
 (*** Computer Prompt Actions ***)
 
+let fold_action (state : state) players_in bets player =
+  print_string (str_of_player player ^ " is folding \n");
+  update_bets bets state.turn state 0;
+  let amt = fold_hand state players_in bets in
+  amt
+
+let raise_action (state : state) bets player hand money =
+  print_string (str_of_player player ^ " is raising \n");
+  let amt = bet player (Float.to_int money) state in
+  update_bets bets state.turn state amt;
+  print_string ("Raise Amt: " ^ string_of_int amt);
+  print_string "\n";
+  amt
+
+let check_action (state : state) player =
+  (* CHECK This is essentially the helper function for checking *)
+  print_string
+    (str_of_player player ^ " is checking with current bet:"
+    ^ string_of_int state.current_bet
+    ^ "\n");
+  bet player 0 state
+
+let call_action (state : state) bets player =
+  (* CALL *)
+  print_string (str_of_player player ^ " is calling \n");
+  let amt = bet player state.current_bet state in
+  update_bets bets player state amt;
+  amt
+
+let fold_after_call (state : state) players_in bets player =
+  (* FOLD *)
+  print_string
+    (str_of_player player ^ " is folding after failing to call \n");
+  update_bets bets player state 0;
+  fold_hand state players_in bets
+
 let comp_action (state : state) players_in bets =
   let player = state.turn in
   let hand = get_hand state player in
@@ -267,41 +306,16 @@ let comp_action (state : state) players_in bets =
   let v = p *. Float.of_int (get_money state player) in
   match v with
   | v when v < 0.9 *. Float.of_int state.current_bet ->
-      (* FOLD *)
-      print_string (str_of_player player ^ " is folding \n");
-      update_bets bets state.turn state 0;
-      let amt = fold_hand state players_in bets in
-      amt
+      fold_action state players_in bets player
   | v
     when v > 1.1 *. Float.of_int state.current_bet
          && valid_raise state player bets ->
-      (* RAISE *)
-      print_string (str_of_player player ^ " is raising \n");
-      let amt = bet player (Float.to_int v) state in
-      update_bets bets state.turn state amt;
-      print_string ("Raise Amt: " ^ string_of_int amt);
-      print_string "\n";
-      amt
+      raise_action state bets player hand v
   | _ ->
-      if valid_check state player bets then (
-        (* CHECK This is essentially the helper function for checking *)
-        print_string
-          (str_of_player player ^ " is checking with current bet:"
-          ^ string_of_int state.current_bet
-          ^ "\n");
-        bet player 0 state)
-      else if valid_call state player bets then (
-        (* CALL *)
-        print_string (str_of_player player ^ " is calling \n");
-        let amt = bet player state.current_bet state in
-        update_bets bets player state amt;
-        amt)
-      else (
-        (* FOLD *)
-        print_string
-          (str_of_player player ^ " is folding after failing to call \n");
-        update_bets bets player state 0;
-        fold_hand state players_in bets)
+      if valid_check state player bets then check_action state player
+      else if valid_call state player bets then
+        call_action state bets player
+      else fold_after_call state players_in bets player
 
 (*** Recursive Betting Round ***)
 let rec rec_bet_round (state : state) players_in bets plays =
@@ -313,6 +327,14 @@ let rec rec_bet_round (state : state) players_in bets plays =
     final_play state players_in bets plays
   else play state players_in bets plays
 
+and final_play_player state players_in bets plays =
+  let amt = prompt_last_action state players_in bets in
+  amt
+
+and final_play_cpu state players_in bets plays cpu_int =
+  let amt = comp_action state players_in bets in
+  amt
+
 and final_play state players_in bets plays =
   let player = state.turn in
 
@@ -321,11 +343,12 @@ and final_play state players_in bets plays =
   | Player -> final_play_player state players_in bets plays
   | Computer x -> final_play_cpu state players_in bets plays x
 
-and final_play_player state players_in bets plays =
-  let amt = prompt_last_action state players_in bets in
+and play_player state players_in bets plays =
+  let amt = prompt_action state players_in bets in
+  print_string ("play_player amt: " ^ string_of_int amt ^ "\n");
   amt
 
-and final_play_cpu state players_in bets plays cpu_int =
+and play_cpu state players_in bets plays cpu_int =
   let amt = comp_action state players_in bets in
   amt
 
@@ -341,21 +364,12 @@ and play state players_in bets plays =
     | Computer x -> play_cpu state players_in bets plays x
   in
   (* Update state.turn and state.current_bet *)
-  print_string ("Setting current_bet to: "^(string_of_int amt)^"\n");
+  print_string ("Setting current_bet to: " ^ string_of_int amt ^ "\n");
   state.current_bet <- amt;
   if player_count = Array.length !players_in then
     state.turn <- iterate_player turn_index players_in 1
   else state.turn <- iterate_player turn_index players_in 0;
   rec_bet_round state players_in bets (plays + 1)
-
-and play_player state players_in bets plays =
-  let amt = prompt_action state players_in bets in
-  print_string ("play_player amt: "^(string_of_int amt)^"\n");
-  amt
-
-and play_cpu state players_in bets plays cpu_int =
-  let amt = comp_action state players_in bets in
-  amt
 
 let last_call state players_in bets =
   let max = Array.fold_left max 0 bets in
