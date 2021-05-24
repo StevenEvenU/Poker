@@ -643,8 +643,8 @@ let get_money_test
     (play : players) : test =
   name >:: fun _ -> assert_equal expected (get_money state play)
 
-(** [get_money_test] constructs an OUnit test named [name] that asserts
-    with [expected] and [get_money state play]. *)
+(** [valid_check_test] constructs an OUnit test named [name] that asserts
+    with [expected] and [valid_check state state.turn arr]. *)
 let valid_check_test
     (name : string)
     (expected : bool)
@@ -652,8 +652,8 @@ let valid_check_test
     (arr : int array) : test =
   name >:: fun _ -> assert_equal expected (valid_check state state.turn arr)
 
-(** [get_money_test] constructs an OUnit test named [name] that asserts
-    with [expected] and [get_money state play]. *)
+(** [valid_call_test] constructs an OUnit test named [name] that asserts
+    with [expected] and [valid_call state state.turn play]. *)
 let valid_call_test
     (name : string)
     (expected : bool)
@@ -944,7 +944,7 @@ let suite =
            deck_test;
            table_test;
            compare_test;
-           (*main_test;*)
+           main_test;
            pot_test;
            probability_test;
          ]

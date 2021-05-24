@@ -260,6 +260,8 @@ and last_human_call state players_in bets =
 let comp_action (state : state) players_in bets =
   let player = state.turn in
   let hand = get_hand state player in
+  (* ATTENTION: Uncomment the below line when there is a helper function for checking *)
+  (* if 1 = (Array.length !players_in ) then comp_check else *)
   let p = Probability.prob (hand @ state.cards_on_table) 10 in
   let v = p *. Float.of_int (get_money state player) in
   match v with
@@ -281,7 +283,7 @@ let comp_action (state : state) players_in bets =
       amt
   | _ ->
       if valid_check state player bets then (
-        (* CHECK *)
+        (* CHECK This is essentially the helper function for checking *)
         print_string
           (str_of_player player ^ " is checking with current bet:"
           ^ string_of_int state.current_bet
