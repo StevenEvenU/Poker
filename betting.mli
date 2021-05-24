@@ -1,12 +1,15 @@
 (** Updates state.turn and state.current_bet *)
 val next_turn : State.state -> State.players array ref -> int -> unit
 
-(** Returns index of player in the players_in array *)
+(** Returns index of [player] in the [players_in] array *)
 val player_index :
   State.players -> State.players array ref -> int -> int
 
-(** Updates the bets array that keeps track of each persons bet in a
-    round of betting *)
+(** Safely iterates [num] players ahead in the [players_in] array starting from position [idx] *)
+val iterate_players : int -> State.players array ref -> int -> State.player
+
+(** Updates the [bets] array that keeps track of each persons bet in a
+    round of betting. Changes [player]'s latest bet to [bet] *)
 val update_bets :
   int array -> State.players -> State.state -> int -> unit
 

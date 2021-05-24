@@ -672,6 +672,22 @@ let prob_test (name : string) (expected : float) (lst : Deck.card list)
   name >:: fun _ ->
   assert_equal true (Float.abs (expected -. prob lst 3) < 0.15)
 
+
+(* [player_index_test] constructs an OUnit test named [name] that asserts that
+  [player_index player players_in 0] is equal to [expected]. *)
+let player_index_test (name : string) (expected : int) (player : State.players) (players_in : State.players array ref) : test = 
+  name >:: fun _ -> assert_equal expected (player_index player players_in 0)
+
+(* [iterate_player_test] constructs an OUnit test named [name] that asserts that 
+  [iterate_player idx players_in num] is equal to [expected] *)
+let iterate_player_test (name : string) (expected : State.players) (idx : int) (players_in : State.players array ref) (num : int) : test = 
+  name >:: fun _ -> assert_equal expected (iterate_player idx players_in num)
+
+(* [update_bets_test] constructs an OUnit test named [name] that asserts that
+  [update_bets bets player state bet] is equal to [expected] *)
+
+
+
 (* *******END HELPER FUNCTIONS********* *)
 let deck_test =
   [
@@ -958,6 +974,11 @@ let probability_test =
     prob_test "pocket aces pre-flop hand" 0.86
       [ { suit = Hearts; value = Ace }; { suit = Clubs; value = Ace } ];
   ]
+
+let betting_test = [
+
+
+]
 
 let suite =
   "test suite for A2"
