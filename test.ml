@@ -16,7 +16,22 @@
     could never knew what result I would get. The way I tested it was by
     seeing that no two shuffled decks were the same, though of course
     there is a very small chance of this test failing even if the code
-    is correct due to its probabilastic nature.*)
+    is correct due to its probabilastic nature.
+
+    Pot Module Testing: This module was primarily tested by the OUnit
+    test cases, but occasionally errors were found while playing the
+    game and then corrected. Tests were done using mostly black box
+    testing but with some white box testing (I knew some situations
+    (such as players going all in) would activate helper functions, so I
+    made test cases to go through those functions). Rather than testing
+    the functions in the modeule independently, the tests were done by
+    using the Pot Module as it would be used during a game. First
+    [reset] was called, then inputs (bet amounts or folds) were added
+    iteratively using [add] and then [to_winners] was called, which used
+    [top_winners]. Note that [print_pot] was not explicitely tested, but
+    it is simply an [string_of_int] of [piling], which is an extensively
+    used helper function of [to_winners], and so is guaranteed to work
+    if [to_winners] works. *)
 
 open OUnit2
 open Deck
