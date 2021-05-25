@@ -4,7 +4,10 @@
 
 (** Type card_check turns the card suit into a string and the card value
     into an int, then stores these into one type. *)
-type card_check
+type card_check = {
+  string_suit : string;
+  int_value : int;
+}
 
 (** Type win_record holds knowledge of the player, the rank of their
     hand, and a value for tiebreakers *)

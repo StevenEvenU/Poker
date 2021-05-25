@@ -111,7 +111,7 @@ let filter_winner win_rec_list players_in =
   (* print_string "Filtering the following list: \n"; print_win_record
      win_rec_list; *)
   (* print_string "The players still in are: "; *)
-  (* print_string (stupid (ref "") players_in 0 (Array.length
+  (* print_string (players_to_str (ref "") players_in 0 (Array.length
      !players_in - 1)); *)
   (* print_string "Done\n"; *)
   let rec playing player players_in i =

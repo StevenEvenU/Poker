@@ -21,23 +21,27 @@
     Pot Module Testing: This module was primarily tested by the OUnit
     test cases, but occasionally errors were found while playing the
     game and then corrected. Tests were done using mostly black box
-    testing but with some white box testing. I knew some situations
-    (such as different numbers of players going all in and causing side
-    pots) would trigger helper functions, so I made test cases to go
-    through those functions. I tested cases including one winner, a tie,
-    a side pot, multiple side pots, a tie involving a side pot, and
-    others. The side pots were tested for both the cases that the player
-    that caused them won and lost. Rather than testing the functions in
-    the modeule independently, the tests were done by using the Pot
-    Module as it would be used during a game. First [reset] was called,
-    then inputs (bet amounts or folds) were added iteratively using
-    [add] and then [to_winners] was called, which used [top_winners].
-    Note that [print_pot] was not explicitely tested, but it is simply
-    an [string_of_int] of [piling], which is an extensively used helper
-    function of [to_winners], and so is guaranteed to work if
-    [to_winners] works.
+    testing but with some white box testing (I knew some situations
+    (such as players going all in) would activate helper functions, so I
+    made test cases to go through those functions). Rather than testing
+    the functions in the modeule independently, the tests were done by
+    using the Pot Module as it would be used during a game. First
+    [reset] was called, then inputs (bet amounts or folds) were added
+    iteratively using [add] and then [to_winners] was called, which used
+    [top_winners]. Note that [print_pot] was not explicitely tested, but
+    it is simply an [string_of_int] of [piling], which is an extensively
+    used helper function of [to_winners], and so is guaranteed to work
+    if [to_winners] works.
 
-    Probability Moduel Testing: This module was primarily tested by the
+    Compare Module Testing: This module was fully tested by OUnit test.
+    Tests were done using both black box testing and white box testing
+    to make sure that every function in Compare module was tested to
+    some extent. Not only that, but further testing has also been done
+    throughout the course of creating this game by seeing the different
+    pairs of hands and if the right hand is found when we play through
+    games for testing purposes.
+
+    Probability Module Testing: This module was primarily tested by the
     OUnit test cases. This was very difficult to test as the value that
     [prob] returns is entirely dependent on statistical chance. Rather
     than knowing an expected value, I gave it a float which the test
@@ -51,9 +55,21 @@
     hands with probabilities of winning ranging from very low to almost
     certain, and with different numbers of players in the game.
 
-    Main Module Testing: This module was primarily tested through playing 
-    the game, with a few OUnit test cases for common functions. Most of this
-    just calls our other modules and prints out the information for the user. *)
+    Main Module & Main_Func Module Testing : These modules were
+    primarily tested through playing the game, with a few OUnit test
+    cases for common functions. Most of this just calls our other
+    modules and prints out the information for the user.
+
+    Table Module Testing: This module was primarily tested thorugh
+    playing the game since we could see how many cards were being
+    distributed per round and make sure that it works. However, some of
+    it was black box tested in OUnit because we couldn't see what was
+    happening through the terminal. Not only that, but we also tested
+    sequences that were in the functions.
+
+    State Module Testing: This module was primarily tested through
+    indirectly throughout other modules using the functions and records
+    in this module. *)
 
 open OUnit2
 open Deck
@@ -1093,20 +1109,27 @@ let compare_test =
         { suit = Spades; value = Queen };
         { suit = Spades; value = King };
       ];
-    (* hand_converter_test "Converting numbers" t_player_hand [ {
-       string_suit = "♠"; int_value = 3 }; { string_suit = "♠";
-       int_value = 6 }; ]; *)
-    (* hand_sort_int_test "Sort numbers" (hand_converter [] (total_hand
-       t_player_hand t_table_river)) [ { string_suit = "♠"; int_value =
-       2 }; { string_suit = "♠"; int_value = 3 }; { string_suit = "♠";
-       int_value = 6 }; { string_suit = "♠"; int_value = 8 }; {
-       string_suit = "♠"; int_value = 9 }; { string_suit = "♠";
-       int_value = 12 }; { string_suit = "♠"; int_value = 13 }; ]; *)
+    hand_converter_test "Converting numbers" t_player_hand
+      [
+        { string_suit = "♠"; int_value = 6 };
+        { string_suit = "♠"; int_value = 3 };
+      ];
+    hand_sort_int_test "Sort numbers"
+      (hand_converter [] (total_hand t_player_hand t_table_river))
+      [
+        { string_suit = "♠"; int_value = 13 };
+        { string_suit = "♠"; int_value = 12 };
+        { string_suit = "♠"; int_value = 9 };
+        { string_suit = "♠"; int_value = 8 };
+        { string_suit = "♠"; int_value = 6 };
+        { string_suit = "♠"; int_value = 3 };
+        { string_suit = "♠"; int_value = 2 };
+      ];
     find_best_hand "Test player" t_state Player
       [ { player = Player; rank = 2; value = 12 } ];
   ]
 
-let main_test =
+let main_func_test =
   [
     string_of_card_test "Ace of Spades" "A♠"
       { suit = Spades; value = Ace };
@@ -1335,7 +1358,7 @@ let suite =
            deck_test;
            table_test;
            compare_test;
-           main_test;
+           main_func_test;
            pot_test;
            probability_test;
            betting_test;
