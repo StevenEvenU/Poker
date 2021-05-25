@@ -41,7 +41,7 @@
     pairs of hands and if the right hand is found when we play through
     games for testing purposes.
 
-    Probability Moduel Testing: This module was primarily tested by the
+    Probability Module Testing: This module was primarily tested by the
     OUnit test cases. This was very difficult to test as the value that
     [prob] returns is entirely dependent on statistical chance. Rather
     than knowing an expected value, I gave it a float which the test
@@ -55,10 +55,21 @@
     hands with probabilities of winning ranging from very low to almost
     certain, and with different numbers of players in the game.
 
-    Main Module Testing: This module was primarily tested through
-    playing the game, with a few OUnit test cases for common functions.
-    Most of this just calls our other modules and prints out the
-    information for the user. *)
+    Main Module & Main_Func Module Testing : These modules were
+    primarily tested through playing the game, with a few OUnit test
+    cases for common functions. Most of this just calls our other
+    modules and prints out the information for the user.
+
+    Table Module Testing: This module was primarily tested thorugh
+    playing the game since we could see how many cards were being
+    distributed per round and make sure that it works. However, some of
+    it was black box tested in OUnit because we couldn't see what was
+    happening through the terminal. Not only that, but we also tested
+    sequences that were in the functions.
+
+    State Module Testing: This module was primarily tested through
+    indirectly throughout other modules using the functions and records
+    in this module. *)
 
 open OUnit2
 open Deck
@@ -1118,7 +1129,7 @@ let compare_test =
       [ { player = Player; rank = 2; value = 12 } ];
   ]
 
-let main_test =
+let main_func_test =
   [
     string_of_card_test "Ace of Spades" "A♠"
       { suit = Spades; value = Ace };
@@ -1347,7 +1358,7 @@ let suite =
            deck_test;
            table_test;
            compare_test;
-           main_test;
+           main_func_test;
            pot_test;
            probability_test;
            betting_test;
