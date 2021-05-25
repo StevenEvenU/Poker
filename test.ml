@@ -39,12 +39,31 @@
     some extent. Not only that, but further testing has also been done
     throughout the course of creating this game by seeing the different
     pairs of hands and if the right hand is found when we play through
-    games for testing purposes. *)
+    games for testing purposes.
+
+    Probability Moduel Testing: This module was primarily tested by the
+    OUnit test cases. This was very difficult to test as the value that
+    [prob] returns is entirely dependent on statistical chance. Rather
+    than knowing an expected value, I gave it a float which the test
+    cases would then see if the returned value fell in the confidence
+    interval of. Even if the code is correct, sometimes test cases fail
+    by random chance and making the intervals any larger would decrease
+    the effectiveness of the tests to judge the code. The expected
+    values I got from a combination of probability calculations and
+    online poker calculators. I tested [prob] with a variety of
+    scenarios including pre-flop, pre-turn, and pre-river hands and with
+    hands with probabilities of winning ranging from very low to almost
+    certain, and with different numbers of players in the game.
+
+    Main Module Testing: This module was primarily tested through
+    playing the game, with a few OUnit test cases for common functions.
+    Most of this just calls our other modules and prints out the
+    information for the user. *)
 
 open OUnit2
 open Deck
 open Compare
-open Main
+open Mainfuncs
 open Table
 open State
 open Pot
