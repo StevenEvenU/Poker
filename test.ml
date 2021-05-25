@@ -31,12 +31,19 @@
     [top_winners]. Note that [print_pot] was not explicitely tested, but
     it is simply an [string_of_int] of [piling], which is an extensively
     used helper function of [to_winners], and so is guaranteed to work
-    if [to_winners] works. *)
+    if [to_winners] works. 
+      
+    Main Module Testing: This module was primarily tested through playing 
+    the game, with a few OUnit test cases for common functions. Most of this
+    just calls our other modules and prints out the information for the user.
+    
+    Betting Module Testing: 
+      *)
 
 open OUnit2
 open Deck
 open Compare
-open Main
+open Mainfuncs
 open Table
 open State
 open Pot
