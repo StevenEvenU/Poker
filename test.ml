@@ -603,11 +603,12 @@ let string_of_cards_test
     (cards : Deck.card list) : test =
   name >:: fun _ -> assert_equal expected (str_of_cards cards)
 
-(** [to_winner_test] constructs an OUnit test named [name] that asserts
+(** [pot_all_test] constructs an OUnit test named [name] that asserts
     with [expected] how the pot is constructed given players
     contributing money corresponding to [adding] to the pot and then
-    split amongs the properly according to [winners]. *)
-let to_winner_test
+    split amongs the properly according to [winners]. This tests
+    [reset], [add], [to_winner], and [top_winner]*)
+let pot_all_test
     (name : string)
     (expected : int array)
     (winners : win_record list)
@@ -834,7 +835,7 @@ let main_test =
 
 let pot_test =
   [
-    to_winner_test "User wins, no side pot"
+    pot_all_test "User wins, no side pot"
       [| 75; 0; 0; 0; 0; 0; 0; 0 |]
       [
         { player = Player; rank = 10; value = 1000 };
@@ -843,7 +844,7 @@ let pot_test =
       ]
       t_state
       [| 25; 25; 25; 0; 0; 0; 0; 0 |];
-    to_winner_test "Computer player wins, no side pot"
+    pot_all_test "Computer player wins, no side pot"
       [| 0; 75; 0; 0; 0; 0; 0; 0 |]
       [
         { player = Player; rank = 8; value = 500 };
@@ -852,7 +853,7 @@ let pot_test =
       ]
       t_state
       [| 25; 25; 25; 0; 0; 0; 0; 0 |];
-    to_winner_test "Tie, no side pot"
+    pot_all_test "Tie, no side pot"
       [| 45; 45; 0; 0; 0; 0; 0; 0 |]
       [
         { player = Player; rank = 10; value = 1000 };
@@ -861,7 +862,7 @@ let pot_test =
       ]
       t_state
       [| 30; 30; 30; 0; 0; 0; 0; 0 |];
-    to_winner_test "User wins with computer caused side\n pot"
+    pot_all_test "User wins with computer caused side pot"
       [| 55; 0; 0; 0; 0; 0; 0; 0 |]
       [
         { player = Player; rank = 10; value = 1000 };
@@ -870,7 +871,7 @@ let pot_test =
       ]
       t_state_1
       [| 25; 25; 5; 0; 0; 0; 0; 0 |];
-    to_winner_test "User wins with their own\n caused\n      side pot"
+    pot_all_test "User wins with their own caused side pot"
       [| 15; 40; 0; 0; 0; 0; 0; 0 |]
       [
         { player = Player; rank = 10; value = 1000 };
@@ -879,7 +880,7 @@ let pot_test =
       ]
       t_state_2
       [| 5; 25; 25; 0; 0; 0; 0; 0 |];
-    to_winner_test "User wins with two\n      computer caused side pots"
+    pot_all_test "User wins with two computer caused side pots"
       [| 35; 0; 0; 0; 0; 0; 0; 0 |]
       [
         { player = Player; rank = 10; value = 1000 };
@@ -888,10 +889,9 @@ let pot_test =
       ]
       t_state_3
       [| 25; 5; 5; 0; 0; 0; 0; 0 |];
-    to_winner_test
-      "User wins with their own side pot and computer\n\
-      \  caused side\n\
-      \      pot of different values"
+    pot_all_test
+      "User wins with their own side pot and computer caused side pot \
+       of different values"
       [| 30; 10; 35; 0; 0; 0; 0; 0 |]
       [
         { player = Player; rank = 10; value = 1000 };
@@ -900,10 +900,9 @@ let pot_test =
       ]
       t_state_4
       [| 10; 15; 50; 0; 0; 0; 0; 0 |];
-    to_winner_test
-      "User wins with their own side pot and computer\n\
-      \  caused side\n\
-      \      pot of different values 1"
+    pot_all_test
+      "User wins with their own side pot and computer caused side\n\
+       pot of different values test 2"
       [| 0; 10; 35; 0; 0; 0; 0; 0 |]
       [
         { player = Player; rank = 1; value = 10 };
