@@ -71,8 +71,8 @@
     white box testing. There were certain situations that were much more
     likely to cause errors, so we focused on testing those. More testing
     was also done by playing the game which calls all of these functions
-    multiple times. Because of the probabalistic nature of the game, simply
-    playing games was a form of black box testing.
+    multiple times. Because of the probabalistic nature of the game,
+    simply playing games was a form of black box testing.
 
     State Module Testing: This module was primarily tested through
     indirectly throughout other modules using the functions and records
