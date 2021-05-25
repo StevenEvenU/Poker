@@ -50,7 +50,7 @@ val prompt_action :
 val rec_bet_round :
   State.state -> State.players array ref -> int array -> int -> int
 
-(* Last part of a betting round, where we make sure everyone has either
-   called or folded *)
+(** Last part of a betting round, where we make sure everyone has either
+    called or folded *)
 val last_call :
   State.state -> State.players array ref -> int array -> unit
