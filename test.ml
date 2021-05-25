@@ -60,12 +60,19 @@
     cases for common functions. Most of this just calls our other
     modules and prints out the information for the user.
 
-    Table Module Testing: This module was primarily tested thorugh
+    Table Module Testing: This module was primarily tested through
     playing the game since we could see how many cards were being
     distributed per round and make sure that it works. However, some of
     it was black box tested in OUnit because we couldn't see what was
     happening through the terminal. Not only that, but we also tested
     sequences that were in the functions.
+
+    Betting Module Testing: This module was primarily tested through
+    white box testing. There were certain situations that were much more
+    likely to cause errors, so we focused on testing those. More testing
+    was also done by playing the game which calls all of these functions
+    multiple times. Because of the probabalistic nature of the game, simply
+    playing games was a form of black box testing.
 
     State Module Testing: This module was primarily tested through
     indirectly throughout other modules using the functions and records
