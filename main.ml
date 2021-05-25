@@ -137,104 +137,104 @@ let main =
   deal_player state;
   Sys.command "clear";
 
-  let continue = ref true in
-  while !continue do
-    (* Delegates cards to players *)
-    let players_in = ref [| Player |] in
-    for x = 1 to num_players do
-      players_in := Array.append !players_in [| Computer x |]
-    done;
-    print_hands state Player;
-    print_string
-      ("You currently have $"
-      ^ string_of_int state.user_money
-      ^ " to gamble.\n");
+  (* let continue = ref true in
+  while !continue do *)
+  (* Delegates cards to players *)
+  let players_in = ref [| Player |] in
+  for x = 1 to num_players do
+    players_in := Array.append !players_in [| Computer x |]
+  done;
+  print_hands state Player;
+  print_string
+    ("You currently have $"
+    ^ string_of_int state.user_money
+    ^ " to gamble.\n");
 
-    (* Set the first player to the under the gun (utg) *)
-    let utg =
-      int_of_player state.dealer mod (1 + Array.length state.cpu_hands)
-    in
-    state.turn <- player_of_int utg;
+  (* Set the first player to the under the gun (utg) *)
+  let utg =
+    int_of_player state.dealer mod (1 + Array.length state.cpu_hands)
+  in
+  state.turn <- player_of_int utg;
 
-    (* First round of betting will occur here *)
-    print_string "\n";
-    print_string "First Betting Round is Starting\n";
-    print_string "-------------------------------\n";
-    betting_round (state : state) players_in;
-    Sys.command "clear";
-    print_string "Players in: \n";
-    print_string
-      (players_to_str (ref "") players_in 0
-        (Array.length !players_in - 1));
-    print_string "\n";
-    print_bal state;
-    print_string "\n";
-    print_string "\nCurrent amount in pot is: \n";
-    print_string (print_pot () ^ "\n");
+  (* First round of betting will occur here *)
+  print_string "\n";
+  print_string "First Betting Round is Starting\n";
+  print_string "-------------------------------\n";
+  betting_round (state : state) players_in;
+  Sys.command "clear";
+  print_string "Players in: \n";
+  print_string
+    (players_to_str (ref "") players_in 0
+      (Array.length !players_in - 1));
+  print_string "\n";
+  print_bal state;
+  print_string "\n";
+  print_string "\nCurrent amount in pot is: \n";
+  print_string (print_pot () ^ "\n");
 
-    flop_table state;
-    print_hands state Player;
-    print_event state "Flop";
+  flop_table state;
+  print_hands state Player;
+  print_event state "Flop";
 
-    (* Second round of betting will occur here *)
-    print_string "\n";
-    print_string "Second Betting Round\n";
-    print_string "-------------------------------\n";
-    betting_round (state : state) players_in;
-    Sys.command "clear";
-    print_string "Players in: \n";
-    print_string
-      (players_to_str (ref "") players_in 0
-        (Array.length !players_in - 1));
-    print_bal state;
-    print_string "\n";
-    print_string "\nCurrent amount in pot is: \n";
-    print_string (print_pot () ^ "\n");
+  (* Second round of betting will occur here *)
+  print_string "\n";
+  print_string "Second Betting Round\n";
+  print_string "-------------------------------\n";
+  betting_round (state : state) players_in;
+  Sys.command "clear";
+  print_string "Players in: \n";
+  print_string
+    (players_to_str (ref "") players_in 0
+      (Array.length !players_in - 1));
+  print_bal state;
+  print_string "\n";
+  print_string "\nCurrent amount in pot is: \n";
+  print_string (print_pot () ^ "\n");
 
-    deal_table state;
-    print_hands state Player;
-    print_event state "Turn";
+  deal_table state;
+  print_hands state Player;
+  print_event state "Turn";
 
-    (* Third round of betting will occur here *)
-    print_string "\n";
-    print_string "Third Betting Round\n";
-    print_string "-------------------------------\n";
-    betting_round (state : state) players_in;
-    Sys.command "clear";
-    print_string "Players in: \n";
-    print_string
-      (players_to_str (ref "") players_in 0
-        (Array.length !players_in - 1));
-    print_bal state;
-    print_string "\n";
-    print_string "\nCurrent amount in pot is: \n";
-    print_string (print_pot () ^ "\n");
+  (* Third round of betting will occur here *)
+  print_string "\n";
+  print_string "Third Betting Round\n";
+  print_string "-------------------------------\n";
+  betting_round (state : state) players_in;
+  Sys.command "clear";
+  print_string "Players in: \n";
+  print_string
+    (players_to_str (ref "") players_in 0
+      (Array.length !players_in - 1));
+  print_bal state;
+  print_string "\n";
+  print_string "\nCurrent amount in pot is: \n";
+  print_string (print_pot () ^ "\n");
 
-    deal_table state;
-    print_hands state Player;
-    print_event state "River";
+  deal_table state;
+  print_hands state Player;
+  print_event state "River";
 
-    print_string "You have a ";
-    hand_of_rank (List.hd (find_best_hand state Player)).rank ^ "\n"
-    |> print_string;
-    print_string "The WINNER is....\n";
-    let win_record_list = winner state in
-    let filtered_winners = filter_winner win_record_list players_in in
-    (* print_string ("Players count: " ^ string_of_int (Array.length
-      !players_in) ^ "\n"); *)
-    (* print_string "tesatfdjlk: "; *)
-    (* print_int (List.length filtered_winners); *)
-    print_string "\n";
-    print_win_record filtered_winners;
+  print_string "You have a ";
+  hand_of_rank (List.hd (find_best_hand state Player)).rank ^ "\n"
+  |> print_string;
+  print_string "The WINNER is....\n";
+  let win_record_list = winner state in
+  let filtered_winners = filter_winner win_record_list players_in in
+  (* print_string ("Players count: " ^ string_of_int (Array.length
+    !players_in) ^ "\n"); *)
+  (* print_string "tesatfdjlk: "; *)
+  (* print_int (List.length filtered_winners); *)
+  print_string "\n";
+  print_win_record filtered_winners;
 
-    let pot_array = to_winner filtered_winners state in
-    (* print_string (arr_to_str (ref "") pot_array); *)
-    print_bal state;
-    distr pot_array state (List.length win_record_list - 1);
-    print_bal state;
+  let pot_array = to_winner filtered_winners state in
+  (* print_string (arr_to_str (ref "") pot_array); *)
+  print_bal state;
+  distr pot_array state (List.length win_record_list - 1);
+  print_bal state;
     
 
-    let rec continue_ans a : bool = 
+    (* let rec continue_ans a : bool = 
       print_string "Do you wish to continue? (y/n)\n";
       (match String.uppercase_ascii (read_line ()) with
       |"Y" -> true
@@ -243,7 +243,7 @@ let main =
     in
 
     continue := (continue_ans 0) && (get_money state Player > 0) && (0 < Array.fold_left (fun x y -> x+y) 0 state.cpu_moneys)
-    done
+    done *)
 
 (* print_string "THE FOLLOWING IS FOR DEVELOPMENT ONLY\n"; *)
 (* print_string "\nThe other players hands were: \n"; print_win_record
