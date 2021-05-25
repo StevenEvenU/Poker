@@ -14,4 +14,4 @@ let hours_worked_Elias_3 = 25
 
 let hours_worked_Zach_3 = 17
 
-let hours_worked_Steven_2 = 25
+let hours_worked_Steven_3 = 25
