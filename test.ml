@@ -35,6 +35,9 @@ let t_table_river =
     { suit = Spades; value = King };
   ]
 
+let t_players_in = ref [| Player |]
+let t_players_in_1 = ref [| Computer 1 |]
+let t_players_in_2 = ref [| Player; Computer 1 |]
 let t_state =
   {
     users_hand =
@@ -104,6 +107,81 @@ let t_state =
         Some { suit = Clubs; value = Jack };
       ];
     turn = Player;
+    user_money = 1000;
+    cpu_moneys = Array.make 2 1000;
+    dealer = Player;
+    current_bet = 0;
+  }
+
+let t_state_alt =
+  {
+    users_hand =
+      [
+        { suit = Diamonds; value = Eight };
+        { suit = Hearts; value = Three };
+      ];
+    cpu_hands =
+      [|
+        [
+          { suit = Clubs; value = Eight };
+          { suit = Spades; value = Jack };
+        ];
+      |];
+    cards_on_table =
+      [
+        { suit = Hearts; value = Two };
+        { suit = Hearts; value = Six };
+        { suit = Clubs; value = Ten };
+        { suit = Clubs; value = Queen };
+        { suit = Hearts; value = Queen };
+      ];
+    deck_rem =
+      [
+        Some { suit = Spades; value = Nine };
+        Some { suit = Hearts; value = Jack };
+        Some { suit = Spades; value = Six };
+        Some { suit = Spades; value = King };
+        Some { suit = Clubs; value = Six };
+        Some { suit = Clubs; value = Two };
+        Some { suit = Clubs; value = Four };
+        Some { suit = Clubs; value = Nine };
+        Some { suit = Diamonds; value = Ten };
+        Some { suit = Diamonds; value = Three };
+        Some { suit = Clubs; value = Five };
+        Some { suit = Spades; value = Four };
+        Some { suit = Diamonds; value = Four };
+        Some { suit = Diamonds; value = Six };
+        Some { suit = Hearts; value = Ten };
+        Some { suit = Diamonds; value = Seven };
+        Some { suit = Spades; value = Ten };
+        Some { suit = Diamonds; value = Jack };
+        Some { suit = Hearts; value = Five };
+        Some { suit = Hearts; value = Nine };
+        Some { suit = Diamonds; value = Five };
+        Some { suit = Diamonds; value = Two };
+        Some { suit = Diamonds; value = Ace };
+        Some { suit = Hearts; value = Eight };
+        Some { suit = Clubs; value = Seven };
+        Some { suit = Hearts; value = Four };
+        Some { suit = Diamonds; value = King };
+        Some { suit = Hearts; value = Ace };
+        Some { suit = Spades; value = Three };
+        Some { suit = Clubs; value = King };
+        Some { suit = Spades; value = Two };
+        Some { suit = Spades; value = Eight };
+        Some { suit = Clubs; value = Three };
+        Some { suit = Diamonds; value = Queen };
+        Some { suit = Hearts; value = King };
+        Some { suit = Hearts; value = Seven };
+        Some { suit = Spades; value = Seven };
+        Some { suit = Diamonds; value = Nine };
+        Some { suit = Spades; value = Queen };
+        Some { suit = Spades; value = Ace };
+        Some { suit = Spades; value = Five };
+        Some { suit = Clubs; value = Ace };
+        Some { suit = Clubs; value = Jack };
+      ];
+    turn = Computer 1;
     user_money = 1000;
     cpu_moneys = Array.make 2 1000;
     dealer = Player;
@@ -257,10 +335,85 @@ let t_state_2 =
     user_money = 0;
     cpu_moneys = [| 100; 100 |];
     dealer = Player;
-    current_bet = 0;
+    current_bet = 50;
   }
 
 let t_state_3 =
+  {
+    users_hand =
+      [
+        { suit = Diamonds; value = Eight };
+        { suit = Hearts; value = Three };
+      ];
+    cpu_hands =
+      [|
+        [
+          { suit = Clubs; value = Eight };
+          { suit = Spades; value = Jack };
+        ];
+      |];
+    cards_on_table =
+      [
+        { suit = Hearts; value = Two };
+        { suit = Hearts; value = Six };
+        { suit = Clubs; value = Ten };
+        { suit = Clubs; value = Queen };
+        { suit = Hearts; value = Queen };
+      ];
+    deck_rem =
+      [
+        Some { suit = Spades; value = Nine };
+        Some { suit = Hearts; value = Jack };
+        Some { suit = Spades; value = Six };
+        Some { suit = Spades; value = King };
+        Some { suit = Clubs; value = Six };
+        Some { suit = Clubs; value = Two };
+        Some { suit = Clubs; value = Four };
+        Some { suit = Clubs; value = Nine };
+        Some { suit = Diamonds; value = Ten };
+        Some { suit = Diamonds; value = Three };
+        Some { suit = Clubs; value = Five };
+        Some { suit = Spades; value = Four };
+        Some { suit = Diamonds; value = Four };
+        Some { suit = Diamonds; value = Six };
+        Some { suit = Hearts; value = Ten };
+        Some { suit = Diamonds; value = Seven };
+        Some { suit = Spades; value = Ten };
+        Some { suit = Diamonds; value = Jack };
+        Some { suit = Hearts; value = Five };
+        Some { suit = Hearts; value = Nine };
+        Some { suit = Diamonds; value = Five };
+        Some { suit = Diamonds; value = Two };
+        Some { suit = Diamonds; value = Ace };
+        Some { suit = Hearts; value = Eight };
+        Some { suit = Clubs; value = Seven };
+        Some { suit = Hearts; value = Four };
+        Some { suit = Diamonds; value = King };
+        Some { suit = Hearts; value = Ace };
+        Some { suit = Spades; value = Three };
+        Some { suit = Clubs; value = King };
+        Some { suit = Spades; value = Two };
+        Some { suit = Spades; value = Eight };
+        Some { suit = Clubs; value = Three };
+        Some { suit = Diamonds; value = Queen };
+        Some { suit = Hearts; value = King };
+        Some { suit = Hearts; value = Seven };
+        Some { suit = Spades; value = Seven };
+        Some { suit = Diamonds; value = Nine };
+        Some { suit = Spades; value = Queen };
+        Some { suit = Spades; value = Ace };
+        Some { suit = Spades; value = Five };
+        Some { suit = Clubs; value = Ace };
+        Some { suit = Clubs; value = Jack };
+      ];
+    turn = Computer 2;
+    user_money = 110;
+    cpu_moneys = [| 0; 0 |];
+    dealer = Player;
+    current_bet = 0;
+  }
+
+let t_state_3_alt =
   {
     users_hand =
       [
@@ -822,8 +975,23 @@ let main_test =
   ]
 let betting_test = 
   [
-    next_turn_test "Next turn after player, no one folded" (Computer 1)
-      t_state
+    get_money_test "Get player money" 1000 t_state_alt Player;
+    get_money_test "Get computer 1 money" 100 t_state_1 (Computer 1);
+    get_money_test "Get player money state_2" 0 t_state_2 Player;
+    valid_check_test "First in round" true t_state_alt [| 0; 0; 0 |];
+    valid_check_test "End round" true t_state_3_alt [| 4; 4; 4 |];
+    valid_call_test "Call with enough money" true t_state_1
+      [| 9; 9; 50 |];
+    valid_call_test "Call with not enough money (bankrupt)" false
+      t_state_2 [| 9; 9; 50 |];
+    valid_call_test "Call with not enough money (too high)" true
+      t_state_1 [| 9; 9; 50000 |];
+    player_index_test "Player index t_players_in" 0 Player t_players_in;
+    player_index_test "Player index t_players_in_2" 1 (Computer 1) t_players_in_2;
+    iterate_player_test "Iterate 1 player" (Computer 1) 0 t_players_in_2 1;
+    iterate_player_test "Iterate 0 player" Player 0 t_players_in_2 0;
+    next_turn_test "Next turn after player, no one folded" (Computer 2)
+      t_state_alt
       (ref [| Player; Computer 1; Computer 2 |])
       50;
     next_turn_test "Next turn after player, Computer 1 folded"
@@ -836,19 +1004,8 @@ let betting_test =
       Player t_state_3
       (ref [| Player; Computer 2 |])
       50;
-    get_money_test "Get player money" 1000 t_state Player;
-    get_money_test "Get computer 1 money" 100 t_state_1 Player;
-    valid_check_test "First in round" true t_state [| 0; 0; 0 |];
-    valid_check_test "End round" true t_state_3 [| 4; 4; 4 |];
     valid_check_test "Middle of round" false t_state_3 [| 5; 5; 0 |];
-    valid_call_test "Call with enough money" true t_state_1
-      [| 9; 9; 50 |];
-    valid_call_test "Call with not enough money (bankrupt)" false
-      t_state_2 [| 9; 9; 50 |];
-    valid_call_test "Call with not enough money (too high)" true
-      t_state_1 [| 9; 9; 50000 |];
-      player_index_test "Player index state";
-    
+
   ]
 
 let pot_test =
@@ -1003,8 +1160,6 @@ let probability_test =
       [ { suit = Hearts; value = Ace }; { suit = Clubs; value = Ace } ];
   ]
 
-let betting_test = []
-
 let suite =
   "test suite for A2"
   >::: List.flatten
@@ -1012,9 +1167,10 @@ let suite =
            deck_test;
            table_test;
            compare_test;
-           (* main_test;*)
+           main_test;
            pot_test;
            probability_test;
+           betting_test;
          ]
 
 let _ = run_test_tt_main suite

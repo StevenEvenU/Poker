@@ -21,6 +21,9 @@ val player_prev_bet : State.players -> int array -> int
 (** Retrieves this players money from state *)
 val get_money : State.state -> State.players -> int
 
+(** Retrieves this players hand from state *)
+val get_hand : State.state -> State.players -> Deck.card list
+
 (** Asks the user how much they want to raise by *)
 val get_raise_amt : State.state -> int
 
