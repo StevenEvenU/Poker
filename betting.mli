@@ -1,3 +1,8 @@
+(** The module Betting consists of the functions in order to bet in the
+    game, i.e. raise, check, and call. It also includes the
+    functionality to give every player/computer the chance to bet in
+    some way.*)
+
 (** Updates state.turn and state.current_bet *)
 val next_turn : State.state -> State.players array ref -> int -> unit
 
@@ -20,9 +25,6 @@ val player_prev_bet : State.players -> int array -> int
 
 (** Retrieves this players money from state *)
 val get_money : State.state -> State.players -> int
-
-(** Retrieves this players hand from state *)
-val get_hand : State.state -> State.players -> Deck.card list
 
 (** Asks the user how much they want to raise by *)
 val get_raise_amt : State.state -> int
