@@ -385,6 +385,7 @@ and play state players_in bets plays =
   else state.turn <- iterate_player turn_index players_in 0;
   rec_bet_round state players_in bets (plays + 1)
 
+
 let last_call state players_in bets =
   let max = Array.fold_left max 0 bets in
   (* print_string ("Max bet is: " ^ string_of_int max ^ "\n"); *)
