@@ -167,13 +167,6 @@ and side_pot_addition win_list all_in out =
     else 0;
   side_pot win_list all_in (side_cause :: out)
 
-let rec all_all_in_helper lst all_in =
-  match lst with
-  | h :: t ->
-      let num = to_player_num h in
-      if all_in.(num) = false then false else all_all_in_helper t all_in
-  | [] -> true
-
 let rec any_all_in lst all_in =
   match lst with
   | [] -> false
@@ -186,10 +179,7 @@ let to_winner (win_list : win_record list) (state : State.state) =
   for i = 0 to max_players - 1 do
     if bankrupt i state = true then all_in.(i) <- true else ()
   done;
-  let all_all_in = all_all_in_helper win_list all_in in
-  let side_needed =
-    if not all_all_in then any_all_in win_list all_in else false
-  in
+  let side_needed = any_all_in win_list all_in in
   if not side_needed then give_pot (top_winners win_list) (piling 0 0)
   else side_pot win_list all_in [];
   money_back
