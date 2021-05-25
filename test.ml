@@ -410,15 +410,97 @@ let t_state_4 =
     current_bet = 0;
   }
 
+let t_state_5 =
+  {
+    users_hand =
+      [
+        { suit = Diamonds; value = Eight };
+        { suit = Hearts; value = Three };
+      ];
+    cpu_hands =
+      [|
+        [
+          { suit = Clubs; value = Eight };
+          { suit = Spades; value = Jack };
+        ];
+        [
+          { suit = Spades; value = Queen };
+          { suit = Diamonds; value = Ten };
+        ];
+        [
+          { suit = Clubs; value = King }; { suit = Spades; value = Two };
+        ];
+        [
+          { suit = Diamonds; value = Three };
+          { suit = Clubs; value = Five };
+        ];
+      |];
+    cards_on_table =
+      [
+        { suit = Hearts; value = Two };
+        { suit = Hearts; value = Six };
+        { suit = Clubs; value = Ten };
+        { suit = Clubs; value = Queen };
+        { suit = Hearts; value = Queen };
+      ];
+    deck_rem =
+      [
+        Some { suit = Spades; value = Nine };
+        Some { suit = Hearts; value = Jack };
+        Some { suit = Spades; value = Six };
+        Some { suit = Spades; value = King };
+        Some { suit = Clubs; value = Six };
+        Some { suit = Clubs; value = Two };
+        Some { suit = Clubs; value = Four };
+        Some { suit = Clubs; value = Nine };
+        Some { suit = Diamonds; value = Ace };
+        Some { suit = Spades; value = Four };
+        Some { suit = Diamonds; value = Four };
+        Some { suit = Diamonds; value = Six };
+        Some { suit = Hearts; value = Ten };
+        Some { suit = Diamonds; value = Seven };
+        Some { suit = Spades; value = Ten };
+        Some { suit = Diamonds; value = Jack };
+        Some { suit = Hearts; value = Five };
+        Some { suit = Hearts; value = Nine };
+        Some { suit = Diamonds; value = Five };
+        Some { suit = Diamonds; value = Two };
+        Some { suit = Spades; value = Ace };
+        Some { suit = Hearts; value = Eight };
+        Some { suit = Clubs; value = Seven };
+        Some { suit = Hearts; value = Four };
+        Some { suit = Diamonds; value = King };
+        Some { suit = Hearts; value = Ace };
+        Some { suit = Spades; value = Three };
+        Some { suit = Spades; value = Eight };
+        Some { suit = Clubs; value = Three };
+        Some { suit = Diamonds; value = Queen };
+        Some { suit = Hearts; value = King };
+        Some { suit = Hearts; value = Seven };
+        Some { suit = Spades; value = Seven };
+        Some { suit = Diamonds; value = Nine };
+        Some { suit = Spades; value = Five };
+        Some { suit = Clubs; value = Ace };
+        Some { suit = Clubs; value = Jack };
+      ];
+    turn = Computer 2;
+    user_money = 0;
+    cpu_moneys = [| 0; 0; 0; 0 |];
+    dealer = Player;
+    current_bet = 0;
+  }
+
 (********START HELPER FUNCTIONS*************)
 
 let arr_to_str str_start arr =
-  str_start := "[|" ^ string_of_int arr.(0);
-  for i = 1 to 7 do
-    str_start := !str_start ^ "," ^ string_of_int arr.(i)
-  done;
-  str_start := !str_start ^ "|]";
-  !str_start
+  try
+    str_start := "[|" ^ string_of_int arr.(0);
+    for i = 1 to 7 do
+      str_start := !str_start ^ "," ^ string_of_int arr.(i)
+    done;
+    str_start := !str_start ^ "|]";
+    !str_start
+  with _ -> string_of_int (Array.length arr)
 
 (** converts card option to string*)
 let string_of_card_option card1 =
@@ -901,8 +983,8 @@ let pot_test =
       t_state_4
       [| 10; 15; 50; 0; 0; 0; 0; 0 |];
     pot_all_test
-      "User wins with their own side pot and computer caused side\n\
-       pot of different values test 2"
+      "User loses with computer caused side pot of different values \
+       test 2"
       [| 0; 10; 35; 0; 0; 0; 0; 0 |]
       [
         { player = Player; rank = 1; value = 10 };
@@ -911,6 +993,17 @@ let pot_test =
       ]
       t_state_4
       [| 0; 5; 40; 0; 0; 0; 0; 0 |];
+    pot_all_test "More players, everyone all in with different values"
+      [| 0; 50; 139; 0; 0; 0; 0; 0 |]
+      [
+        { player = Player; rank = 1; value = 10 };
+        { player = Computer 1; rank = 10; value = 500 };
+        { player = Computer 2; rank = 7; value = 100 };
+        { player = Computer 3; rank = 3; value = 100 };
+        { player = Computer 4; rank = 2; value = 100 };
+      ]
+      t_state_5
+      [| 46; 10; 80; 23; 30; 0; 0; 0 |];
   ]
 
 (** IMPORTANT NOTE: there is a not insigificant probability of this
