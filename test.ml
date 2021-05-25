@@ -1,3 +1,23 @@
+(** TEST PLAN.
+
+    Modules were tested as they were being created. Authors mostly made
+    the tests for the modules which they worked on, but occasionally we
+    worked on each others tests.
+
+    Deck Module Testing: This module was primarily tested by the OUnit
+    test cases. I used a mixture of black box and white box testing to
+    test each of the functions in [deck.mli]. The white box testing was
+    used for [create], [top_card], and [remove_card], since those tests
+    depended on the order of the unshuffled deck, which is determined in
+    the code itself. For [size] and [create_card], regular black box
+    testing was used. I knew what I needed to input and what I wanted to
+    get from the comment in the mli file. The function [shuffle] also
+    used black box testing, but because it depends on random numbers, I
+    could never knew what result I would get. The way I tested it was by
+    seeing that no two shuffled decks were the same, though of course
+    there is a very small chance of this test failing even if the code
+    is correct due to its probabilastic nature.*)
+
 open OUnit2
 open Deck
 open Compare
@@ -110,6 +130,7 @@ let t_state =
     current_bet = 0;
   }
 
+(** The following states are only for testing pot*)
 let t_state_1 =
   {
     users_hand =
@@ -122,6 +143,9 @@ let t_state_1 =
         [
           { suit = Clubs; value = Eight };
           { suit = Spades; value = Jack };
+        ];
+        [
+          { suit = Clubs; value = Four }; { suit = Clubs; value = Nine };
         ];
       |];
     cards_on_table =
@@ -140,8 +164,6 @@ let t_state_1 =
         Some { suit = Spades; value = King };
         Some { suit = Clubs; value = Six };
         Some { suit = Clubs; value = Two };
-        Some { suit = Clubs; value = Four };
-        Some { suit = Clubs; value = Nine };
         Some { suit = Diamonds; value = Ten };
         Some { suit = Diamonds; value = Three };
         Some { suit = Clubs; value = Five };
@@ -198,6 +220,10 @@ let t_state_2 =
           { suit = Clubs; value = Eight };
           { suit = Spades; value = Jack };
         ];
+        [
+          { suit = Hearts; value = Five };
+          { suit = Hearts; value = Nine };
+        ];
       |];
     cards_on_table =
       [
@@ -227,8 +253,6 @@ let t_state_2 =
         Some { suit = Diamonds; value = Seven };
         Some { suit = Spades; value = Ten };
         Some { suit = Diamonds; value = Jack };
-        Some { suit = Hearts; value = Five };
-        Some { suit = Hearts; value = Nine };
         Some { suit = Diamonds; value = Five };
         Some { suit = Diamonds; value = Two };
         Some { suit = Diamonds; value = Ace };
@@ -273,6 +297,10 @@ let t_state_3 =
           { suit = Clubs; value = Eight };
           { suit = Spades; value = Jack };
         ];
+        [
+          { suit = Diamonds; value = Ten };
+          { suit = Diamonds; value = Three };
+        ];
       |];
     cards_on_table =
       [
@@ -292,8 +320,6 @@ let t_state_3 =
         Some { suit = Clubs; value = Two };
         Some { suit = Clubs; value = Four };
         Some { suit = Clubs; value = Nine };
-        Some { suit = Diamonds; value = Ten };
-        Some { suit = Diamonds; value = Three };
         Some { suit = Clubs; value = Five };
         Some { suit = Spades; value = Four };
         Some { suit = Diamonds; value = Four };
@@ -348,6 +374,9 @@ let t_state_4 =
           { suit = Clubs; value = Eight };
           { suit = Spades; value = Jack };
         ];
+        [
+          { suit = Spades; value = Five }; { suit = Clubs; value = Ace };
+        ];
       |];
     cards_on_table =
       [
@@ -399,8 +428,6 @@ let t_state_4 =
         Some { suit = Diamonds; value = Nine };
         Some { suit = Spades; value = Queen };
         Some { suit = Spades; value = Ace };
-        Some { suit = Spades; value = Five };
-        Some { suit = Clubs; value = Ace };
         Some { suit = Clubs; value = Jack };
       ];
     turn = Computer 2;
@@ -1087,7 +1114,7 @@ let suite =
            deck_test;
            table_test;
            compare_test;
-           (* main_test;*)
+           (*main_test;*)
            pot_test;
            probability_test;
          ]
