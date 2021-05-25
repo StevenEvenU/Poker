@@ -21,17 +21,35 @@
     Pot Module Testing: This module was primarily tested by the OUnit
     test cases, but occasionally errors were found while playing the
     game and then corrected. Tests were done using mostly black box
-    testing but with some white box testing (I knew some situations
-    (such as players going all in) would activate helper functions, so I
-    made test cases to go through those functions). Rather than testing
-    the functions in the modeule independently, the tests were done by
-    using the Pot Module as it would be used during a game. First
-    [reset] was called, then inputs (bet amounts or folds) were added
-    iteratively using [add] and then [to_winners] was called, which used
-    [top_winners]. Note that [print_pot] was not explicitely tested, but
-    it is simply an [string_of_int] of [piling], which is an extensively
-    used helper function of [to_winners], and so is guaranteed to work
-    if [to_winners] works. *)
+    testing but with some white box testing. I knew some situations
+    (such as different numbers of players going all in and causing side
+    pots) would trigger helper functions, so I made test cases to go
+    through those functions. I tested cases including one winner, a tie,
+    a side pot, multiple side pots, a tie involving a side pot, and
+    others. The side pots were tested for both the cases that the player
+    that caused them won and lost. Rather than testing the functions in
+    the modeule independently, the tests were done by using the Pot
+    Module as it would be used during a game. First [reset] was called,
+    then inputs (bet amounts or folds) were added iteratively using
+    [add] and then [to_winners] was called, which used [top_winners].
+    Note that [print_pot] was not explicitely tested, but it is simply
+    an [string_of_int] of [piling], which is an extensively used helper
+    function of [to_winners], and so is guaranteed to work if
+    [to_winners] works.
+
+    Probability Moduel Testing: This module was primarily tested by the
+    OUnit test cases. This was very difficult to test as the value that
+    [prob] returns is entirely dependent on statistical chance. Rather
+    than knowing an expected value, I gave it a float which the test
+    cases would then see if the returned value fell in the confidence
+    interval of. Even if the code is correct, sometimes test cases fail
+    by random chance and making the intervals any larger would decrease
+    the effectiveness of the tests to judge the code. The expected
+    values I got from a combination of probability calculations and
+    online poker calculators. I tested [prob] with a variety of
+    scenarios including pre-flop, pre-turn, and pre-river hands and with
+    hands with probabilities of winning ranging from very low to almost
+    certain, and with different numbers of players in the game.*)
 
 open OUnit2
 open Deck
@@ -71,8 +89,11 @@ let t_table_river =
   ]
 
 let t_players_in = ref [| Player |]
+
 let t_players_in_1 = ref [| Computer 1 |]
+
 let t_players_in_2 = ref [| Player; Computer 1 |]
+
 let t_state =
   {
     users_hand =
@@ -222,7 +243,7 @@ let t_state_alt =
     dealer = Player;
     current_bet = 0;
   }
-  
+
 (** The following states are only for testing pot*)
 let t_state_1 =
   {
@@ -899,7 +920,6 @@ let pot_all_test
   let to_win = to_winner winners state in
   assert_equal expected to_win ~printer:(arr_to_str (ref ""))
 
-
 (* **** BETTING HELPER FUNCTIONS **** *)
 
 (** [next_turn_test] constructs an OUnit test named [name] that asserts
@@ -980,16 +1000,23 @@ let iterate_player_test
 (* [update_bets_test] constructs an OUnit test named [name] that asserts
    that [update_bets bets player state bet] is equal to [expected] *)
 
-(* [player_prev_bet_test] constructs an OUnit test named [name] that asserts
-   that [player_prev_bet player bets] is equal to [expected] *)
-let player_prev_bet_test (name : string) (expected : int) (player : State.players) (bets : int array) : test = 
+(* [player_prev_bet_test] constructs an OUnit test named [name] that
+   asserts that [player_prev_bet player bets] is equal to [expected] *)
+let player_prev_bet_test
+    (name : string)
+    (expected : int)
+    (player : State.players)
+    (bets : int array) : test =
   name >:: fun _ -> assert_equal expected (player_prev_bet player bets)
 
 (* [get_hand_test] constructs an OUnit test named [name] that asserts
    that [get_hand_bet state player] is equal to [expected] *)
-let get_hand_test (name : string) (expected : Deck.card list) (state : State.state) (player : State.players) : test =
+let get_hand_test
+    (name : string)
+    (expected : Deck.card list)
+    (state : State.state)
+    (player : State.players) : test =
   name >:: fun _ -> assert_equal expected (get_hand state player)
-
 
 (* *******END HELPER FUNCTIONS********* *)
 let deck_test =
@@ -1095,9 +1122,10 @@ let main_test =
         { suit = Hearts; value = Queen };
         { suit = Clubs; value = Two };
         { suit = Diamonds; value = Seven };
-      ]
+      ];
   ]
-let betting_test = 
+
+let betting_test =
   [
     get_money_test "Get player money" 1000 t_state_alt Player;
     get_money_test "Get computer 1 money" 100 t_state_1 (Computer 1);
@@ -1111,8 +1139,10 @@ let betting_test =
     valid_call_test "Call with not enough money (too high)" true
       t_state_1 [| 9; 9; 50000 |];
     player_index_test "Player index t_players_in" 0 Player t_players_in;
-    player_index_test "Player index t_players_in_2" 1 (Computer 1) t_players_in_2;
-    iterate_player_test "Iterate 1 player" (Computer 1) 0 t_players_in_2 1;
+    player_index_test "Player index t_players_in_2" 1 (Computer 1)
+      t_players_in_2;
+    iterate_player_test "Iterate 1 player" (Computer 1) 0 t_players_in_2
+      1;
     iterate_player_test "Iterate 0 player" Player 0 t_players_in_2 0;
     next_turn_test "Next turn after player, no one folded" (Computer 2)
       t_state_alt
@@ -1129,7 +1159,6 @@ let betting_test =
       (ref [| Player; Computer 2 |])
       50;
     valid_check_test "Middle of round" false t_state_3 [| 5; 5; 0 |];
-
   ]
 
 let pot_test =
