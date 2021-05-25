@@ -52,3 +52,14 @@ val hours_worked_Steven_2 : int
 
 (** [hours_worked_Zach_2] is the number of hours Zach worked in MS2 .*)
 val hours_worked_Zach_2 : int
+
+(** [hours_worked_Elias_3] is the number of hours that Elias worked in
+    MS3.*)
+val hours_worked_Elias_3 : int
+
+(** [hours_worked_Steven_3] is the number of hours that Steven worked in
+    MS3.*)
+val hours_worked_Steven_3 : int
+
+(** [hours_worked_Zach_3] is the number of hours Zach worked in MS3 .*)
+val hours_worked_Zach_3 : int

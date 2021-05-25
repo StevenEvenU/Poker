@@ -9,3 +9,9 @@ let hours_worked_Elias_2 = 10
 let hours_worked_Zach_2 = 8
 
 let hours_worked_Steven_2 = 5
+
+let hours_worked_Elias_3 = 25
+
+let hours_worked_Zach_3 = 17
+
+let hours_worked_Steven_2 = 25
