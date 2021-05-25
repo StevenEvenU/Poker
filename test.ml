@@ -621,6 +621,9 @@ let to_winner_test
   let to_win = to_winner winners state in
   assert_equal expected to_win ~printer:(arr_to_str (ref ""))
 
+
+(* **** BETTING HELPER FUNCTIONS **** *)
+
 (** [next_turn_test] constructs an OUnit test named [name] that asserts
     with [expected] and [bet_num] how the state changes after
     [next_turn] with the [state] and [play_arr]. *)
@@ -698,6 +701,17 @@ let iterate_player_test
 
 (* [update_bets_test] constructs an OUnit test named [name] that asserts
    that [update_bets bets player state bet] is equal to [expected] *)
+
+(* [player_prev_bet_test] constructs an OUnit test named [name] that asserts
+   that [player_prev_bet player bets] is equal to [expected] *)
+let player_prev_bet_test (name : string) (expected : int) (player : State.players) (bets : int array) : test = 
+  name >:: fun _ -> assert_equal expected (player_prev_bet player bets)
+
+(* [get_hand_test] constructs an OUnit test named [name] that asserts
+   that [get_hand_bet state player] is equal to [expected] *)
+let get_hand_test (name : string) (expected : Deck.card list) (state : State.state) (player : State.players) : test =
+  name >:: fun _ -> assert_equal expected (get_hand state player)
+
 
 (* *******END HELPER FUNCTIONS********* *)
 let deck_test =
@@ -803,8 +817,10 @@ let main_test =
         { suit = Hearts; value = Queen };
         { suit = Clubs; value = Two };
         { suit = Diamonds; value = Seven };
-      ];
-    (************)
+      ]
+  ]
+let betting_test = 
+  [
     next_turn_test "Next turn after player, no one folded" (Computer 1)
       t_state
       (ref [| Player; Computer 1; Computer 2 |])
@@ -830,6 +846,8 @@ let main_test =
       t_state_2 [| 9; 9; 50 |];
     valid_call_test "Call with not enough money (too high)" true
       t_state_1 [| 9; 9; 50000 |];
+      player_index_test "Player index state";
+    
   ]
 
 let pot_test =
