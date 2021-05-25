@@ -31,7 +31,15 @@
     [top_winners]. Note that [print_pot] was not explicitely tested, but
     it is simply an [string_of_int] of [piling], which is an extensively
     used helper function of [to_winners], and so is guaranteed to work
-    if [to_winners] works. *)
+    if [to_winners] works.
+
+    Compare Module Testing: This module was fully tested by OUnit test.
+    Tests were done using both black box testing and white box testing
+    to make sure that every function in Compare module was tested to
+    some extent. Not only that, but further testing has also been done
+    throughout the course of creating this game by seeing the different
+    pairs of hands and if the right hand is found when we play through
+    games for testing purposes. *)
 
 open OUnit2
 open Deck
@@ -71,8 +79,11 @@ let t_table_river =
   ]
 
 let t_players_in = ref [| Player |]
+
 let t_players_in_1 = ref [| Computer 1 |]
+
 let t_players_in_2 = ref [| Player; Computer 1 |]
+
 let t_state =
   {
     users_hand =
@@ -222,7 +233,7 @@ let t_state_alt =
     dealer = Player;
     current_bet = 0;
   }
-  
+
 (** The following states are only for testing pot*)
 let t_state_1 =
   {
@@ -899,7 +910,6 @@ let pot_all_test
   let to_win = to_winner winners state in
   assert_equal expected to_win ~printer:(arr_to_str (ref ""))
 
-
 (* **** BETTING HELPER FUNCTIONS **** *)
 
 (** [next_turn_test] constructs an OUnit test named [name] that asserts
@@ -980,16 +990,23 @@ let iterate_player_test
 (* [update_bets_test] constructs an OUnit test named [name] that asserts
    that [update_bets bets player state bet] is equal to [expected] *)
 
-(* [player_prev_bet_test] constructs an OUnit test named [name] that asserts
-   that [player_prev_bet player bets] is equal to [expected] *)
-let player_prev_bet_test (name : string) (expected : int) (player : State.players) (bets : int array) : test = 
+(* [player_prev_bet_test] constructs an OUnit test named [name] that
+   asserts that [player_prev_bet player bets] is equal to [expected] *)
+let player_prev_bet_test
+    (name : string)
+    (expected : int)
+    (player : State.players)
+    (bets : int array) : test =
   name >:: fun _ -> assert_equal expected (player_prev_bet player bets)
 
 (* [get_hand_test] constructs an OUnit test named [name] that asserts
    that [get_hand_bet state player] is equal to [expected] *)
-let get_hand_test (name : string) (expected : Deck.card list) (state : State.state) (player : State.players) : test =
+let get_hand_test
+    (name : string)
+    (expected : Deck.card list)
+    (state : State.state)
+    (player : State.players) : test =
   name >:: fun _ -> assert_equal expected (get_hand state player)
-
 
 (* *******END HELPER FUNCTIONS********* *)
 let deck_test =
@@ -1062,15 +1079,22 @@ let compare_test =
         { suit = Spades; value = Queen };
         { suit = Spades; value = King };
       ];
-    (* hand_converter_test "Converting numbers" t_player_hand [ {
-       string_suit = "♠"; int_value = 3 }; { string_suit = "♠";
-       int_value = 6 }; ]; *)
-    (* hand_sort_int_test "Sort numbers" (hand_converter [] (total_hand
-       t_player_hand t_table_river)) [ { string_suit = "♠"; int_value =
-       2 }; { string_suit = "♠"; int_value = 3 }; { string_suit = "♠";
-       int_value = 6 }; { string_suit = "♠"; int_value = 8 }; {
-       string_suit = "♠"; int_value = 9 }; { string_suit = "♠";
-       int_value = 12 }; { string_suit = "♠"; int_value = 13 }; ]; *)
+    hand_converter_test "Converting numbers" t_player_hand
+      [
+        { string_suit = "♠"; int_value = 6 };
+        { string_suit = "♠"; int_value = 3 };
+      ];
+    hand_sort_int_test "Sort numbers"
+      (hand_converter [] (total_hand t_player_hand t_table_river))
+      [
+        { string_suit = "♠"; int_value = 13 };
+        { string_suit = "♠"; int_value = 12 };
+        { string_suit = "♠"; int_value = 9 };
+        { string_suit = "♠"; int_value = 8 };
+        { string_suit = "♠"; int_value = 6 };
+        { string_suit = "♠"; int_value = 3 };
+        { string_suit = "♠"; int_value = 2 };
+      ];
     find_best_hand "Test player" t_state Player
       [ { player = Player; rank = 2; value = 12 } ];
   ]
@@ -1095,9 +1119,10 @@ let main_test =
         { suit = Hearts; value = Queen };
         { suit = Clubs; value = Two };
         { suit = Diamonds; value = Seven };
-      ]
+      ];
   ]
-let betting_test = 
+
+let betting_test =
   [
     get_money_test "Get player money" 1000 t_state_alt Player;
     get_money_test "Get computer 1 money" 100 t_state_1 (Computer 1);
@@ -1111,8 +1136,10 @@ let betting_test =
     valid_call_test "Call with not enough money (too high)" true
       t_state_1 [| 9; 9; 50000 |];
     player_index_test "Player index t_players_in" 0 Player t_players_in;
-    player_index_test "Player index t_players_in_2" 1 (Computer 1) t_players_in_2;
-    iterate_player_test "Iterate 1 player" (Computer 1) 0 t_players_in_2 1;
+    player_index_test "Player index t_players_in_2" 1 (Computer 1)
+      t_players_in_2;
+    iterate_player_test "Iterate 1 player" (Computer 1) 0 t_players_in_2
+      1;
     iterate_player_test "Iterate 0 player" Player 0 t_players_in_2 0;
     next_turn_test "Next turn after player, no one folded" (Computer 2)
       t_state_alt
@@ -1129,7 +1156,6 @@ let betting_test =
       (ref [| Player; Computer 2 |])
       50;
     valid_check_test "Middle of round" false t_state_3 [| 5; 5; 0 |];
-
   ]
 
 let pot_test =
