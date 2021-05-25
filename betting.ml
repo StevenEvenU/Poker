@@ -69,12 +69,9 @@ let rec player_index player players_in i =
 (* Safely iterates [num] players ahead in the [players_in] array
    starting from position [idx] *)
 let iterate_player idx players_in num =
-  (* print_string
-    ("Iterating " ^ string_of_int num ^ " players from index "
-   ^ string_of_int idx ^ " with length "
-    ^ string_of_int (Array.length !players_in)
-    ^ "\n"); *)
-
+  (* print_string ("Iterating " ^ string_of_int num ^ " players from
+     index " ^ string_of_int idx ^ " with length " ^ string_of_int
+     (Array.length !players_in) ^ "\n"); *)
   let v =
     if idx + num <= Array.length !players_in - 1 then
       !players_in.(idx + num)
@@ -94,11 +91,10 @@ let update_bets bets (player : State.players) state bet =
   (* print_string ("Computer money updated: " ^ string_of_int
      state.cpu_moneys.(x - 1) ^ "\n")); *)
   bets.(int_of_player player) <- bet
-  (* print_bet player bet *)
+(* print_bet player bet *)
 
 let player_prev_bet player bets =
-  (* print_string "DEBUG: \n";
-  print_string "----player_prev_bet----\n"; *)
+  (* print_string "DEBUG: \n"; print_string "----player_prev_bet----\n"; *)
   (* print_string (bets_arr_to_str (ref "") bets); *)
   (* print_string "----^^^^^^^^^^^^^^^----\n"; *)
   bets.(int_of_player player)
@@ -211,15 +207,12 @@ and human_call (state : state) players_in bets =
 
 and human_raise (state : state) players_in bets =
   let amt = Table.bet Player (get_raise_amt state) state in
-  (* print_string "DEBUG:\n";
-  print_string "vvvvvvvvvvvvvvvvvv\n";
-  print_string
-    ("Prev bet: " ^ string_of_int (player_prev_bet Player bets) ^ "\n");
-  print_string "Updating bets: \n"; *)
+  (* print_string "DEBUG:\n"; print_string "vvvvvvvvvvvvvvvvvv\n";
+     print_string ("Prev bet: " ^ string_of_int (player_prev_bet Player
+     bets) ^ "\n"); print_string "Updating bets: \n"; *)
   update_bets bets state.turn state amt;
-  (* print_string
-    ("New bet: " ^ string_of_int (player_prev_bet Player bets) ^ "\n");
-  print_string "^^^^^^^^^^^^^^^^^^\n"; *)
+  (* print_string ("New bet: " ^ string_of_int (player_prev_bet Player
+     bets) ^ "\n"); print_string "^^^^^^^^^^^^^^^^^^\n"; *)
   amt
 
 let rec prompt_last_action (state : state) players_in bets =
@@ -333,10 +326,8 @@ let comp_action (state : state) players_in bets =
 
 (*** Recursive Betting Round ***)
 let rec rec_bet_round (state : state) players_in bets plays =
-  (* print_string "Current Balances: \n";
-  print_bal state; *)
-  (* print_string "Current Bets: \n";
-  player_prev_bet state.turn bets; *)
+  (* print_string "Current Balances: \n"; print_bal state; *)
+  (* print_string "Current Bets: \n"; player_prev_bet state.turn bets; *)
   if state.turn = !players_in.(0) && plays > 0 then
     final_play state players_in bets plays
   else play state players_in bets plays
@@ -378,13 +369,13 @@ and play state players_in bets plays =
     | Computer x -> play_cpu state players_in bets plays x
   in
   (* Update state.turn and state.current_bet *)
-  (* print_string ("Setting current_bet to: " ^ string_of_int amt ^ "\n"); *)
+  (* print_string ("Setting current_bet to: " ^ string_of_int amt ^
+     "\n"); *)
   state.current_bet <- amt;
   if player_count = Array.length !players_in then
     state.turn <- iterate_player turn_index players_in 1
   else state.turn <- iterate_player turn_index players_in 0;
   rec_bet_round state players_in bets (plays + 1)
-
 
 let last_call state players_in bets =
   let max = Array.fold_left max 0 bets in

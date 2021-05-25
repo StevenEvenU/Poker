@@ -38,14 +38,11 @@ type action =
   | Raise
   | Fold
 
-
 let str_of_action = function
   | Check -> "Check"
   | Call -> "Call"
   | Raise -> "Raise"
   | Fold -> "Fold"
-
-
 
 (* Given a state. This prints the user's hand *)
 let print_hand hand player =
@@ -137,8 +134,7 @@ let main =
   deal_player state;
   Sys.command "clear";
 
-  (* let continue = ref true in
-  while !continue do *)
+  (* let continue = ref true in while !continue do *)
   (* Delegates cards to players *)
   let players_in = ref [| Player |] in
   for x = 1 to num_players do
@@ -165,7 +161,7 @@ let main =
   print_string "Players in: \n";
   print_string
     (players_to_str (ref "") players_in 0
-      (Array.length !players_in - 1));
+       (Array.length !players_in - 1));
   print_string "\n";
   print_bal state;
   print_string "\n";
@@ -185,7 +181,7 @@ let main =
   print_string "Players in: \n";
   print_string
     (players_to_str (ref "") players_in 0
-      (Array.length !players_in - 1));
+       (Array.length !players_in - 1));
   print_bal state;
   print_string "\n";
   print_string "\nCurrent amount in pot is: \n";
@@ -204,7 +200,7 @@ let main =
   print_string "Players in: \n";
   print_string
     (players_to_str (ref "") players_in 0
-      (Array.length !players_in - 1));
+       (Array.length !players_in - 1));
   print_bal state;
   print_string "\n";
   print_string "\nCurrent amount in pot is: \n";
@@ -221,7 +217,7 @@ let main =
   let win_record_list = winner state in
   let filtered_winners = filter_winner win_record_list players_in in
   (* print_string ("Players count: " ^ string_of_int (Array.length
-    !players_in) ^ "\n"); *)
+     !players_in) ^ "\n"); *)
   (* print_string "tesatfdjlk: "; *)
   (* print_int (List.length filtered_winners); *)
   print_string "\n";
@@ -231,19 +227,15 @@ let main =
   (* print_string (arr_to_str (ref "") pot_array); *)
   print_bal state;
   distr pot_array state (List.length win_record_list - 1);
-  print_bal state;
-    
+  print_bal state
 
-    (* let rec continue_ans a : bool = 
-      print_string "Do you wish to continue? (y/n)\n";
-      (match String.uppercase_ascii (read_line ()) with
-      |"Y" -> true
-      |"N" -> false
-      | _ -> (print_string "not valid\n"; continue_ans a))
-    in
+(* let rec continue_ans a : bool = print_string "Do you wish to
+   continue? (y/n)\n"; (match String.uppercase_ascii (read_line ()) with
+   |"Y" -> true |"N" -> false | _ -> (print_string "not valid\n";
+   continue_ans a)) in
 
-    continue := (continue_ans 0) && (get_money state Player > 0) && (0 < Array.fold_left (fun x y -> x+y) 0 state.cpu_moneys)
-    done *)
+   continue := (continue_ans 0) && (get_money state Player > 0) && (0 <
+   Array.fold_left (fun x y -> x+y) 0 state.cpu_moneys) done *)
 
 (* print_string "THE FOLLOWING IS FOR DEVELOPMENT ONLY\n"; *)
 (* print_string "\nThe other players hands were: \n"; print_win_record

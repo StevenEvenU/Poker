@@ -33,4 +33,3 @@ let rec str_of_card_rec str cards =
       str_of_card_rec s t
 
 let str_of_cards cards = str_of_card_rec "" cards
-
